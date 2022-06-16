@@ -36,6 +36,12 @@ namespace DataContextSqlite
                 entity.Property(e => e.Width).HasDefaultValueSql("0");
             });
 
+            modelBuilder.Entity<Box>()
+                .HasOne(p => p.Pallet)
+                .WithMany(t => t.Boxes)
+                .HasForeignKey(p => p.PalletId)
+                .HasPrincipalKey(t => t.Id);
+
             modelBuilder.Entity<Pallet>(entity =>
             {
                 entity.Property(e => e.Height).HasDefaultValueSql("0");
