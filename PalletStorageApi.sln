@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityModelsSqlite", "Entit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataContextSqlite", "DataContextSqlite\DataContextSqlite.csproj", "{105AC33A-4CE1-4381-A2E1-21AE4A61413A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PalletStorageWebApi", "PalletStorageWebApi\PalletStorageWebApi.csproj", "{480F2981-EE45-413A-9D8E-D27196038F48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{105AC33A-4CE1-4381-A2E1-21AE4A61413A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{105AC33A-4CE1-4381-A2E1-21AE4A61413A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{105AC33A-4CE1-4381-A2E1-21AE4A61413A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{480F2981-EE45-413A-9D8E-D27196038F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{480F2981-EE45-413A-9D8E-D27196038F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{480F2981-EE45-413A-9D8E-D27196038F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{480F2981-EE45-413A-9D8E-D27196038F48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
