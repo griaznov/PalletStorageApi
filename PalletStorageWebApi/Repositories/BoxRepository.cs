@@ -1,13 +1,14 @@
 ﻿using System.Collections.Concurrent;
-using EntityModelsSqlite;
 using DataContextSqlite;
+using EntityModels;
+using PalletStorageWebApi.Repositories;
 
-namespace PalletStorageWebApi.Repositories;
+namespace PalletStorage.WebApi.Repositories;
 
 public class BoxRepository : IBoxRepository
 {
     // use a static thread-safe dictionary field to cache
-    private static ConcurrentDictionary<Guid, Box>? customersCache;
+    private static ConcurrentDictionary<Guid, BoxModel>? customersCache;
 
     // use an instance data context field because it should not be
     // cached due to their internal caching
@@ -19,15 +20,15 @@ public class BoxRepository : IBoxRepository
 
         if (customersCache is null)
         {
-            customersCache = new ConcurrentDictionary<Guid, Box>(
+            customersCache = new ConcurrentDictionary<Guid, BoxModel>(
                 db.Boxes.ToDictionary(c => c.Id));
         }
     }
 
-    public Task<IEnumerable<Box>> RetrieveAllAsync()
+    public Task<IEnumerable<BoxModel>> RetrieveAllAsync()
     {
         // for performance, get from cache
-        return Task.FromResult(customersCache is null ? Enumerable.Empty<Box>() : customersCache.Values);
+        return Task.FromResult(customersCache is null ? Enumerable.Empty<BoxModel>() : customersCache.Values);
     }
 
 }

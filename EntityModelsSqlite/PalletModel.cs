@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore;
 
-namespace EntityModelsSqlite
+namespace EntityModels
 {
     //[Index(nameof(Guid), Name = "Guid")]
-    public partial class Pallet
+    public partial class PalletModel
     {
         [Key]
         [Column(TypeName = "INT")]
@@ -32,9 +32,9 @@ namespace EntityModelsSqlite
         [Column(TypeName = "DOUBLE")]
         public double? Length { get; set; }
 
-        [InverseProperty(nameof(Box.Pallet))]
+        [InverseProperty(nameof(BoxModel.Pallet))]
         //[XmlIgnore]
         //public virtual ICollection<Box> Boxes { get; set; } = new List<Box>();
-        public virtual List<Box> Boxes { get; set; } = new List<Box>();
+        public virtual List<BoxModel> Boxes { get; set; } = new List<BoxModel>();
     }
 }

@@ -1,4 +1,4 @@
-namespace PalletStorageWebApi
+namespace PalletStorage.WebApi
 {
     public class WeatherForecast
     {

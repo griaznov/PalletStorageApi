@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace PalletStorageWebApi.Controllers
+namespace PalletStorage.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

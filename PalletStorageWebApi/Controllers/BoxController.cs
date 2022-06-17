@@ -1,4 +1,5 @@
-﻿using EntityModelsSqlite;
+﻿using EntityModels;
+using EntityModelsSqlite;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PalletStorageWebApi.Repositories;
@@ -20,8 +21,8 @@ public class BoxesController : ControllerBase
 
     // GET: api/boxes
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<Box>))]
-    public async Task<IEnumerable<Box>> GetBoxes()
+    [ProducesResponseType(200, Type = typeof(IEnumerable<BoxModel>))]
+    public async Task<IEnumerable<BoxModel>> GetBoxes()
     {
         return await repo.RetrieveAllAsync();
     }

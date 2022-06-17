@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
-namespace EntityModelsSqlite
+namespace EntityModels
 {
     //[Index(nameof(Id), Name = "Id")]
-    public partial class Box
+    public partial class BoxModel
     {
         [Key]
         [Column(TypeName = "INT")]
@@ -43,6 +40,6 @@ namespace EntityModelsSqlite
 
         [ForeignKey(nameof(PalletId))]
         [InverseProperty("Boxes")]
-        public virtual Pallet? Pallet { get; set; }
+        public virtual PalletModel? Pallet { get; set; }
     }
 }

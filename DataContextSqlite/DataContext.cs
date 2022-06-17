@@ -1,4 +1,5 @@
-﻿using EntityModelsSqlite;
+﻿using EntityModels;
+using EntityModelsSqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataContextSqlite
@@ -9,13 +10,12 @@ namespace DataContextSqlite
         {
         }
 
-        public DataContext(DbContextOptions<DataContext> options)
-            : base(options)
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
 
-        public virtual DbSet<Box> Boxes { get; set; } = null!;
-        public virtual DbSet<Pallet> Pallets { get; set; } = null!;
+        public virtual DbSet<BoxModel> Boxes { get; set; } = null!;
+        public virtual DbSet<PalletModel> Pallets { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,7 +27,7 @@ namespace DataContextSqlite
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Box>(entity =>
+            modelBuilder.Entity<BoxModel>(entity =>
             {
                 entity.Property(e => e.Height).HasDefaultValueSql("0");
                 entity.Property(e => e.Length).HasDefaultValueSql("0");
@@ -36,13 +36,13 @@ namespace DataContextSqlite
                 entity.Property(e => e.Width).HasDefaultValueSql("0");
             });
 
-            modelBuilder.Entity<Box>()
+            modelBuilder.Entity<BoxModel>()
                 .HasOne(p => p.Pallet)
                 .WithMany(t => t.Boxes)
                 .HasForeignKey(p => p.PalletId)
                 .HasPrincipalKey(t => t.Id);
 
-            modelBuilder.Entity<Pallet>(entity =>
+            modelBuilder.Entity<PalletModel>(entity =>
             {
                 entity.Property(e => e.Height).HasDefaultValueSql("0");
                 entity.Property(e => e.Length).HasDefaultValueSql("0");
