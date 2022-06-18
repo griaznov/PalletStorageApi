@@ -1,4 +1,4 @@
-﻿using EntityModels;
+﻿using EntityModels.Sqlite;
 using PalletStorage.Common;
 
 namespace PalletStorage.Converters;

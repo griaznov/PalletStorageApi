@@ -1,8 +1,7 @@
-﻿using EntityModels;
-using EntityModelsSqlite;
+﻿using EntityModels.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataContextSqlite
+namespace DataContext.Sqlite
 {
     public partial class DataContext : DbContext
     {

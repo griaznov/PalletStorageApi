@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DataContextSqlite;
+namespace DataContext.Sqlite;
 
 public static class DataContextExtensions
 {

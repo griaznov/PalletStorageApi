@@ -1,10 +1,8 @@
-﻿using EntityModels;
-using EntityModelsSqlite;
-using Microsoft.AspNetCore.Http;
+﻿using EntityModels.Sqlite;
 using Microsoft.AspNetCore.Mvc;
-using PalletStorageWebApi.Repositories;
+using PalletStorage.WebApi.Repositories;
 
-namespace PalletStorageWebApi.Controllers;
+namespace PalletStorage.WebApi.Controllers;
 
 // base address: api/boxes
 [Route("api/[controller]")]

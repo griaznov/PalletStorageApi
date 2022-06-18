@@ -1,7 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using DataContextSqlite;
-using EntityModels;
-using PalletStorageWebApi.Repositories;
+using EntityModels.Sqlite;
 
 namespace PalletStorage.WebApi.Repositories;
 
@@ -12,9 +10,9 @@ public class BoxRepository : IBoxRepository
 
     // use an instance data context field because it should not be
     // cached due to their internal caching
-    private readonly DataContext db;
+    private readonly DataContext.Sqlite.DataContext db;
 
-    public BoxRepository(DataContext injectedContext)
+    public BoxRepository(DataContext.Sqlite.DataContext injectedContext)
     {
         db = injectedContext;
 

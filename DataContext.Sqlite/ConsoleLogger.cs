@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-
 using static System.Console;
 
-namespace DataContextSqlite;
+namespace DataContext.Sqlite;
 
 public class ConsoleLoggerFactory : ILoggerFactory
 {
@@ -26,19 +25,18 @@ public class ConsoleLogger : ILogger
     public bool IsEnabled(LogLevel logLevel)
     {
         // to avoid overlogging, you can filter on the log level
-        switch (logLevel)
+        return logLevel switch
         {
-            case LogLevel.Trace:
-            case LogLevel.Information:
-            case LogLevel.None:
-                return false;
-            case LogLevel.Debug:
-            case LogLevel.Warning:
-            case LogLevel.Error:
-            case LogLevel.Critical:
-            default:
-                return true;
+            LogLevel.Trace => false,
+            LogLevel.Information => false,
+            LogLevel.None => false,
+            LogLevel.Debug => true,
+            LogLevel.Warning => true,
+            LogLevel.Error => true,
+            LogLevel.Critical => true,
+            _ => true
         };
+        ;
     }
 
     public void Log<TState>(LogLevel logLevel,

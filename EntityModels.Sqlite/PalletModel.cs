@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Serialization;
-using Microsoft.EntityFrameworkCore;
 
-namespace EntityModels
+namespace EntityModels.Sqlite
 {
     //[Index(nameof(Guid), Name = "Guid")]
     public partial class PalletModel

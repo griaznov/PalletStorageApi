@@ -1,10 +1,10 @@
+using DataContext.Sqlite;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using DataContextSqlite;
 using Swashbuckle.AspNetCore.SwaggerUI; // SubmitMethod
 using Microsoft.AspNetCore.HttpLogging;
 using PalletStorage.WebApi.Repositories;
-using PalletStorageWebApi.Repositories; // HttpLoggingFields
+// HttpLoggingFields
 
 using static System.Console;
 

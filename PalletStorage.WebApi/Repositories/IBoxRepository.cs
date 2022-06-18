@@ -1,7 +1,6 @@
-﻿using EntityModels;
-using EntityModelsSqlite;
+﻿using EntityModels.Sqlite;
 
-namespace PalletStorageWebApi.Repositories;
+namespace PalletStorage.WebApi.Repositories;
 
 public interface IBoxRepository
 {

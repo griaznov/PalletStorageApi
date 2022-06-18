@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EntityModels
+namespace EntityModels.Sqlite
 {
     //[Index(nameof(Id), Name = "Id")]
     public partial class BoxModel
