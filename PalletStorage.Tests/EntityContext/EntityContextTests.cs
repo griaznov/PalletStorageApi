@@ -1,39 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.IO.Path;
-using DataContext.Sqlite;
+﻿using DataContext.Sqlite;
 using EntityContext.Sqlite;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using static System.IO.Path;
 
-namespace PalletStorage.Tests.DataContext;
+namespace PalletStorage.Tests.EntityContext;
 
-public class DataContextTests
+public class EntityContextTests
 {
-    private static string GenerateFileName(string extension = "")
-    {
-        return string.Concat(GetRandomFileName().Replace(".", ""),
-            (!string.IsNullOrEmpty(extension)) ? (extension.StartsWith(".") ? extension : string.Concat(".", extension)) : "");
-    }
-
-    private static void DeleteFile(string fileName)
-    {
-        if (File.Exists(fileName))
-        {
-            File.Delete(fileName);
-        }
-    }
-
-
     [Fact(DisplayName = "1. The database can be created by models")]
     public async Task CreateDatabase()
     {
-        // Assign
-        var fileName = GenerateFileName("db");
+        // Arrange
+        var fileName = FilesOperations.GenerateFileName("db");
 
         // Act
         await using StorageDataContext db = await DataContextCreator.CreateDataContextAsync(fileName);
@@ -47,8 +27,8 @@ public class DataContextTests
     [Fact(DisplayName = "2. Add a box model to the database")]
     public async void AddBox()
     {
-        // Assign
-        var fileName = GenerateFileName("db");
+        // Arrange
+        var fileName = FilesOperations.GenerateFileName("db");
 
         await using StorageDataContext db = await DataContextCreator.CreateDataContextAsync(fileName);
 
@@ -79,8 +59,8 @@ public class DataContextTests
     [Fact(DisplayName = "3. Add a pallet model to the database")]
     public async void AddPallet()
     {
-        // Assign
-        var fileName = GenerateFileName("db");
+        // Arrange
+        var fileName = FilesOperations.GenerateFileName("db");
 
         await using StorageDataContext db = await DataContextCreator.CreateDataContextAsync(fileName);
 
@@ -106,8 +86,8 @@ public class DataContextTests
     [Fact(DisplayName = "4. Add a pallet model containing box models to the database")]
     public async void AddPalletWithBoxes()
     {
-        // Assign
-        var fileName = GenerateFileName("db");
+        // Arrange
+        var fileName = FilesOperations.GenerateFileName("db");
 
         await using StorageDataContext db = await DataContextCreator.CreateDataContextAsync(fileName);
 
@@ -156,8 +136,8 @@ public class DataContextTests
     //[Fact(DisplayName = "5. Add a box model to the database without required field - Id(guid)")]
     //public async void AddBoxWithoutRequiredId()
     //{
-    //    // Assign
-    //    var fileName = GenerateFileName("db");
+    //    // Arrange
+    //    var fileName = FilesOperations.GenerateFileName("db");
 
     //    await using StorageDataContext db = await DataContextCreator.CreateDataContextAsync(fileName);
 

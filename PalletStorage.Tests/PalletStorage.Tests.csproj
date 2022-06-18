@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DataContext.Sqlite\DataContext.Sqlite.csproj" />
     <ProjectReference Include="..\PalletStorage.Common\PalletStorage.Common.csproj" />
+    <ProjectReference Include="..\PalletStorage.Converters\PalletStorage.Converters.csproj" />
   </ItemGroup>
 
 </Project>

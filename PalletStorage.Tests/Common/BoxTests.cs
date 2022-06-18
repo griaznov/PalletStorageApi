@@ -39,6 +39,7 @@ public class BoxTests
     [Fact(DisplayName = "3. Creating a box without expiration date")]
     public void CreationWithoutExpirationDate()
     {
+        // Arrange
         var todayDate = DateTime.Today;
 
         // Act
