@@ -1,7 +1,7 @@
-﻿using Xunit;
-using PalletStorage.Common;
+﻿using PalletStorage.Common;
+using Xunit;
 
-namespace PalletStorageTests.Common;
+namespace PalletStorage.Tests.Common;
 
 public class PalletTests
 {

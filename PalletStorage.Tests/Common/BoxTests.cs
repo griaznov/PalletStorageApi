@@ -1,8 +1,8 @@
-using Xunit;
 using FluentAssertions;
 using PalletStorage.Common;
+using Xunit;
 
-namespace PalletStorageTests.Common;
+namespace PalletStorage.Tests.Common;
 
 public class BoxTests
 {

@@ -1,20 +1,21 @@
-﻿using EntityModels.Sqlite;
+﻿using EntityContext.Sqlite;
 using PalletStorage.Common;
 
 namespace PalletStorage.Converters;
 
 public static class BoxConverter
 {
-    public static Box FromModel(this BoxModel model) =>
+    public static Box ToCommonModel(this BoxEfModel model) =>
         new(model.Width ?? 0,
             model.Length ?? 0,
             model.Height ?? 0,
             model.Weight ?? 0,
             model.ProductionDate ?? default,
             model.ExpirationDate ?? default,
+            //model.Id ?? default);
             model.Id);
 
-    public static BoxModel ToModel(this Box input) => new()
+    public static BoxEfModel ToEfModel(this Box input) => new()
     {
         Width = input.Width,
         Length = input.Length,

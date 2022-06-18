@@ -11,7 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EntityModels.Sqlite\EntityModels.Sqlite.csproj" />
+    <ProjectReference Include="..\EntityModels.Sqlite\EntityContext.Sqlite.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Server.IIS">
+      <HintPath>..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\6.0.5\ref\net6.0\Microsoft.AspNetCore.Server.IIS.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

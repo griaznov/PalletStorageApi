@@ -1,4 +1,4 @@
-﻿using EntityModels.Sqlite;
+﻿using EntityContext.Sqlite;
 
 namespace PalletStorage.WebApi.Repositories;
 
@@ -11,7 +11,7 @@ public interface IBoxRepository
     //Task<bool?> DeleteAsync(string id);
 
     //Task<Box?> CreateAsync(Box c);
-    Task<IEnumerable<BoxModel>> RetrieveAllAsync();
+    Task<IEnumerable<BoxEfModel>> RetrieveAllAsync();
     //Task<Box?> RetrieveAsync(Guid id);
     //Task<Box?> UpdateAsync(Guid id, Box c);
     //Task<bool?> DeleteAsync(Guid id);

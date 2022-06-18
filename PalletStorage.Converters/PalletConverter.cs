@@ -1,26 +1,26 @@
-﻿using EntityModels.Sqlite;
+﻿using EntityContext.Sqlite;
 using PalletStorage.Common;
 
 namespace PalletStorage.Converters;
 
 public static class PalletConverter
 {
-    public static Pallet FromModel(this PalletModel model) => new(
+    public static Pallet ToCommonModel(this PalletEfModel model) => new(
         model.Width ?? 0,
         model.Length ?? 0,
         model.Height ?? 0,
-        model.Weight ?? 0,
-        id: model.Id,
-        boxes: model.Boxes.Select(item => item.FromModel()).ToList());
+        model.PalletWeight ?? 0,
+        id: model.Id ?? default,
+        boxes: model.Boxes.Select(item => item.ToCommonModel()).ToList());
 
-    public static PalletModel ToModel(this Pallet input) => new()
+    public static PalletEfModel ToEfModel(this Pallet input) => new()
     {
         Width = input.Width,
         Length = input.Length,
         Height = input.Height,
-        Weight = input.Weight,
+        PalletWeight = input.Weight,
         //Volume = input.Volume,
         Id = input.Id,
-        Boxes = input.Boxes.Select(item => item.ToModel()).ToList(),
+        Boxes = input.Boxes.Select(item => item.ToEfModel()).ToList(),
     };
 }

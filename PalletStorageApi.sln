@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.Tests", "Pall
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.WebApi", "PalletStorage.WebApi\PalletStorage.WebApi.csproj", "{965D2C67-EFB8-4549-AD67-3AF4C13B3814}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityModels.Sqlite", "EntityModels.Sqlite\EntityModels.Sqlite.csproj", "{20356797-4997-4236-92D7-C066F3AAFA78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityContext.Sqlite", "EntityModels.Sqlite\EntityContext.Sqlite.csproj", "{20356797-4997-4236-92D7-C066F3AAFA78}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataContext.Sqlite", "DataContext.Sqlite\DataContext.Sqlite.csproj", "{A4B23CF0-4B4C-4697-8700-74F554B419F4}"
 EndProject
