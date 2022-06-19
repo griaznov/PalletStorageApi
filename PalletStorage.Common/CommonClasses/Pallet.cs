@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using static System.Console;
 
-namespace PalletStorage.Common;
+namespace PalletStorage.Common.CommonClasses;
 
 public class Pallet : UniversalBox
 {
@@ -10,8 +10,8 @@ public class Pallet : UniversalBox
     public double PalletWeight { get; }
     public Guid Id { get; }
     public List<Box> Boxes { get; }
-    public override double Weight => (PalletWeight + Boxes.Sum(b => b.Weight));
-    public override double Volume => (base.Volume + Boxes.Sum(b => b.Volume));
+    public override double Weight => PalletWeight + Boxes.Sum(b => b.Weight);
+    public override double Volume => base.Volume + Boxes.Sum(b => b.Volume);
     public DateTime ExpirationDate => Boxes.Count == 0 ? default : Boxes.Min(box => box.ExpirationDate);
 
     public Pallet(double width,

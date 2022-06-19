@@ -1,5 +1,5 @@
 using FluentAssertions;
-using PalletStorage.Common;
+using PalletStorage.Common.CommonClasses;
 using Xunit;
 
 namespace PalletStorage.Tests.Common;

@@ -26,8 +26,10 @@
   <ItemGroup>
     <ProjectReference Include="..\DataContext.Sqlite\DataContext.Sqlite.csproj" />
     <ProjectReference Include="..\EntityContext.Sqlite\EntityContext.Sqlite.csproj" />
+    <ProjectReference Include="..\PalletStorage.Common.Converters\PalletStorage.Common.Converters.csproj" />
     <ProjectReference Include="..\PalletStorage.Common\PalletStorage.Common.csproj" />
     <ProjectReference Include="..\PalletStorage.EfConverters\PalletStorage.EfConverters.csproj" />
+    <ProjectReference Include="..\PalletStorage.WebApi\PalletStorage.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

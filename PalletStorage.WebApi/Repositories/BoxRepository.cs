@@ -4,6 +4,7 @@ using DataContext.Sqlite;
 using EntityContext.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using PalletStorage.WebApi.Models;
 
 namespace PalletStorage.WebApi.Repositories;
 

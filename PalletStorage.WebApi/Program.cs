@@ -46,6 +46,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddScoped<IBoxRepository, BoxRepository>();
+builder.Services.AddScoped<IPalletRepository, PalletRepository>();
 
 builder.Services.AddHttpLogging(options =>
 {

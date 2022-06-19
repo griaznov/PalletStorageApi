@@ -2,7 +2,7 @@
 {
     public class BoxApiModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public DateTime? ProductionDate { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public double? Height { get; set; }

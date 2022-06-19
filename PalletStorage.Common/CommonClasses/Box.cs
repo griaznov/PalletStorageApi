@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using static System.Console;
 
-namespace PalletStorage.Common;
+namespace PalletStorage.Common.CommonClasses;
 
 public class Box : UniversalBox
 {
@@ -65,8 +65,8 @@ public class Box : UniversalBox
 
     public static bool ValidateDateParams(DateTime prodDate = default, DateTime expDate = default)
     {
-        return (expDate != default) || (prodDate != default);
+        return expDate != default || prodDate != default;
     }
 
-    private bool Equals(Box box) => (box.Id == Id);
+    private bool Equals(Box box) => box.Id == Id;
 }

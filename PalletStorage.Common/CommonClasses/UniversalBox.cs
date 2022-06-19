@@ -1,4 +1,4 @@
-﻿namespace PalletStorage.Common;
+﻿namespace PalletStorage.Common.CommonClasses;
 
 public class UniversalBox
 {
@@ -27,7 +27,7 @@ public class UniversalBox
 
     public static bool IsValidBoxParams(double width, double length, double height)
     {
-        return (!(width <= 0)) && (!(length <= 0)) && (!(height <= 0));
+        return !(width <= 0) && !(length <= 0) && !(height <= 0);
     }
 
     public static bool IsValidWeight(double weight)
