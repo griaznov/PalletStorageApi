@@ -1,10 +1,9 @@
-﻿using EntityContext.Sqlite;
+﻿using DataContext.Sqlite;
 using PalletStorage.Common;
-using DataContext.Sqlite;
 
-namespace PalletStorage.Converters;
+namespace PalletStorage.EfConverters;
 
-public static class StorageConverter
+public static class StorageEfConverter
 {
     public static async Task<int> AddPalletAsync(this StorageDataContext db, Pallet pallet)
     {

@@ -1,9 +1,9 @@
 ﻿using EntityContext.Sqlite;
 using PalletStorage.Common;
 
-namespace PalletStorage.Converters;
+namespace PalletStorage.EfConverters;
 
-public static class BoxConverter
+public static class BoxEfConverter
 {
     public static Box ToCommonModel(this BoxEfModel model) =>
         new(model.Width ?? 0,

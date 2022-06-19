@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EntityModels.Sqlite\EntityContext.Sqlite.csproj" />
+    <ProjectReference Include="..\EntityContext.Sqlite\EntityContext.Sqlite.csproj" />
   </ItemGroup>
 
   <ItemGroup>

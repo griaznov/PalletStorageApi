@@ -34,7 +34,6 @@ namespace EntityContext.Sqlite
 
         [InverseProperty(nameof(BoxEfModel.Pallet))]
         [XmlIgnore]
-        public virtual ICollection<BoxEfModel> Boxes { get; set; } = new List<BoxEfModel>();
-        //public virtual List<BoxEfModel> Boxes { get; set; } = new List<BoxEfModel>();
+        public virtual ICollection<BoxEfModel> Boxes { get; set; } = new HashSet<BoxEfModel>();
     }
 }
