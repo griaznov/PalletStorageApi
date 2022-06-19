@@ -10,9 +10,9 @@ public interface IBoxRepository
     //Task<Box?> UpdateAsync(string id, Box c);
     //Task<bool?> DeleteAsync(string id);
 
-    //Task<Box?> CreateAsync(Box c);
+    Task<BoxEfModel?> CreateAsync(BoxEfModel box);
     Task<IEnumerable<BoxEfModel>> RetrieveAllAsync();
-    //Task<Box?> RetrieveAsync(Guid id);
-    //Task<Box?> UpdateAsync(Guid id, Box c);
-    //Task<bool?> DeleteAsync(Guid id);
+    Task<BoxEfModel?> RetrieveAsync(string id);
+    Task<BoxEfModel?> UpdateAsync(string id, BoxEfModel box);
+    Task<bool?> DeleteAsync(string id);
 }

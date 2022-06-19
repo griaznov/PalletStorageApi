@@ -35,7 +35,7 @@ public static class DataContextCreator
 
             if (!dbIsCreated)
             {
-                throw new DbUpdateException($"Error with creating data in {dataPath}");
+                throw new DbUpdateException($"Error with creating database in {dataPath}");
             }
         }
 

@@ -6,27 +6,37 @@ namespace PalletStorage.Converters;
 
 public static class StorageConverter
 {
-    public static async Task AddPalletAsync(this StorageDataContext db, Pallet pallet)
+    public static async Task<int> AddPalletAsync(this StorageDataContext db, Pallet pallet)
     {
         await db.Pallets.AddAsync(pallet.ToEfModel());
-        await db.SaveChangesAsync();
+
+        return await db.SaveChangesAsync();
     }
 
-    public static async Task AddBoxAsync(this StorageDataContext db, Box box)
+    public static async Task<int> AddBoxAsync(this StorageDataContext db, Box box)
     {
         await db.Boxes.AddAsync(box.ToEfModel());
-        await db.SaveChangesAsync();
+
+        return await db.SaveChangesAsync();
     }
 
-    public static async Task MoveBoxToPalletAsync(this StorageDataContext db, Box box, Pallet pallet)
+    public static async Task<int> MoveBoxToPalletAsync(this StorageDataContext db, Box box, Pallet pallet)
     {
-        if (!pallet.Boxes.Contains(box))
+        if (pallet.Boxes.Contains(box))
         {
-            pallet.AddBox(box);
+            return 0;
         }
 
+        pallet.AddBox(box);
+
         db.Pallets.Update(pallet.ToEfModel());
-        await db.SaveChangesAsync();
+        db.Boxes.Update(box.ToEfModel());
+
+        //db.Update(box.ToEfModel());
+        //db.Update(pallet.ToEfModel());
+        //db.Remove()
+
+        return await db.SaveChangesAsync();
     }
 
 
