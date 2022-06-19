@@ -1,11 +1,20 @@
 ﻿using DataContext.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using PalletStorage.Common.CommonClasses;
 using PalletStorage.EfConverters;
-using PalletStorage.WebApi.Models;
-
 
 namespace PalletStorage.Common.Converters;
+
+public class StorageEfConverter2
+{
+    private readonly StorageDataContext db;
+
+    public StorageEfConverter2(StorageDataContext injectedContext)
+    {
+        db = injectedContext;
+    }
+
+
+}
 
 public static class StorageEfConverter
 {
@@ -32,12 +41,8 @@ public static class StorageEfConverter
 
         pallet.AddBox(box);
 
-        db.Pallets.Update(pallet.ToEfModel());
+        //db.Pallets.Update(pallet.ToEfModel());
         db.Boxes.Update(box.ToEfModel());
-
-        //db.Update(box.ToEfModel());
-        //db.Update(pallet.ToEfModel());
-        //db.Remove()
 
         return await db.SaveChangesAsync();
     }

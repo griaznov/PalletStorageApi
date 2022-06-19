@@ -68,12 +68,14 @@ public class DataConvertersTests
         await db.AddBoxAsync(box);
         await db.AddPalletAsync(pallet);
 
-        await db.DisposeAsync();
+        await db.MoveBoxToPalletAsync(box, pallet);
 
-        await using StorageDataContext db1 = await DataContextCreator.CreateDataContextAsync(fileName);
+        //await db.DisposeAsync();
+
+        //await using StorageDataContext db1 = await DataContextCreator.CreateDataContextAsync(fileName);
 
         // Act
-        await db1.MoveBoxToPalletAsync(box, pallet);
+        //await db1.MoveBoxToPalletAsync(box, pallet);
 
         //Pallet palletConvertedFromDatabase = db.Pallets.First(b => b.Id == pallet.Id).ToCommonModel();
 

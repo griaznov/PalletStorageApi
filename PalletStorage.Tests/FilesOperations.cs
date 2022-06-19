@@ -17,6 +17,5 @@ namespace PalletStorage.Tests
                 File.Delete(fileName);
             }
         }
-
     }
 }

@@ -12,7 +12,7 @@ public class BoxRepository : IBoxRepository
 {
     // use a static thread-safe dictionary field to cache
     private static ConcurrentDictionary<Guid, BoxEfModel>? boxesCache;
-
+    
     // use an instance data context field because it should not be
     // cached due to their internal caching
     private readonly StorageDataContext db;

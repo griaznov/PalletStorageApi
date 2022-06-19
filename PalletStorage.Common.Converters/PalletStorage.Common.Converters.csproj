@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataContext.Sqlite\DataContext.Sqlite.csproj" />
     <ProjectReference Include="..\PalletStorage.ApiConverters\PalletStorage.ApiConverters.csproj" />
     <ProjectReference Include="..\PalletStorage.Common\PalletStorage.Common.csproj" />
     <ProjectReference Include="..\PalletStorage.EfConverters\PalletStorage.EfConverters.csproj" />

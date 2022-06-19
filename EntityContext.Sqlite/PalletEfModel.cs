@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EntityContext.Sqlite
 {
     [Index(nameof(Id), Name = "Id")]
-    public partial class PalletEfModel
+    public class PalletEfModel
     {
         [Key]
         [Column(TypeName = "INTEGER")]
