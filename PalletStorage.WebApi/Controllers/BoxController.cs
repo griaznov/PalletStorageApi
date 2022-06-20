@@ -1,5 +1,6 @@
-﻿using EntityContext.Models;
+﻿using EntityContext.Models.Models;
 using Microsoft.AspNetCore.Mvc;
+using PalletStorage.Common.Controllers;
 using PalletStorage.WebApi.Repositories;
 
 namespace PalletStorage.WebApi.Controllers;
@@ -10,11 +11,13 @@ namespace PalletStorage.WebApi.Controllers;
 public class BoxesController : ControllerBase
 {
     private readonly IBoxRepository repo;
+    //private readonly IBoxCommonRepository repoCommon;
 
     // constructor injects repository registered in Startup
     public BoxesController(IBoxRepository repo)
     {
         this.repo = repo;
+        //this.repoCommon = repo;
     }
 
     // GET: api/boxes

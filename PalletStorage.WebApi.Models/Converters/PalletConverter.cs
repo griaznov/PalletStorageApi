@@ -1,7 +1,7 @@
 ﻿using PalletStorage.Common.CommonClasses;
-using PalletStorage.WebApi.Models;
+using PalletStorage.WebApi.Models.Models;
 
-namespace PalletStorage.WebApi.Converters
+namespace PalletStorage.WebApi.Models.Converters
 {
     public static class PalletConverter
     {

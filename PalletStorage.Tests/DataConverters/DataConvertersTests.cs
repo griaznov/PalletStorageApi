@@ -1,5 +1,5 @@
 ﻿using DataContext.Sqlite;
-using EntityContext.Converters;
+using EntityContext.Models.Converters;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.Common.CommonClasses;

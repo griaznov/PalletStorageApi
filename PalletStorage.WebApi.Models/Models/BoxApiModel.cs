@@ -1,4 +1,4 @@
-﻿namespace PalletStorage.WebApi.Models
+﻿namespace PalletStorage.WebApi.Models.Models
 {
     public class BoxApiModel
     {

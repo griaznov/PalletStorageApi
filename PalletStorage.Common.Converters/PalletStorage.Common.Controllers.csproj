@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataContext.Sqlite\DataContext.Sqlite.csproj" />
-    <ProjectReference Include="..\EntityContext.Converters\EntityContext.Converters.csproj" />
     <ProjectReference Include="..\PalletStorage.Common\PalletStorage.Common.csproj" />
   </ItemGroup>
 

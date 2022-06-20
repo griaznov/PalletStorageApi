@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore.ChangeTracking; // EntityEntry<T>
 using DataContext.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using EntityContext.Models;
 using PalletStorage.WebApi.Models;
+using EntityContext.Models.Models;
 
 namespace PalletStorage.WebApi.Repositories;
 

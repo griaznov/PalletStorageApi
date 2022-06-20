@@ -1,5 +1,6 @@
 ﻿using DataContext.Sqlite;
 using EntityContext.Models;
+using EntityContext.Models.Models;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;

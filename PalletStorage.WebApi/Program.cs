@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Swashbuckle.AspNetCore.SwaggerUI; // SubmitMethod
 using Microsoft.AspNetCore.HttpLogging;
 using PalletStorage.WebApi.Repositories;
+using PalletStorage.Common.Controllers;
 // HttpLoggingFields
 
 using static System.Console;
@@ -47,6 +48,8 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IBoxRepository, BoxRepository>();
 builder.Services.AddScoped<IPalletRepository, PalletRepository>();
+
+builder.Services.AddScoped<IBoxCommonRepository, BoxCommonRepository>();
 
 builder.Services.AddHttpLogging(options =>
 {

@@ -1,4 +1,4 @@
-﻿using EntityContext.Models;
+﻿using EntityContext.Models.Models;
 
 namespace PalletStorage.WebApi.Repositories;
 

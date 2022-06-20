@@ -1,7 +1,7 @@
-﻿using EntityContext.Models;
+﻿using EntityContext.Models.Models;
 using PalletStorage.Common.CommonClasses;
 
-namespace EntityContext.Converters;
+namespace EntityContext.Models.Converters;
 
 public static class PalletConverter
 {

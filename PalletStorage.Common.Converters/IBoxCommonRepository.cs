@@ -2,7 +2,7 @@
 
 namespace PalletStorage.Common.Controllers;
 
-public interface IBoxRepository
+public interface IBoxCommonRepository
 {
     Task<IEnumerable<Box>> RetrieveAllAsync();
 }

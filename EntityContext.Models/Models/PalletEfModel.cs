@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore;
 
-namespace EntityContext.Models
+namespace EntityContext.Models.Models
 {
     [Index(nameof(Id), Name = "Id")]
     public class PalletEfModel

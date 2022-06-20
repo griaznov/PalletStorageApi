@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PalletStorage.Common\PalletStorage.Common.csproj" />
+  </ItemGroup>
+
 </Project>
