@@ -1,10 +1,10 @@
 using DataContext.Sqlite;
+using EntityContext.Repositories;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Swashbuckle.AspNetCore.SwaggerUI; // SubmitMethod
 using Microsoft.AspNetCore.HttpLogging;
 using PalletStorage.WebApi.Repositories;
-using PalletStorage.Common.Controllers;
 // HttpLoggingFields
 
 using static System.Console;
@@ -21,7 +21,7 @@ builder.Services.AddControllers(options =>
         WriteLine("Default output formatters:");
         foreach (IOutputFormatter formatter in options.OutputFormatters)
         {
-            OutputFormatter? mediaFormatter = formatter as OutputFormatter;
+            var mediaFormatter = formatter as OutputFormatter;
             if (mediaFormatter == null)
             {
                 WriteLine($"  {formatter.GetType().Name}");

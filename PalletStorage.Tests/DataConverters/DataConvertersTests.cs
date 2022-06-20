@@ -1,11 +1,9 @@
 ﻿using DataContext.Sqlite;
 using EntityContext.Models.Converters;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using PalletStorage.Common.CommonClasses;
-using PalletStorage.Common.Controllers;
+using PalletStorage.Common.Controllers.Controllers;
 using Xunit;
-using static System.IO.Path;
 
 namespace PalletStorage.Tests.DataConverters;
 

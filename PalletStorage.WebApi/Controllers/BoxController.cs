@@ -1,6 +1,5 @@
 ﻿using EntityContext.Models.Models;
 using Microsoft.AspNetCore.Mvc;
-using PalletStorage.Common.Controllers;
 using PalletStorage.WebApi.Repositories;
 
 namespace PalletStorage.WebApi.Controllers;
