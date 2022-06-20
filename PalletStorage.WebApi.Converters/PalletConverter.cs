@@ -1,10 +1,9 @@
-﻿
+﻿using PalletStorage.Common.CommonClasses;
 using PalletStorage.WebApi.Models;
-using PalletStorage.Common.CommonClasses;
 
-namespace PalletStorage.ApiConverters
+namespace PalletStorage.WebApi.Converters
 {
-    public static class PalletApiConverter
+    public static class PalletConverter
     {
         public static Pallet ToCommonModel(this PalletApiModel model) => new(
             model.Width ?? 0,

@@ -1,10 +1,9 @@
 ﻿using DataContext.Sqlite;
-using EntityContext.Sqlite;
+using EntityContext.Converters;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.Common.CommonClasses;
-using PalletStorage.Common.Converters;
-using PalletStorage.EfConverters;
+using PalletStorage.Common.Controllers;
 using Xunit;
 using static System.IO.Path;
 

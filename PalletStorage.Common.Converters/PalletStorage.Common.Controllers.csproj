@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PalletStorage.ApiConverters\PalletStorage.ApiConverters.csproj" />
+    <ProjectReference Include="..\DataContext.Sqlite\DataContext.Sqlite.csproj" />
+    <ProjectReference Include="..\EntityContext.Converters\EntityContext.Converters.csproj" />
     <ProjectReference Include="..\PalletStorage.Common\PalletStorage.Common.csproj" />
-    <ProjectReference Include="..\PalletStorage.EfConverters\PalletStorage.EfConverters.csproj" />
   </ItemGroup>
 
 </Project>

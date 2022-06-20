@@ -1,4 +1,4 @@
-﻿using EntityContext.Sqlite;
+﻿using EntityContext.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataContext.Sqlite

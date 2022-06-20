@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace EntityContext.Sqlite
+namespace EntityContext.Models
 {
     [Index(nameof(Id), Name = "Id")]
     public class BoxEfModel

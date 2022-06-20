@@ -1,9 +1,9 @@
 ﻿using PalletStorage.Common.CommonClasses;
 using PalletStorage.WebApi.Models;
 
-namespace PalletStorage.ApiConverters
+namespace PalletStorage.WebApi.Converters
 {
-    public static class BoxApiConverter
+    public static class BoxConverter
     {
         public static Box ToCommonModel(this BoxApiModel model) =>
             new(model.Width ?? 0,
