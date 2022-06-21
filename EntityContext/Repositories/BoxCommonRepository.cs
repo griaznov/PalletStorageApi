@@ -17,10 +17,12 @@ public class BoxCommonRepository : IBoxCommonRepository
     }
 
     public async Task<IEnumerable<BoxEfModel>> RetrieveAllAsync()
+    //public async Task<IList<BoxEfModel>> RetrieveAllAsync()
     {
         var listBoxes = await db.Boxes.ToListAsync();
 
         return listBoxes.AsEnumerable();
+        //return listBoxes;
     }
 
     public async Task<BoxEfModel?> RetrieveAsync(string idString)

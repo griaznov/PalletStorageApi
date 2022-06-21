@@ -9,19 +9,19 @@ namespace PalletStorage.Common.Controllers.Controllers;
 
 // base address: api/boxes
 
-public class BoxesController
+public class BoxCommonController
 {
     private readonly IBoxCommonRepository repo;
 
     // constructor injects repository registered in Startup
-    public BoxesController(IBoxCommonRepository repo)
+    public BoxCommonController(IBoxCommonRepository repo)
     {
         this.repo = repo;
     }
 
-    public async Task<IEnumerable<BoxEfModel>> GetBoxes()
+    public async Task<IEnumerable<Box>> GetBoxes()
     {
-        return await repo.RetrieveAllAsync();
+        return (IEnumerable<Box>)await repo.RetrieveAllAsync();
     }
 
     public async Task<Box?> GetBox(string id)
