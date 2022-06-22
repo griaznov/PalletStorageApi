@@ -2,7 +2,7 @@
 using EntityContext.Models.Converters;
 using FluentAssertions;
 using PalletStorage.Common.CommonClasses;
-using PalletStorage.Common.Controllers.Controllers;
+using PalletStorage.Repositories;
 using Xunit;
 
 namespace PalletStorage.Tests.DataConverters;

@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DataContext.Models\DataContext.Models.csproj" />
     <ProjectReference Include="..\DataContext.Sqlite\DataContext.Sqlite.csproj" />
-    <ProjectReference Include="..\EntityContext\EntityContext.csproj" />
-    <ProjectReference Include="..\PalletStorage.Common.Controllers\PalletStorage.Common.Controllers.csproj" />
+    <ProjectReference Include="..\PalletStorage.Repositories\PalletStorage.Repositories.csproj" />
     <ProjectReference Include="..\PalletStorage.WebApi.Models\PalletStorage.WebApi.Models.csproj" />
   </ItemGroup>
 

@@ -2,7 +2,7 @@
 using EntityContext.Models.Converters;
 using PalletStorage.Common.CommonClasses;
 
-namespace PalletStorage.Common.Controllers.Controllers;
+namespace PalletStorage.Repositories;
 
 public class StorageEfConverter2
 {
