@@ -1,5 +1,5 @@
-﻿using DataContext.Sqlite;
-using EntityContext.Models.Converters;
+﻿using DataContext;
+using DataContext.Models.Converters;
 using PalletStorage.Common.CommonClasses;
 
 namespace PalletStorage.Repositories;
@@ -12,8 +12,6 @@ public class StorageEfConverter2
     {
         db = injectedContext;
     }
-
-
 }
 
 public static class StorageEfConverter

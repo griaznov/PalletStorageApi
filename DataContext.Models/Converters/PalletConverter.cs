@@ -1,7 +1,7 @@
-﻿using EntityContext.Models.Models;
+﻿using DataContext.Models.Models;
 using PalletStorage.Common.CommonClasses;
 
-namespace EntityContext.Models.Converters;
+namespace DataContext.Models.Converters;
 
 public static class PalletConverter
 {
@@ -10,7 +10,6 @@ public static class PalletConverter
         model.Length ?? 0,
         model.Height ?? 0,
         model.PalletWeight ?? 0,
-        id: model.Id ?? default,
         boxes: model.Boxes.Select(item => item.ToCommonModel()).ToList());
 
     public static PalletEfModel ToEfModel(this Pallet input) => new()
@@ -19,8 +18,6 @@ public static class PalletConverter
         Length = input.Length,
         Height = input.Height,
         PalletWeight = input.Weight,
-        //Volume = input.Volume,
-        Id = input.Id,
         Boxes = input.Boxes.Select(item => item.ToEfModel()).ToList(),
     };
 }

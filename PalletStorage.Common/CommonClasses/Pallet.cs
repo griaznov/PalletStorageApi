@@ -8,7 +8,7 @@ public class Pallet : UniversalBox
     private const double DefaultPalletWeight = 30;
 
     public double PalletWeight { get; }
-    public Guid Id { get; }
+    public int Id { get; }
     public List<Box> Boxes { get; }
     public override double Weight => PalletWeight + Boxes.Sum(b => b.Weight);
     public override double Volume => base.Volume + Boxes.Sum(b => b.Volume);
@@ -18,7 +18,7 @@ public class Pallet : UniversalBox
         double length,
         double height,
         double weight = 0,
-        Guid id = default,
+        int id = default,
         List<Box>? boxes = null)
         : base(width, length, height, weight)
     {
@@ -26,9 +26,6 @@ public class Pallet : UniversalBox
         PalletWeight = DefaultPalletWeight;
         Boxes = boxes ?? new List<Box>();
         Id = id;
-
-        if (Id == default)
-        { Id = Guid.NewGuid(); }
     }
 
     public void AddBox(Box box)
@@ -40,4 +37,8 @@ public class Pallet : UniversalBox
     {
         return new Pallet(width, length, height, DefaultPalletWeight);
     }
+
+    public override int GetHashCode() => Id;
+
+    public override bool Equals(object? obj) => obj is Pallet pallet && pallet.Id == Id;
 }

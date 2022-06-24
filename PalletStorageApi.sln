@@ -9,13 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.Tests", "Pall
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.WebApi", "PalletStorage.WebApi\PalletStorage.WebApi.csproj", "{965D2C67-EFB8-4549-AD67-3AF4C13B3814}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataContext.Sqlite", "DataContext.Sqlite\DataContext.Sqlite.csproj", "{A4B23CF0-4B4C-4697-8700-74F554B419F4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.WebApi.Models", "PalletStorage.WebApi.Models\PalletStorage.WebApi.Models.csproj", "{467DF7F1-E0AB-4145-ACFB-0AC96EDE74A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.Repositories", "PalletStorage.Repositories\PalletStorage.Repositories.csproj", "{F1854F70-BEEC-4DA3-B4C5-B2761B885662}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataContext.Models", "DataContext.Models\DataContext.Models.csproj", "{2D4E7063-5D4A-4E91-B299-4A1C27199E3D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataContext", "DataContext\DataContext.csproj", "{16A418FA-F1A3-4023-9175-537C82007390}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,6 @@ Global
 		{965D2C67-EFB8-4549-AD67-3AF4C13B3814}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{965D2C67-EFB8-4549-AD67-3AF4C13B3814}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{965D2C67-EFB8-4549-AD67-3AF4C13B3814}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4B23CF0-4B4C-4697-8700-74F554B419F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4B23CF0-4B4C-4697-8700-74F554B419F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4B23CF0-4B4C-4697-8700-74F554B419F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4B23CF0-4B4C-4697-8700-74F554B419F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{467DF7F1-E0AB-4145-ACFB-0AC96EDE74A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{467DF7F1-E0AB-4145-ACFB-0AC96EDE74A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{467DF7F1-E0AB-4145-ACFB-0AC96EDE74A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +47,10 @@ Global
 		{2D4E7063-5D4A-4E91-B299-4A1C27199E3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D4E7063-5D4A-4E91-B299-4A1C27199E3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D4E7063-5D4A-4E91-B299-4A1C27199E3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16A418FA-F1A3-4023-9175-537C82007390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16A418FA-F1A3-4023-9175-537C82007390}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16A418FA-F1A3-4023-9175-537C82007390}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16A418FA-F1A3-4023-9175-537C82007390}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

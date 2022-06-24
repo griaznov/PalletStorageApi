@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataContext.Models\DataContext.Models.csproj" />
-    <ProjectReference Include="..\EntityContext.Models\DataContext.Models.csproj" />
   </ItemGroup>
 
 </Project>

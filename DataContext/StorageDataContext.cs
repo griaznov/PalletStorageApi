@@ -1,19 +1,11 @@
-﻿using EntityContext.Models.Models;
+﻿using DataContext.Models.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataContext.Sqlite
+namespace DataContext
 {
     public partial class StorageDataContext : DbContext
     {
         private readonly string dataFileName;
-
-        //public StorageDataContext()
-        //{
-        //}
-
-        //public StorageDataContext(DbContextOptions<StorageDataContext> options) : base(options)
-        //{
-        //}
 
         public StorageDataContext(string dataFileName = "../PalletStorage.db")
         {
@@ -35,8 +27,6 @@ namespace DataContext.Sqlite
             }
         }
 
-        //public virtual DbSet<BoxEfModel> Boxes { get; set; } = null!;
-        //public virtual DbSet<PalletEfModel> Pallets { get; set; } = null!;
         //public virtual DbSet<BoxEfModel>? Boxes { get; set; }
         //public virtual DbSet<PalletEfModel>? Pallets { get; set; }
         public virtual DbSet<BoxEfModel> Boxes { get; set; } = null!;
@@ -47,7 +37,6 @@ namespace DataContext.Sqlite
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlite("Filename=../PalletStorage.db");
                 optionsBuilder.UseSqlite($"Filename={dataFileName}");
             }
         }
@@ -58,7 +47,6 @@ namespace DataContext.Sqlite
             {
                 entity.Property(e => e.Height).HasDefaultValueSql("0");
                 entity.Property(e => e.Length).HasDefaultValueSql("0");
-                entity.Property(e => e.Volume).HasDefaultValueSql("0");
                 entity.Property(e => e.Weight).HasDefaultValueSql("0");
                 entity.Property(e => e.Width).HasDefaultValueSql("0");
             });
@@ -66,8 +54,7 @@ namespace DataContext.Sqlite
             modelBuilder.Entity<BoxEfModel>()
                 .HasOne(p => p.Pallet)
                 .WithMany(t => t.Boxes)
-                .HasForeignKey(p => p.PalletId)
-                .HasPrincipalKey(t => t.Id);
+                .HasForeignKey(p => p.PalletId);
 
             modelBuilder.Entity<PalletEfModel>(entity =>
             {

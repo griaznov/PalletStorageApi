@@ -1,7 +1,7 @@
-﻿using EntityContext.Models.Models;
+﻿using DataContext.Models.Models;
 using PalletStorage.Common.CommonClasses;
 
-namespace EntityContext.Models.Converters;
+namespace DataContext.Models.Converters;
 
 public static class BoxConverter
 {
@@ -11,9 +11,7 @@ public static class BoxConverter
             model.Height ?? 0,
             model.Weight ?? 0,
             model.ProductionDate ?? default,
-            model.ExpirationDate ?? default,
-            //model.Id ?? default);
-            model.Id);
+            model.ExpirationDate ?? default);
 
     public static BoxEfModel ToEfModel(this Box input) => new()
     {
@@ -21,9 +19,7 @@ public static class BoxConverter
         Length = input.Length,
         Height = input.Height,
         Weight = input.Weight,
-        Volume = input.Volume,
         ProductionDate = input.ProductionDate,
-        ExpirationDate = input.ExpirationDate,
-        Id = input.Id
+        ExpirationDate = input.ExpirationDate
     };
 }

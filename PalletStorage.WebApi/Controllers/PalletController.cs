@@ -1,6 +1,8 @@
-﻿using EntityContext.Models.Models;
-using Microsoft.AspNetCore.Mvc;
-using PalletStorage.WebApi.Repositories;
+﻿using Microsoft.AspNetCore.Mvc;
+using PalletStorage.Common.CommonClasses;
+using PalletStorage.Repositories.Repositories;
+using PalletStorage.WebApi.Models.Converters;
+using PalletStorage.WebApi.Models.Models;
 
 namespace PalletStorage.WebApi.Controllers;
 
@@ -19,85 +21,88 @@ public class PalletController : ControllerBase
 
     // GET: api/pallets
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<PalletEfModel>))]
-    public async Task<IEnumerable<PalletEfModel>> GetPallets()
+    [ProducesResponseType(200, Type = typeof(IEnumerable<PalletApiModel>))]
+    public async Task<IEnumerable<PalletApiModel>> GetPallets()
     {
-        return await repo.RetrieveAllAsync();
+        var pallets = await repo.RetrieveAllAsync();
+
+        return pallets.Select(box => box.ToApiModel()).AsEnumerable();
     }
 
     // GET: api/pallets/[id]
-    [HttpGet("{id}", Name = nameof(GetPallet))] // named route
-    [ProducesResponseType(200, Type = typeof(PalletEfModel))]
+    [HttpGet("{id:int}", Name = nameof(GetPallet))] // named route
+    [ProducesResponseType(200, Type = typeof(PalletApiModel))]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetPallet(string id)
+    public async Task<IActionResult> GetPallet(int id)
     {
-        PalletEfModel? pallet = await repo.RetrieveAsync(id);
+        Pallet? pallet = await repo.RetrieveAsync(id);
+
         if (pallet == null)
         {
             return NotFound(); // 404 Resource not found
         }
-        return Ok(pallet); // 200 OK with customer in body
+
+        return Ok(pallet.ToApiModel()); // 200 OK with customer in body
     }
 
     // POST: api/pallets
     // BODY: pallets (JSON, XML)
     [HttpPost]
-    [ProducesResponseType(201, Type = typeof(PalletEfModel))]
+    [ProducesResponseType(201, Type = typeof(PalletApiModel))]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Create([FromBody] PalletEfModel pallet)
+    public async Task<IActionResult> Create([FromBody] PalletApiModel pallet)
     {
         if (pallet == null)
         {
             return BadRequest(); // 400 Bad request
         }
 
-        PalletEfModel? addedPallet = await repo.CreateAsync(pallet);
+        Pallet? addedPallet = await repo.CreateAsync(pallet.ToCommonModel());
 
         if (addedPallet == null)
         {
-            return BadRequest("Repository failed to create pallet.");
+            return BadRequest("Repository failed to create new pallet.");
         }
-        else
-        {
-            return CreatedAtRoute( // 201 Created
-                routeName: nameof(GetPallet),
-                routeValues: new { id = addedPallet.Id },
-                value: addedPallet);
-        }
+
+        return CreatedAtRoute( // 201 Created
+            routeName: nameof(GetPallet),
+            routeValues: new { id = addedPallet.Id },
+            value: addedPallet);
     }
 
     // PUT: api/pallets/[id]
     // BODY: Pallet (JSON, XML)
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Update(string id, [FromBody] PalletEfModel pallet)
+    public async Task<IActionResult> Update(int id, [FromBody] PalletApiModel pallet)
     {
-        if (pallet == null || pallet.Id != new Guid(id))
+        if (pallet == null || pallet.Id != id)
         {
             return BadRequest(); // 400 Bad request
         }
 
-        PalletEfModel? existing = await repo.RetrieveAsync(id);
+        Pallet? existing = await repo.RetrieveAsync(id);
+
         if (existing == null)
         {
             return NotFound(); // 404 Resource not found
         }
 
-        await repo.UpdateAsync(id, pallet);
+        await repo.UpdateAsync(id, pallet.ToCommonModel());
 
         return new NoContentResult(); // 204 No content
     }
 
     // DELETE: api/pallets/[id]
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<IActionResult> Delete(int id)
     {
-        PalletEfModel? existing = await repo.RetrieveAsync(id);
+        Pallet? existing = await repo.RetrieveAsync(id);
 
         if (existing == null)
         {
@@ -113,8 +118,7 @@ public class PalletController : ControllerBase
         else
         {
             return BadRequest( // 400 Bad request
-                $"Customer {id} was found but failed to delete.");
+                $"Pallet {id} was found but failed to delete.");
         }
     }
-
 }

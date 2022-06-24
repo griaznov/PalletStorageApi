@@ -13,7 +13,6 @@ namespace PalletStorage.WebApi.Models.Converters
                 model.ProductionDate ?? default,
                 model.ExpirationDate ?? default,
                 model.Id ?? default);
-                //model.Id);
 
         public static BoxApiModel ToApiModel(this Box input) => new()
         {
@@ -21,7 +20,6 @@ namespace PalletStorage.WebApi.Models.Converters
             Length = input.Length,
             Height = input.Height,
             Weight = input.Weight,
-            Volume = input.Volume,
             ProductionDate = input.ProductionDate,
             ExpirationDate = input.ExpirationDate,
             Id = input.Id

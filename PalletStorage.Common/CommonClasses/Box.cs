@@ -7,7 +7,7 @@ public class Box : UniversalBox
 {
     private const int MinDaysExpirationDate = 100;
 
-    public Guid Id { get; }
+    public int Id { get; }
     public DateTime ProductionDate { get; }
     public DateTime ExpirationDate { get; }
 
@@ -18,7 +18,7 @@ public class Box : UniversalBox
         double weight,
         DateTime productionDate = default,
         DateTime expirationDate = default,
-        Guid id = default)
+        int id = default)
         : base(width, length, height, weight)
     {
         // Verifying parameters
@@ -44,14 +44,7 @@ public class Box : UniversalBox
         ProductionDate = productionDate;
         ExpirationDate = expirationDate;
         Id = id;
-
-        if (Id == default)
-        { Id = Guid.NewGuid(); }
     }
-
-    public override int GetHashCode() => Id.GetHashCode();
-
-    public override bool Equals(object? obj) => obj is not null && Equals((Box)obj);
 
     public static Box Create(double width,
         double length,
@@ -68,5 +61,7 @@ public class Box : UniversalBox
         return expDate != default || prodDate != default;
     }
 
-    private bool Equals(Box box) => box.Id == Id;
+    public override int GetHashCode() => Id;
+
+    public override bool Equals(object? obj) => obj is Box box && box.Id == Id;
 }

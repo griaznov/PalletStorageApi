@@ -2,18 +2,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace EntityContext.Models.Models
+namespace DataContext.Models.Models
 {
     [Index(nameof(Id), Name = "Id")]
     public class BoxEfModel
     {
         [Key]
         [Column(TypeName = "INTEGER")]
-        public int BoxId { get; set; }
-
-        [Required]
-        [Column(TypeName = "GUID")]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [Column(TypeName = "DATETIME")]
@@ -39,15 +35,11 @@ namespace EntityContext.Models.Models
         [Column(TypeName = "DOUBLE")]
         public double? Weight { get; set; }
 
-        [Required]
-        [Column(TypeName = "DOUBLE")]
-        public double? Volume { get; set; }
-
-        [Column(TypeName = "GUID")]
-        public Guid? PalletId { get; set; }
+        [Column(TypeName = "INTEGER")]
+        public int? PalletId { get; set; }
 
         [ForeignKey(nameof(PalletId))]
         [InverseProperty("Boxes")]
-        public virtual PalletEfModel? Pallet { get; set; }
+        public PalletEfModel? Pallet { get; set; }
     }
 }

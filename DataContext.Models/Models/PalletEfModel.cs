@@ -3,18 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore;
 
-namespace EntityContext.Models.Models
+namespace DataContext.Models.Models
 {
     [Index(nameof(Id), Name = "Id")]
     public class PalletEfModel
     {
         [Key]
         [Column(TypeName = "INTEGER")]
-        public int PalletId { get; set; }
-
-        [Required]
-        [Column(TypeName = "GUID")]
-        public Guid? Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [Column(TypeName = "DOUBLE")]
@@ -34,6 +30,6 @@ namespace EntityContext.Models.Models
 
         [InverseProperty(nameof(BoxEfModel.Pallet))]
         [XmlIgnore]
-        public virtual ICollection<BoxEfModel> Boxes { get; set; } = new HashSet<BoxEfModel>();
+        public virtual ICollection<BoxEfModel> Boxes { get; set; } = new List<BoxEfModel>();
     }
 }

@@ -19,7 +19,6 @@ namespace PalletStorage.WebApi.Models.Converters
             Length = input.Length,
             Height = input.Height,
             PalletWeight = input.Weight,
-            //Volume = input.Volume,
             Id = input.Id,
             Boxes = input.Boxes.Select(item => item.ToApiModel()).ToList(),
         };

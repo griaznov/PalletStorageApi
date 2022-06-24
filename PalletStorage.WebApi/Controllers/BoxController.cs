@@ -1,6 +1,8 @@
-﻿using EntityContext.Models.Models;
-using Microsoft.AspNetCore.Mvc;
-using PalletStorage.WebApi.Repositories;
+﻿using Microsoft.AspNetCore.Mvc;
+using PalletStorage.Common.CommonClasses;
+using PalletStorage.Repositories.Repositories;
+using PalletStorage.WebApi.Models.Converters;
+using PalletStorage.WebApi.Models.Models;
 
 namespace PalletStorage.WebApi.Controllers;
 
@@ -9,8 +11,8 @@ namespace PalletStorage.WebApi.Controllers;
 [ApiController]
 public class BoxesController : ControllerBase
 {
+    //private readonly delIBoxRepository repo;
     private readonly IBoxRepository repo;
-    //private readonly IBoxCommonRepository repoCommon;
 
     // constructor injects repository registered in Startup
     public BoxesController(IBoxRepository repo)
@@ -21,85 +23,89 @@ public class BoxesController : ControllerBase
 
     // GET: api/boxes
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<BoxEfModel>))]
-    public async Task<IEnumerable<BoxEfModel>> GetBoxes()
+    [ProducesResponseType(200, Type = typeof(IEnumerable<BoxApiModel>))]
+    public async Task<IEnumerable<BoxApiModel>> GetBoxes()
     {
-        return await repo.RetrieveAllAsync();
+        var boxes = await repo.RetrieveAllAsync();
+
+        return boxes.Select(box => box.ToApiModel()).AsEnumerable();
     }
 
     // GET: api/boxes/[id]
-    [HttpGet("{id}", Name = nameof(GetBox))] // named route
-    [ProducesResponseType(200, Type = typeof(BoxEfModel))]
+    [HttpGet("{id:int}", Name = nameof(GetBox))] // named route
+    [ProducesResponseType(200, Type = typeof(BoxApiModel))]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetBox(string id)
+    //public async Task<IActionResult> GetBox(string id)
+    public async Task<IActionResult> GetBox(int id)
     {
-        BoxEfModel? box = await repo.RetrieveAsync(id);
+        Box? box = await repo.RetrieveAsync(id);
+
         if (box == null)
         {
             return NotFound(); // 404 Resource not found
         }
-        return Ok(box); // 200 OK with customer in body
+
+        return Ok(box.ToApiModel()); // 200 OK with customer in body
     }
 
     // POST: api/boxes
     // BODY: Box (JSON, XML)
     [HttpPost]
-    [ProducesResponseType(201, Type = typeof(BoxEfModel))]
+    [ProducesResponseType(201, Type = typeof(BoxApiModel))]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Create([FromBody] BoxEfModel box)
+    public async Task<IActionResult> Create([FromBody] BoxApiModel box)
     {
         if (box == null)
         {
-            return BadRequest(); // 400 Bad request
+            return BadRequest("Wrong model for the box."); // 400 Bad request
         }
 
-        BoxEfModel? addedBox = await repo.CreateAsync(box);
+        Box? addedBox = await repo.CreateAsync(box.ToCommonModel());
 
         if (addedBox == null)
         {
             return BadRequest("Repository failed to create box.");
         }
-        else
-        {
-            return CreatedAtRoute( // 201 Created
-                routeName: nameof(GetBox),
-                routeValues: new { id = addedBox.Id },
-                value: addedBox);
-        }
+
+        return CreatedAtRoute( // 201 Created
+            routeName: nameof(GetBox),
+            routeValues: new { id = addedBox.Id },
+            value: addedBox);
     }
 
     // PUT: api/boxes/[id]
     // BODY: Box (JSON, XML)
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Update(string id, [FromBody] BoxEfModel box)
+    public async Task<IActionResult> Update(int id, [FromBody] BoxApiModel box)
     {
-        if (box == null || box.Id != new Guid(id))
+        if (box == null || box.Id != id)
         {
-            return BadRequest(); // 400 Bad request
+            return BadRequest("Wrong model or ID for the box."); // 400 Bad request
         }
 
-        BoxEfModel? existing = await repo.RetrieveAsync(id);
+        Box? existing = await repo.RetrieveAsync(id);
+
         if (existing == null)
         {
             return NotFound(); // 404 Resource not found
         }
 
-        await repo.UpdateAsync(id, box);
+        await repo.UpdateAsync(id, box.ToCommonModel());
 
         return new NoContentResult(); // 204 No content
     }
 
     // DELETE: api/boxes/[id]
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<IActionResult> Delete(int id)
     {
-        BoxEfModel? existing = await repo.RetrieveAsync(id);
+        Box? existing = await repo.RetrieveAsync(id);
 
         if (existing == null)
         {
@@ -115,7 +121,7 @@ public class BoxesController : ControllerBase
         else
         {
             return BadRequest( // 400 Bad request
-                $"Customer {id} was found but failed to delete.");
+                $"Box {id} was found but failed to delete.");
         }
     }
 

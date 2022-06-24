@@ -1,10 +1,10 @@
-using DataContext.Sqlite;
+using DataContext;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Swashbuckle.AspNetCore.SwaggerUI; // SubmitMethod
 using Microsoft.AspNetCore.HttpLogging;
 using PalletStorage.Repositories.Repositories;
-using PalletStorage.WebApi.Repositories;
+//using PalletStorage.WebApi.Repositories;
 // HttpLoggingFields
 
 using static System.Console;
@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-await builder.Services.AddDataContextSqliteAsync();
+await builder.Services.AddStorageDataContextAsync();
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers(options =>
@@ -21,8 +21,7 @@ builder.Services.AddControllers(options =>
         WriteLine("Default output formatters:");
         foreach (IOutputFormatter formatter in options.OutputFormatters)
         {
-            var mediaFormatter = formatter as OutputFormatter;
-            if (mediaFormatter == null)
+            if (formatter is not OutputFormatter mediaFormatter)
             {
                 WriteLine($"  {formatter.GetType().Name}");
             }
@@ -48,8 +47,6 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IBoxRepository, BoxRepository>();
 builder.Services.AddScoped<IPalletRepository, PalletRepository>();
-
-builder.Services.AddScoped<IBoxCommonRepository, BoxCommonRepository>();
 
 builder.Services.AddHttpLogging(options =>
 {

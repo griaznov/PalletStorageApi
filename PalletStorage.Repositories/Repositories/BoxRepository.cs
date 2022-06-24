@@ -1,18 +1,18 @@
-﻿using DataContext.Sqlite;
-using EntityContext.Models.Converters;
-using EntityContext.Models.Models;
+﻿using DataContext;
+using DataContext.Models.Converters;
+using DataContext.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.Common.CommonClasses;
 
 namespace PalletStorage.Repositories.Repositories;
 
-public class BoxCommonRepository : IBoxCommonRepository
+public class BoxRepository : IBoxRepository
 {
     // use an instance data context field because it should not be
     // cached due to their internal caching
     private readonly StorageDataContext db;
 
-    public BoxCommonRepository(StorageDataContext injectedContext)
+    public BoxRepository(StorageDataContext injectedContext)
     {
         db = injectedContext;
     }
@@ -24,11 +24,11 @@ public class BoxCommonRepository : IBoxCommonRepository
         return await db.Boxes.Select(box => box.ToCommonModel()).ToListAsync();
     }
 
-    public async Task<Box?> RetrieveAsync(string id)
+    public async Task<Box?> RetrieveAsync(int id)
     {
-        var boxEfModel = await db.Boxes.FindAsync(new Guid(id));
+        var boxEf = await db.Boxes.FindAsync(id);
 
-        return boxEfModel?.ToCommonModel();
+        return boxEf?.ToCommonModel();
     }
 
     public async Task<Box?> CreateAsync(Box box)
@@ -41,33 +41,39 @@ public class BoxCommonRepository : IBoxCommonRepository
         return affected == 1 ? box : null;
     }
 
-    public async Task<Box?> UpdateAsync(string idString, Box box)
+    public async Task<Box?> UpdateAsync(int id, Box box)
     {
-        var id = new Guid(idString);
+        BoxEfModel? boxFounded = await db.Boxes.FindAsync(id);
 
-        // update in database
-        db.Boxes.Update(box.ToEfModel());
+        if (boxFounded is null)
+        {
+            await db.Boxes.AddAsync(box.ToEfModel());
+        }
+        else
+        {
+            // update in database
+            //db.Boxes.Update(box.ToEfModel());
+            db.Entry(boxFounded).CurrentValues.SetValues(box.ToEfModel());
+        }
 
         var affected = await db.SaveChangesAsync();
 
         return affected == 1 ? box : null;
     }
 
-    public async Task<bool?> DeleteAsync(string id)
+    public async Task<bool?> DeleteAsync(int id)
     {
         // remove from database
-        BoxEfModel? box = await db.Boxes.FindAsync(new Guid(id));
+        BoxEfModel? boxFounded = await db.Boxes.FindAsync(id);
 
-        if (box is null)
+        if (boxFounded is null)
         {
             return null;
         }
 
-        db.Boxes.Remove(box);
-
+        db.Boxes.Remove(boxFounded);
         var affected = await db.SaveChangesAsync();
 
         return affected == 1 ? true : null;
     }
-
 }
