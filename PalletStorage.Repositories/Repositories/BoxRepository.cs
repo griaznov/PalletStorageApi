@@ -17,10 +17,8 @@ public class BoxRepository : IBoxRepository
         db = injectedContext;
     }
 
-    //public async Task<IEnumerable<BoxEfModel>> RetrieveAllAsync()
     public async Task<List<Box>> RetrieveAllAsync()
     {
-        //return await Task.FromResult(db.Boxes.Select(box => box.ToCommonModel()).ToList());
         return await db.Boxes.Select(box => box.ToCommonModel()).ToListAsync();
     }
 
@@ -41,9 +39,10 @@ public class BoxRepository : IBoxRepository
         return affected == 1 ? box : null;
     }
 
-    public async Task<Box?> UpdateAsync(int id, Box box)
+    //public async Task<Box?> UpdateAsync(int id, Box box)
+    public async Task<Box?> UpdateAsync(Box box)
     {
-        BoxEfModel? boxFounded = await db.Boxes.FindAsync(id);
+        BoxEfModel? boxFounded = await db.Boxes.FindAsync(box.Id);
 
         if (boxFounded is null)
         {
@@ -52,7 +51,6 @@ public class BoxRepository : IBoxRepository
         else
         {
             // update in database
-            //db.Boxes.Update(box.ToEfModel());
             db.Entry(boxFounded).CurrentValues.SetValues(box.ToEfModel());
         }
 

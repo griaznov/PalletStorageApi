@@ -1,8 +1,6 @@
 ﻿using DataContext;
-using DataContext.Models.Converters;
 using FluentAssertions;
 using PalletStorage.Common.CommonClasses;
-using PalletStorage.Repositories;
 using PalletStorage.Repositories.Repositories;
 using Xunit;
 
@@ -21,7 +19,7 @@ public class BoxRepositoryTests
         boxRepo = new BoxRepository(db);
     }
 
-    [Fact(DisplayName = "1. Save common model of Box in database")]
+    [Fact(DisplayName = "1. Save common model of Box")]
     public async Task AddBoxAsync()
     {
         var date = new DateTime(2022, 7, 21, 19, 20, 17);
@@ -29,35 +27,55 @@ public class BoxRepositoryTests
         const int length = 31;
         const int height = 43;
 
-        // Arrange
         var box = Box.Create(width, length, height, 11, date, date);
 
-        //var fileName = FilesOperations.GenerateFileName("db");
-        //await using StorageDataContext db = await DataContextCreator.CreateDataContextAsync(fileName);
-
+        // Arrange
         await boxRepo.CreateAsync(box);
 
-        // Act
-        //await db.AddBoxAsync(box);
-
-        //Box boxConvertedFromDatabase = db.Boxes.First(b => b.Id == box.Id).ToCommonModel();
-
+        // Assert
         var boxEfModel = db.Boxes.FirstOrDefault(boxes => boxes.ExpirationDate == date
                                                           && boxes.ProductionDate == date
                                                           && boxes.Width == width
                                                           && boxes.Length == length
                                                           && boxes.Height == height);
-        if (boxEfModel == null)
-        {
-            throw new Exception();
-        }
-
-        var boxConvertedFromDatabase = boxEfModel.ToCommonModel();
-
-        // Assert
-        ObjectComparison.EqualsByJson(box, boxConvertedFromDatabase).Should().BeTrue();
-
+        boxEfModel.Should().NotBeNull();
     }
 
+    [Fact(DisplayName = "2. Delete common model Box")]
+    public async Task DeleteBox()
+    {
+        // Arrange
+        var box = new Box(1, 2, 3, 4, DateTime.Today, DateTime.Today, 12);
 
+        await boxRepo.CreateAsync(box);
+
+        // Act
+        await boxRepo.DeleteAsync(box.Id);
+
+        // Assert
+        var boxSaved = await boxRepo.RetrieveAsync(box.Id);
+        boxSaved?.Should().BeNull();
+    }
+
+    [Fact(DisplayName = "3. Update common model Box")]
+    public async Task UpdateBox()
+    {
+        // Arrange
+        var box = new Box(1, 2, 3, 4, DateTime.Today, DateTime.Today, 13);
+        await boxRepo.CreateAsync(box);
+
+        // Act
+        box = new Box(2, 3, 4, 5, DateTime.Today, DateTime.Today, 13);
+        await boxRepo.UpdateAsync(box);
+
+        // Assert
+        var boxSaved = await boxRepo.RetrieveAsync(box.Id);
+
+        boxSaved.Should().NotBeNull();
+
+        boxSaved?.Width.Should().Be(2);
+        boxSaved?.Length.Should().Be(3);
+        boxSaved?.Height.Should().Be(4);
+        boxSaved?.Weight.Should().Be(5);
+    }
 }

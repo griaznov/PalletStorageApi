@@ -4,8 +4,6 @@ using DataContext.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.Common.CommonClasses;
 
-// EntityEntry<T>
-
 namespace PalletStorage.Repositories.Repositories;
 
 public class PalletRepository : IPalletRepository
@@ -44,9 +42,9 @@ public class PalletRepository : IPalletRepository
         return affected == 1 ? pallet : null;
     }
 
-    public async Task<Pallet?> UpdateAsync(int id, Pallet pallet)
+    public async Task<Pallet?> UpdateAsync(Pallet pallet)
     {
-        BoxEfModel? palletFounded = await db.Boxes.FindAsync(id);
+        var palletFounded = await db.Pallets.FindAsync(pallet.Id);
 
         if (palletFounded is null)
         {
@@ -55,7 +53,6 @@ public class PalletRepository : IPalletRepository
         else
         {
             // update in database
-            //db.Pallets.Update(pallet.ToEfModel());
             db.Entry(palletFounded).CurrentValues.SetValues(pallet.ToEfModel());
         }
 
@@ -80,4 +77,39 @@ public class PalletRepository : IPalletRepository
         return affected == 1 ? true : null;
     }
 
+    public async Task<bool?> AddBoxToPalletAsync(Box box, Pallet pallet)
+    {
+        var palletFounded = await db.Pallets.FindAsync(pallet.Id);
+
+        if (palletFounded is null)
+        {
+            return null;
+        }
+
+        var boxEf = await db.Boxes.FindAsync(box.Id);
+
+        if (boxEf is null)
+        {
+            boxEf = box.ToEfModel();
+            await db.Boxes.AddAsync(boxEf);
+        }
+
+        boxEf.PalletId = pallet.Id;
+
+        return await db.SaveChangesAsync() > 0;
+    }
+
+    public async Task<bool?> DeleteBoxFromPallet(Box box)
+    {
+        var boxEf = await db.Boxes.FindAsync(box.Id);
+
+        if (boxEf == null)
+        {
+            return null;
+        }
+
+        boxEf.PalletId = null;
+
+        return await db.SaveChangesAsync() > 0;
+    }
 }

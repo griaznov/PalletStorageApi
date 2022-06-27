@@ -90,7 +90,7 @@ public class PalletController : ControllerBase
             return NotFound(); // 404 Resource not found
         }
 
-        await repo.UpdateAsync(id, pallet.ToCommonModel());
+        await repo.UpdateAsync(pallet.ToCommonModel());
 
         return new NoContentResult(); // 204 No content
     }

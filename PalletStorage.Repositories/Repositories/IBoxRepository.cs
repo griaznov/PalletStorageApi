@@ -7,6 +7,7 @@ public interface IBoxRepository
     Task<Box?> CreateAsync(Box box);
     Task<List<Box>> RetrieveAllAsync();
     Task<Box?> RetrieveAsync(int id);
-    Task<Box?> UpdateAsync(int id, Box box);
+    //Task<Box?> UpdateAsync(int id, Box box);
+    Task<Box?> UpdateAsync(Box box);
     Task<bool?> DeleteAsync(int id);
 }

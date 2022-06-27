@@ -11,7 +11,9 @@ public static class BoxConverter
             model.Height ?? 0,
             model.Weight ?? 0,
             model.ProductionDate ?? default,
-            model.ExpirationDate ?? default);
+            model.ExpirationDate ?? default,
+            model.Id
+            );
 
     public static BoxEfModel ToEfModel(this Box input) => new()
     {
@@ -20,6 +22,7 @@ public static class BoxConverter
         Height = input.Height,
         Weight = input.Weight,
         ProductionDate = input.ProductionDate,
-        ExpirationDate = input.ExpirationDate
+        ExpirationDate = input.ExpirationDate,
+        Id = input.Id
     };
 }

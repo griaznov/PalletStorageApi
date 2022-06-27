@@ -10,7 +10,9 @@ public static class PalletConverter
         model.Length ?? 0,
         model.Height ?? 0,
         model.PalletWeight ?? 0,
-        boxes: model.Boxes.Select(item => item.ToCommonModel()).ToList());
+        boxes: model.Boxes.Select(item => item.ToCommonModel()).ToList(),
+        id: model.Id
+        );
 
     public static PalletEfModel ToEfModel(this Pallet input) => new()
     {
@@ -19,5 +21,6 @@ public static class PalletConverter
         Height = input.Height,
         PalletWeight = input.Weight,
         Boxes = input.Boxes.Select(item => item.ToEfModel()).ToList(),
+        Id = input.Id
     };
 }

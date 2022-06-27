@@ -93,7 +93,7 @@ public class BoxesController : ControllerBase
             return NotFound(); // 404 Resource not found
         }
 
-        await repo.UpdateAsync(id, box.ToCommonModel());
+        await repo.UpdateAsync(box.ToCommonModel());
 
         return new NoContentResult(); // 204 No content
     }
