@@ -28,6 +28,7 @@
     <ProjectReference Include="..\DataContext\DataContext.csproj" />
     <ProjectReference Include="..\PalletStorage.Common\PalletStorage.Common.csproj" />
     <ProjectReference Include="..\PalletStorage.Repositories\PalletStorage.Repositories.csproj" />
+    <ProjectReference Include="..\PalletStorage.WebApi.Models\PalletStorage.WebApi.Models.csproj" />
   </ItemGroup>
 
 </Project>

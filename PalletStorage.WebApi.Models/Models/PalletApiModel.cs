@@ -8,6 +8,7 @@
         public double? Width { get; set; }
         public double? Length { get; set; }
 
-        public virtual List<BoxApiModel> Boxes { get; set; } = new();
+        //public virtual List<BoxApiModel> Boxes { get; set; } = new();
+        public virtual List<BoxApiModel>? Boxes { get; set; }
     }
 }

@@ -3,33 +3,27 @@ using DataContext.Models.Converters;
 using FluentAssertions;
 using PalletStorage.Common.CommonClasses;
 using PalletStorage.Repositories;
+using PalletStorage.Repositories.Repositories;
 using Xunit;
 
-namespace PalletStorage.Tests.DataConverters;
-
-public class DataConvertersTests
+namespace PalletStorage.Tests.DataRepositories;
+ 
+public class PalletRepositoryTests
 {
-    [Fact(DisplayName = "1. Save common model of Box in database")]
-    public async Task StorageAddBoxAsync()
+    private readonly StorageDataContext db;
+    private readonly IBoxRepository boxRepo;
+    private readonly IPalletRepository palletRepo;
+
+    public PalletRepositoryTests()
     {
-        // Arrange
-        var box = Box.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
-
         var fileName = FilesOperations.GenerateFileName("db");
-        await using StorageDataContext db = await DataContextCreator.CreateDataContextAsync(fileName);
 
-        // Act
-        await db.AddBoxAsync(box);
-
-        Box boxConvertedFromDatabase = db.Boxes.First(b => b.Id == box.Id).ToCommonModel();
-
-        // Assert
-        ObjectComparison.EqualsByJson(box, boxConvertedFromDatabase).Should().BeTrue();
-
-        //DeleteFile(fileName);
+        db = DataContextCreator.CreateDataContextAsync(fileName).Result;
+        boxRepo = new BoxRepository(db);
+        palletRepo = new PalletRepository(db);
     }
 
-    [Fact(DisplayName = "2. Save common model of Pallet in database")]
+    [Fact(DisplayName = "1. Save common model of Pallet in database")]
     public async Task StorageAddPalletAsync()
     {
         // Arrange
@@ -47,12 +41,9 @@ public class DataConvertersTests
 
         // Assert
         ObjectComparison.EqualsByJson(pallet, palletConvertedFromDatabase).Should().BeTrue();
-
-        //await db.DisposeAsync();
-        //FilesOperations.DeleteFile(fileName);
     }
 
-    [Fact(DisplayName = "3. Move common model of Box to Pallet in database")]
+    [Fact(DisplayName = "2. Move common model of Box to Pallet in database")]
     public async Task StorageMoveBoxToPalletAsync()
     {
         // Arrange
