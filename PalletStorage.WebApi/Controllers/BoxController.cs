@@ -18,15 +18,14 @@ public class BoxesController : ControllerBase
     public BoxesController(IBoxRepository repo)
     {
         this.repo = repo;
-        //this.repoCommon = repo;
     }
 
     // GET: api/boxes
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(IEnumerable<BoxApiModel>))]
-    public async Task<IEnumerable<BoxApiModel>> GetBoxes()
+    public async Task<IEnumerable<BoxApiModel>> GetBoxes(int count = 0, int skip = 0)
     {
-        var boxes = await repo.RetrieveAllAsync();
+        var boxes = await repo.RetrieveAllAsync(count, skip);
 
         return boxes.Select(box => box.ToApiModel()).AsEnumerable();
     }
@@ -35,7 +34,6 @@ public class BoxesController : ControllerBase
     [HttpGet("{id:int}", Name = nameof(GetBox))] // named route
     [ProducesResponseType(200, Type = typeof(BoxApiModel))]
     [ProducesResponseType(404)]
-    //public async Task<IActionResult> GetBox(string id)
     public async Task<IActionResult> GetBox(int id)
     {
         Box? box = await repo.RetrieveAsync(id);
@@ -73,27 +71,25 @@ public class BoxesController : ControllerBase
             value: addedBox);
     }
 
-    // PUT: api/boxes/[id]
+    // PUT: api/boxes
     // BODY: Box (JSON, XML)
-    [HttpPut("{id:int}")]
+    [HttpPut("{box}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Update(int id, [FromBody] BoxApiModel box)
+    public async Task<IActionResult> Update([FromBody] BoxApiModel box)
     {
-        if (box == null || box.Id != id)
+        if (box?.Id == null)
         {
             return BadRequest("Wrong model or ID for the box."); // 400 Bad request
         }
 
-        Box? existing = await repo.RetrieveAsync(id);
+        var existing = await repo.UpdateAsync(box.ToCommonModel());
 
         if (existing == null)
         {
             return NotFound(); // 404 Resource not found
         }
-
-        await repo.UpdateAsync(box.ToCommonModel());
 
         return new NoContentResult(); // 204 No content
     }
@@ -105,16 +101,14 @@ public class BoxesController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> Delete(int id)
     {
-        Box? existing = await repo.RetrieveAsync(id);
+        var deleted = await repo.DeleteAsync(id);
 
-        if (existing == null)
+        if (deleted == null)
         {
             return NotFound(); // 404 Resource not found
         }
 
-        var deleted = await repo.DeleteAsync(id);
-
-        if (deleted.HasValue && deleted.Value) // short circuit AND
+        if (deleted.Value)
         {
             return new NoContentResult(); // 204 No content
         }

@@ -17,9 +17,16 @@ public class PalletRepository : IPalletRepository
         db = injectedContext;
     }
 
-    public async Task<List<Pallet>> RetrieveAllAsync()
+    public async Task<List<Pallet>> RetrieveAllAsync(int count = 0, int skip = 0)
     {
+        if (count == 0)
+        {
+            count = 10000;
+        }
+
         return await db.Pallets
+            .Skip(skip)
+            .Take(count)
             .Include(p => p.Boxes)
             .Select(p => p.ToCommonModel())
             .ToListAsync();
@@ -77,9 +84,9 @@ public class PalletRepository : IPalletRepository
         return affected == 1 ? true : null;
     }
 
-    public async Task<bool?> AddBoxToPalletAsync(Box box, Pallet pallet)
+    public async Task<bool?> AddBoxToPalletAsync(Box box, int palletId)
     {
-        var palletFounded = await db.Pallets.FindAsync(pallet.Id);
+        var palletFounded = await db.Pallets.FindAsync(palletId);
 
         if (palletFounded is null)
         {
@@ -94,12 +101,12 @@ public class PalletRepository : IPalletRepository
             await db.Boxes.AddAsync(boxEf);
         }
 
-        boxEf.PalletId = pallet.Id;
+        boxEf.PalletId = palletId;
 
         return await db.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool?> DeleteBoxFromPallet(Box box)
+    public async Task<bool?> DeleteBoxFromPalletAsync(Box box)
     {
         var boxEf = await db.Boxes.FindAsync(box.Id);
 

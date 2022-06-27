@@ -22,9 +22,9 @@ public class PalletController : ControllerBase
     // GET: api/pallets
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(IEnumerable<PalletApiModel>))]
-    public async Task<IEnumerable<PalletApiModel>> GetPallets()
+    public async Task<IEnumerable<PalletApiModel>> GetPallets(int count = 0, int skip = 0)
     {
-        var pallets = await repo.RetrieveAllAsync();
+        var pallets = await repo.RetrieveAllAsync(count, skip);
 
         return pallets.Select(box => box.ToApiModel()).AsEnumerable();
     }
@@ -70,27 +70,25 @@ public class PalletController : ControllerBase
             value: addedPallet);
     }
 
-    // PUT: api/pallets/[id]
+    // PUT: api/pallets
     // BODY: Pallet (JSON, XML)
-    [HttpPut("{id:int}")]
+    [HttpPut("{pallet}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Update(int id, [FromBody] PalletApiModel pallet)
+    public async Task<IActionResult> Update([FromBody] PalletApiModel pallet)
     {
-        if (pallet == null || pallet.Id != id)
+        if (pallet?.Id == null)
         {
             return BadRequest(); // 400 Bad request
         }
 
-        Pallet? existing = await repo.RetrieveAsync(id);
+        var existing = await repo.UpdateAsync(pallet.ToCommonModel());
 
         if (existing == null)
         {
             return NotFound(); // 404 Resource not found
         }
-
-        await repo.UpdateAsync(pallet.ToCommonModel());
 
         return new NoContentResult(); // 204 No content
     }
@@ -102,16 +100,14 @@ public class PalletController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> Delete(int id)
     {
-        Pallet? existing = await repo.RetrieveAsync(id);
+        var deleted = await repo.DeleteAsync(id);
 
-        if (existing == null)
+        if (deleted == null)
         {
             return NotFound(); // 404 Resource not found
         }
 
-        var deleted = await repo.DeleteAsync(id);
-
-        if (deleted.HasValue && deleted.Value) // short circuit AND
+        if (deleted.Value) // short circuit AND
         {
             return new NoContentResult(); // 204 No content
         }
@@ -120,5 +116,51 @@ public class PalletController : ControllerBase
             return BadRequest( // 400 Bad request
                 $"Pallet {id} was found but failed to delete.");
         }
+    }
+
+    // PUT: api/pallets/AddBoxToPallet
+    // BODY: Box (JSON, XML)
+    [HttpPut("AddBoxToPallet/{Box}")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> AddBoxToPallet([FromBody] BoxApiModel box, int palletId)
+    {
+        if (box?.Id == null)
+        {
+            return BadRequest(); // 400 Bad request
+        }
+
+        var existing = await repo.AddBoxToPalletAsync(box.ToCommonModel(), palletId);
+
+        if (existing == null)
+        {
+            return NotFound(); // 404 Resource not found
+        }
+
+        return new NoContentResult(); // 204 No content
+    }
+
+    // DELETE: api/pallets/DeleteBoxFromPallet
+    // BODY: Box (JSON, XML)
+    [HttpDelete("DeleteBoxFromPallet/{Box}")]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> DeleteBoxFromPallet([FromBody] BoxApiModel box)
+    {
+        if (box?.Id == null)
+        {
+            return BadRequest(); // 400 Bad request
+        }
+
+        var existing = await repo.DeleteBoxFromPalletAsync(box.ToCommonModel());
+
+        if (existing == null)
+        {
+            return NotFound(); // 404 Resource not found
+        }
+
+        return new NoContentResult(); // 204 No content
     }
 }

@@ -17,9 +17,18 @@ public class BoxRepository : IBoxRepository
         db = injectedContext;
     }
 
-    public async Task<List<Box>> RetrieveAllAsync()
+    public async Task<List<Box>> RetrieveAllAsync(int count = 0, int skip = 0)
     {
-        return await db.Boxes.Select(box => box.ToCommonModel()).ToListAsync();
+        if (count == 0)
+        {
+            count = 10000;
+        }
+
+        return await db.Boxes
+            .Skip(skip)
+            .Take(count)
+            .Select(box => box.ToCommonModel())
+            .ToListAsync();
     }
 
     public async Task<Box?> RetrieveAsync(int id)
@@ -39,7 +48,6 @@ public class BoxRepository : IBoxRepository
         return affected == 1 ? box : null;
     }
 
-    //public async Task<Box?> UpdateAsync(int id, Box box)
     public async Task<Box?> UpdateAsync(Box box)
     {
         BoxEfModel? boxFounded = await db.Boxes.FindAsync(box.Id);

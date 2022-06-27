@@ -27,8 +27,6 @@ namespace DataContext
             }
         }
 
-        //public virtual DbSet<BoxEfModel>? Boxes { get; set; }
-        //public virtual DbSet<PalletEfModel>? Pallets { get; set; }
         public virtual DbSet<BoxEfModel> Boxes { get; set; } = null!;
 
         public virtual DbSet<PalletEfModel> Pallets { get; set; } = null!;

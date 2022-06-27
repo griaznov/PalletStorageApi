@@ -78,4 +78,46 @@ public class BoxRepositoryTests
         boxSaved?.Height.Should().Be(4);
         boxSaved?.Weight.Should().Be(5);
     }
+
+    [Fact(DisplayName = "4. Retrieve Boxes with pagination - Skip")]
+    public async Task RetrieveWithSkipAsync()
+    {
+        // Arrange
+        var box1 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
+        var box2 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
+        var box3 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
+        var box4 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
+
+        await boxRepo.CreateAsync(box1);
+        await boxRepo.CreateAsync(box2);
+        await boxRepo.CreateAsync(box3);
+        await boxRepo.CreateAsync(box4);
+
+        // Act
+        var collection = await boxRepo.RetrieveAllAsync(skip: 1);
+
+        // Assert
+        collection.Should().HaveCount(3);
+    }
+
+    [Fact(DisplayName = "5. Retrieve Boxes with pagination - Take")]
+    public async Task RetrieveWithTakeAsync()
+    {
+        // Arrange
+        var box1 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
+        var box2 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
+        var box3 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
+        var box4 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
+
+        await boxRepo.CreateAsync(box1);
+        await boxRepo.CreateAsync(box2);
+        await boxRepo.CreateAsync(box3);
+        await boxRepo.CreateAsync(box4);
+
+        // Act
+        var collection = await boxRepo.RetrieveAllAsync(2);
+
+        // Assert
+        collection.Should().HaveCount(2);
+    }
 }

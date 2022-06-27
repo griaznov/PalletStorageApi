@@ -75,7 +75,7 @@ public class PalletRepositoryTests
         await palletRepo.CreateAsync(pallet);
 
         // Act
-        await palletRepo.AddBoxToPalletAsync(box, pallet);
+        await palletRepo.AddBoxToPalletAsync(box, pallet.Id);
 
         // Assert
         var palletSaved = await palletRepo.RetrieveAsync(pallet.Id);
@@ -95,7 +95,7 @@ public class PalletRepositoryTests
         await palletRepo.CreateAsync(pallet);
 
         // Act
-        await palletRepo.DeleteBoxFromPallet(box);
+        await palletRepo.DeleteBoxFromPalletAsync(box);
 
         // Assert
         var palletSaved = await palletRepo.RetrieveAsync(pallet.Id);
@@ -139,5 +139,47 @@ public class PalletRepositoryTests
         palletSaved?.Width.Should().Be(2);
         palletSaved?.Length.Should().Be(3);
         palletSaved?.Height.Should().Be(4);
+    }
+
+    [Fact(DisplayName = "7. Retrieve Pallets with pagination - Skip")]
+    public async Task RetrieveWithSkipAsync()
+    {
+        // Arrange
+        var pallet1 = Pallet.Create(1, 2, 3);
+        var pallet2 = Pallet.Create(1, 2, 3);
+        var pallet3 = Pallet.Create(1, 2, 3);
+        var pallet4 = Pallet.Create(1, 2, 3);
+
+        await palletRepo.CreateAsync(pallet1);
+        await palletRepo.CreateAsync(pallet2);
+        await palletRepo.CreateAsync(pallet3);
+        await palletRepo.CreateAsync(pallet4);
+
+        // Act
+        var collection = await palletRepo.RetrieveAllAsync(skip: 1);
+
+        // Assert
+        collection.Should().HaveCount(3);
+    }
+
+    [Fact(DisplayName = "8. Retrieve Pallets with pagination - Take")]
+    public async Task RetrieveWithTakeAsync()
+    {
+        // Arrange
+        var pallet1 = Pallet.Create(1, 2, 3);
+        var pallet2 = Pallet.Create(1, 2, 3);
+        var pallet3 = Pallet.Create(1, 2, 3);
+        var pallet4 = Pallet.Create(1, 2, 3);
+
+        await palletRepo.CreateAsync(pallet1);
+        await palletRepo.CreateAsync(pallet2);
+        await palletRepo.CreateAsync(pallet3);
+        await palletRepo.CreateAsync(pallet4);
+
+        // Act
+        var collection = await palletRepo.RetrieveAllAsync(3);
+
+        // Assert
+        collection.Should().HaveCount(3);
     }
 }
