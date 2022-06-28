@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.HttpLogging;
 using PalletStorage.Repositories.Repositories;
 using PalletStorage.WebApi.Models.Converters;
 using DataContext.Models.Converters;
+using FluentValidation;
+using FluentValidation.Results;
+using PalletStorage.WebApi.Validators;
 
 // HttpLoggingFields
 
@@ -14,7 +17,6 @@ using static System.Console;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 await builder.Services.AddStorageDataContextAsync();
 
 //builder.Services.AddControllers();
@@ -46,6 +48,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "PalletStorage Web API", Version = "v1" });
 });
+
+builder.Services.AddValidatorsFromAssemblyContaining<BoxValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<PalletValidator>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfileApi));
 builder.Services.AddAutoMapper(typeof(MappingProfileEf));

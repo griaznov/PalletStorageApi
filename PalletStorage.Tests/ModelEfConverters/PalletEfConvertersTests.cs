@@ -31,7 +31,6 @@ public class PalletEfConvertersTests
         pallet.AddBox(box);
 
         // Act
-        //var palletModel = pallet.ToEfModel();
         var palletModel = mapper.Map<PalletEfModel>(pallet);
 
         // Assert
@@ -64,7 +63,6 @@ public class PalletEfConvertersTests
         };
 
         // Act
-        //var pallet = palletModel.ToCommonModel();
         var pallet = mapper.Map<Pallet>(palletModel);
 
         // Assert

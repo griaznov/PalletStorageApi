@@ -29,6 +29,7 @@
     <ProjectReference Include="..\PalletStorage.Common\PalletStorage.Common.csproj" />
     <ProjectReference Include="..\PalletStorage.Repositories\PalletStorage.Repositories.csproj" />
     <ProjectReference Include="..\PalletStorage.WebApi.Models\PalletStorage.WebApi.Models.csproj" />
+    <ProjectReference Include="..\PalletStorage.WebApi\PalletStorage.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

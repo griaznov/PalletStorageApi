@@ -30,7 +30,6 @@ public class BoxRepository : IBoxRepository
         return await db.Boxes
             .Skip(skip)
             .Take(count)
-            //.Select(box => box.ToCommonModel())
             .Select(box => mapper.Map<Box>(box))
             .ToListAsync();
     }
@@ -39,14 +38,12 @@ public class BoxRepository : IBoxRepository
     {
         var boxEf = await db.Boxes.FindAsync(id);
 
-        //return boxEf?.ToCommonModel();
         return mapper.Map<Box>(boxEf);
     }
 
     public async Task<Box?> CreateAsync(Box box)
     {
         // add to database using EF Core
-        //await db.Boxes.AddAsync(box.ToEfModel());
         await db.Boxes.AddAsync(mapper.Map<BoxEfModel>(box));
 
         var affected = await db.SaveChangesAsync();
@@ -60,13 +57,11 @@ public class BoxRepository : IBoxRepository
 
         if (boxFounded is null)
         {
-            //await db.Boxes.AddAsync(box.ToEfModel());
             await db.Boxes.AddAsync(mapper.Map<BoxEfModel>(box));
         }
         else
         {
             // update in database
-            //db.Entry(boxFounded).CurrentValues.SetValues(box.ToEfModel());
             db.Entry(boxFounded).CurrentValues.SetValues(mapper.Map<BoxEfModel>(box));
         }
 

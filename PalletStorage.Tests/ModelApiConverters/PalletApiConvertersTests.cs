@@ -31,7 +31,6 @@ public class PalletApiConvertersTests
         pallet.AddBox(box);
 
         // Act
-        //var palletModel = pallet.ToApiModel();
         var palletModel = mapper.Map<PalletApiModel>(pallet);
 
         // Assert
@@ -64,7 +63,6 @@ public class PalletApiConvertersTests
         };
 
         // Act
-        //var pallet = palletModel.ToCommonModel();
         var pallet = mapper.Map<Pallet>(palletModel);
 
         // Assert

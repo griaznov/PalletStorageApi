@@ -29,7 +29,6 @@ public class BoxEfConvertersTests
         var box = Box.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
 
         // Act
-        //Action action = () => { var boxModel = box.ToEfModel(); };
         Action action = () => { var boxModel = mapper.Map<BoxEfModel>(box); };
 
         // Assert
@@ -52,7 +51,6 @@ public class BoxEfConvertersTests
         };
 
         // Act
-        //Action action = () => { var box = boxModel.ToCommonModel(); };
         Action action = () => { var box = mapper.Map<Box>(boxModel); };
 
         // Assert

@@ -12,7 +12,6 @@ public class BoxRepositoryTests
 {
     private readonly StorageDataContext db;
     private readonly IBoxRepository boxRepo;
-    private readonly IMapper mapper;
 
     public BoxRepositoryTests()
     {
@@ -24,7 +23,7 @@ public class BoxRepositoryTests
             cfg.AddProfile(typeof(MappingProfileEf));
         });
 
-        mapper = config.CreateMapper();
+        var mapper = config.CreateMapper();
 
         boxRepo = new BoxRepository(db, mapper);
     }
@@ -32,6 +31,7 @@ public class BoxRepositoryTests
     [Fact(DisplayName = "1. Save common model of Box")]
     public async Task AddBoxAsync()
     {
+        // Arrange
         var date = new DateTime(2022, 7, 21, 19, 20, 17);
         const int width = 22;
         const int length = 31;
@@ -39,7 +39,7 @@ public class BoxRepositoryTests
 
         var box = Box.Create(width, length, height, 11, date, date);
 
-        // Arrange
+        // Act
         await boxRepo.CreateAsync(box);
 
         // Assert

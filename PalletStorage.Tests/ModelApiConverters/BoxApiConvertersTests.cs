@@ -28,7 +28,6 @@ public class BoxApiConvertersTests
         var box = Box.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
 
         // Act
-        //Action action = () => { var boxModel = box.ToApiModel(); };
         Action action = () => { var boxModel = mapper.Map<BoxApiModel>(box); };
 
         // Assert
@@ -51,7 +50,6 @@ public class BoxApiConvertersTests
         };
 
         // Act
-        //Action action = () => { var box = boxModel.ToCommonModel(); };
         Action action = () => { var box = mapper.Map<Box>(boxModel); };
 
         // Assert

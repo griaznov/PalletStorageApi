@@ -4,6 +4,8 @@ using PalletStorage.Repositories.Repositories;
 using PalletStorage.WebApi.Models.Converters;
 using PalletStorage.WebApi.Models.Models;
 using AutoMapper;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace PalletStorage.WebApi.Controllers;
 
@@ -13,13 +15,15 @@ namespace PalletStorage.WebApi.Controllers;
 public class BoxesController : ControllerBase
 {
     private readonly IMapper mapper;
+    private readonly IValidator<BoxApiModel> validator;
     private readonly IBoxRepository repo;
 
     // constructor injects repository registered in Startup
-    public BoxesController(IBoxRepository repo, IMapper mapper)
+    public BoxesController(IBoxRepository repo, IMapper mapper, IValidator<BoxApiModel> validator)
     {
         this.repo = repo;
         this.mapper = mapper;
+        this.validator = validator;
     }
 
     // GET: api/boxes
@@ -29,7 +33,6 @@ public class BoxesController : ControllerBase
     {
         var boxes = await repo.RetrieveAllAsync(count, skip);
 
-        //return boxes.Select(box => box.ToApiModel()).AsEnumerable();
         return boxes.Select(box => mapper.Map<BoxApiModel>(box)).AsEnumerable();
     }
 
@@ -46,7 +49,6 @@ public class BoxesController : ControllerBase
             return NotFound(); // 404 Resource not found
         }
 
-        //return Ok(box.ToApiModel()); // 200 OK with customer in body
         return Ok(mapper.Map<BoxApiModel>(box)); // 200 OK with customer in body
     }
 
@@ -55,14 +57,19 @@ public class BoxesController : ControllerBase
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(BoxApiModel))]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Create([FromBody] BoxApiModel box)
+    public async Task<ActionResult<BoxApiModel>> Create([FromBody] BoxApiModel box)
     {
         if (box == null)
         {
             return BadRequest("Wrong model for the box."); // 400 Bad request
         }
 
-        //var addedBox = await repo.CreateAsync(box.ToCommonModel());
+        var result = await validator.ValidateAsync(box);
+        if (!result.IsValid)
+        {
+            return BadRequest(result.Errors.ToList()); // 400 Bad request
+        }
+
         var addedBox = await repo.CreateAsync(mapper.Map<Box>(box));
 
         if (addedBox == null)
@@ -70,10 +77,11 @@ public class BoxesController : ControllerBase
             return BadRequest("Repository failed to create box.");
         }
 
-        return CreatedAtRoute( // 201 Created
-            routeName: nameof(GetBox),
-            routeValues: new { id = addedBox.Id },
-            value: addedBox);
+        //return CreatedAtRoute( // 201 Created
+        //    routeName: nameof(GetBox),
+        //    routeValues: new { id = addedBox.Id },
+        //    value: addedBox);
+        return mapper.Map<BoxApiModel>(addedBox);
     }
 
     // PUT: api/boxes
@@ -89,7 +97,12 @@ public class BoxesController : ControllerBase
             return BadRequest("Wrong model or ID for the box."); // 400 Bad request
         }
 
-        //var existing = await repo.UpdateAsync(box.ToCommonModel());
+        var result = await validator.ValidateAsync(box);
+        if (!result.IsValid)
+        {
+            return BadRequest(result.Errors.ToList()); // 400 Bad request
+        }
+
         var existing = await repo.UpdateAsync(mapper.Map<Box>(box));
 
         if (existing == null)

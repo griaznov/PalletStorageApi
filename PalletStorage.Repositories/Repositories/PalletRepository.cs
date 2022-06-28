@@ -31,7 +31,6 @@ public class PalletRepository : IPalletRepository
             .Skip(skip)
             .Take(count)
             .Include(p => p.Boxes)
-            //.Select(p => p.ToCommonModel())
             .Select(p => mapper.Map<Pallet>(p))
             .ToListAsync();
     }
@@ -40,14 +39,12 @@ public class PalletRepository : IPalletRepository
     {
         var palletEf = await db.Pallets.FindAsync(id);
 
-        //return palletEf?.ToCommonModel();
         return mapper.Map<Pallet>(palletEf);
     }
 
     public async Task<Pallet?> CreateAsync(Pallet pallet)
     {
         // add to database using EF Core
-        //await db.Pallets.AddAsync(pallet.ToEfModel());
         await db.Pallets.AddAsync(mapper.Map<PalletEfModel>(pallet));
 
         var affected = await db.SaveChangesAsync();
@@ -61,13 +58,11 @@ public class PalletRepository : IPalletRepository
 
         if (palletFounded is null)
         {
-            //await db.Pallets.AddAsync(pallet.ToEfModel());
             await db.Pallets.AddAsync(mapper.Map<PalletEfModel>(pallet));
         }
         else
         {
             // update in database
-            //db.Entry(palletFounded).CurrentValues.SetValues(pallet.ToEfModel());
             db.Entry(palletFounded).CurrentValues.SetValues(mapper.Map<PalletEfModel>(pallet));
         }
 
@@ -105,7 +100,6 @@ public class PalletRepository : IPalletRepository
 
         if (boxEf is null)
         {
-            //boxEf = box.ToEfModel();
             boxEf = mapper.Map<BoxEfModel>(box);
             await db.Boxes.AddAsync(boxEf);
         }

@@ -12,7 +12,6 @@ public class PalletRepositoryTests
 {
     private readonly StorageDataContext db;
     private readonly IPalletRepository palletRepo;
-    private readonly IMapper mapper;
 
     public PalletRepositoryTests()
     {
@@ -24,7 +23,7 @@ public class PalletRepositoryTests
             cfg.AddProfile(typeof(MappingProfileEf));
         });
 
-        mapper = config.CreateMapper();
+        var mapper = config.CreateMapper();
 
         palletRepo = new PalletRepository(db, mapper);
     }

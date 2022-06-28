@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using PalletStorage.Common.CommonClasses;
 using PalletStorage.Repositories.Repositories;
-using PalletStorage.WebApi.Models.Converters;
 using PalletStorage.WebApi.Models.Models;
 
 namespace PalletStorage.WebApi.Controllers;
@@ -13,13 +13,15 @@ namespace PalletStorage.WebApi.Controllers;
 public class PalletController : ControllerBase
 {
     private readonly IMapper mapper;
+    private readonly IValidator<PalletApiModel> validator;
     private readonly IPalletRepository repo;
 
     // constructor injects repository registered in Startup
-    public PalletController(IPalletRepository repo, IMapper mapper)
+    public PalletController(IPalletRepository repo, IMapper mapper, IValidator<PalletApiModel> validator)
     {
         this.repo = repo;
         this.mapper = mapper;
+        this.validator = validator;
     }
 
     // GET: api/pallets
@@ -29,7 +31,6 @@ public class PalletController : ControllerBase
     {
         var pallets = await repo.RetrieveAllAsync(count, skip);
 
-        //return pallets.Select(box => box.ToApiModel()).AsEnumerable();
         return pallets.Select(p => mapper.Map<PalletApiModel>(p)).AsEnumerable();
     }
 
@@ -46,7 +47,6 @@ public class PalletController : ControllerBase
             return NotFound(); // 404 Resource not found
         }
 
-        //return Ok(pallet.ToApiModel()); // 200 OK with customer in body
         return Ok(mapper.Map<PalletApiModel>(pallet)); // 200 OK with customer in body
     }
 
@@ -55,14 +55,19 @@ public class PalletController : ControllerBase
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(PalletApiModel))]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Create([FromBody] PalletApiModel pallet)
+    public async Task<ActionResult<PalletApiModel>> Create([FromBody] PalletApiModel pallet)
     {
         if (pallet == null)
         {
             return BadRequest(); // 400 Bad request
         }
 
-        //var addedPallet = await repo.CreateAsync(pallet.ToCommonModel());
+        var result = await validator.ValidateAsync(pallet);
+        if (!result.IsValid)
+        {
+            return BadRequest(result.Errors.ToList()); // 400 Bad request
+        }
+
         var addedPallet = await repo.CreateAsync(mapper.Map<Pallet>(pallet));
 
         if (addedPallet == null)
@@ -70,10 +75,11 @@ public class PalletController : ControllerBase
             return BadRequest("Repository failed to create new pallet.");
         }
 
-        return CreatedAtRoute( // 201 Created
-            routeName: nameof(GetPallet),
-            routeValues: new { id = addedPallet.Id },
-            value: addedPallet);
+        //return CreatedAtRoute( // 201 Created
+        //    routeName: nameof(GetPallet),
+        //    routeValues: new { id = addedPallet.Id },
+        //    value: addedPallet);
+        return mapper.Map<PalletApiModel>(addedPallet);
     }
 
     // PUT: api/pallets
@@ -89,7 +95,12 @@ public class PalletController : ControllerBase
             return BadRequest(); // 400 Bad request
         }
 
-        //var existing = await repo.UpdateAsync(pallet.ToCommonModel());
+        var result = await validator.ValidateAsync(pallet);
+        if (!result.IsValid)
+        {
+            return BadRequest(result.Errors.ToList()); // 400 Bad request
+        }
+
         var existing = await repo.UpdateAsync(mapper.Map<Pallet>(pallet));
 
         if (existing == null)
@@ -138,7 +149,6 @@ public class PalletController : ControllerBase
             return BadRequest(); // 400 Bad request
         }
 
-        //var existing = await repo.AddBoxToPalletAsync(box.ToCommonModel(), palletId);
         var existing = await repo.AddBoxToPalletAsync(mapper.Map<Box>(box), palletId);
 
         if (existing == null)
@@ -162,7 +172,6 @@ public class PalletController : ControllerBase
             return BadRequest(); // 400 Bad request
         }
 
-        //var existing = await repo.DeleteBoxFromPalletAsync(box.ToCommonModel());
         var existing = await repo.DeleteBoxFromPalletAsync(mapper.Map<Box>(box));
 
         if (existing == null)
