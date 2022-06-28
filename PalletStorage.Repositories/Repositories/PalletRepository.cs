@@ -1,4 +1,5 @@
-﻿using DataContext;
+﻿using AutoMapper;
+using DataContext;
 using DataContext.Models.Converters;
 using DataContext.Models.Models;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,12 @@ public class PalletRepository : IPalletRepository
     // use an instance data context field because it should not be
     // cached due to their internal caching
     private readonly StorageDataContext db;
+    private readonly IMapper mapper;
 
-    public PalletRepository(StorageDataContext injectedContext)
+    public PalletRepository(StorageDataContext injectedDb, IMapper injectedMapper)
     {
-        db = injectedContext;
+        db = injectedDb;
+        mapper = injectedMapper;
     }
 
     public async Task<List<Pallet>> RetrieveAllAsync(int count = 0, int skip = 0)
@@ -28,7 +31,8 @@ public class PalletRepository : IPalletRepository
             .Skip(skip)
             .Take(count)
             .Include(p => p.Boxes)
-            .Select(p => p.ToCommonModel())
+            //.Select(p => p.ToCommonModel())
+            .Select(p => mapper.Map<Pallet>(p))
             .ToListAsync();
     }
 
@@ -36,13 +40,15 @@ public class PalletRepository : IPalletRepository
     {
         var palletEf = await db.Pallets.FindAsync(id);
 
-        return palletEf?.ToCommonModel();
+        //return palletEf?.ToCommonModel();
+        return mapper.Map<Pallet>(palletEf);
     }
 
     public async Task<Pallet?> CreateAsync(Pallet pallet)
     {
         // add to database using EF Core
-        await db.Pallets.AddAsync(pallet.ToEfModel());
+        //await db.Pallets.AddAsync(pallet.ToEfModel());
+        await db.Pallets.AddAsync(mapper.Map<PalletEfModel>(pallet));
 
         var affected = await db.SaveChangesAsync();
 
@@ -55,12 +61,14 @@ public class PalletRepository : IPalletRepository
 
         if (palletFounded is null)
         {
-            await db.Pallets.AddAsync(pallet.ToEfModel());
+            //await db.Pallets.AddAsync(pallet.ToEfModel());
+            await db.Pallets.AddAsync(mapper.Map<PalletEfModel>(pallet));
         }
         else
         {
             // update in database
-            db.Entry(palletFounded).CurrentValues.SetValues(pallet.ToEfModel());
+            //db.Entry(palletFounded).CurrentValues.SetValues(pallet.ToEfModel());
+            db.Entry(palletFounded).CurrentValues.SetValues(mapper.Map<PalletEfModel>(pallet));
         }
 
         var affected = await db.SaveChangesAsync();
@@ -97,7 +105,8 @@ public class PalletRepository : IPalletRepository
 
         if (boxEf is null)
         {
-            boxEf = box.ToEfModel();
+            //boxEf = box.ToEfModel();
+            boxEf = mapper.Map<BoxEfModel>(box);
             await db.Boxes.AddAsync(boxEf);
         }
 

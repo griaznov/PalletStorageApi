@@ -3,6 +3,7 @@ using PalletStorage.Common.CommonClasses;
 using PalletStorage.Repositories.Repositories;
 using PalletStorage.WebApi.Models.Converters;
 using PalletStorage.WebApi.Models.Models;
+using AutoMapper;
 
 namespace PalletStorage.WebApi.Controllers;
 
@@ -11,13 +12,14 @@ namespace PalletStorage.WebApi.Controllers;
 [ApiController]
 public class BoxesController : ControllerBase
 {
-    //private readonly delIBoxRepository repo;
+    private readonly IMapper mapper;
     private readonly IBoxRepository repo;
 
     // constructor injects repository registered in Startup
-    public BoxesController(IBoxRepository repo)
+    public BoxesController(IBoxRepository repo, IMapper mapper)
     {
         this.repo = repo;
+        this.mapper = mapper;
     }
 
     // GET: api/boxes
@@ -27,7 +29,8 @@ public class BoxesController : ControllerBase
     {
         var boxes = await repo.RetrieveAllAsync(count, skip);
 
-        return boxes.Select(box => box.ToApiModel()).AsEnumerable();
+        //return boxes.Select(box => box.ToApiModel()).AsEnumerable();
+        return boxes.Select(box => mapper.Map<BoxApiModel>(box)).AsEnumerable();
     }
 
     // GET: api/boxes/[id]
@@ -43,7 +46,8 @@ public class BoxesController : ControllerBase
             return NotFound(); // 404 Resource not found
         }
 
-        return Ok(box.ToApiModel()); // 200 OK with customer in body
+        //return Ok(box.ToApiModel()); // 200 OK with customer in body
+        return Ok(mapper.Map<BoxApiModel>(box)); // 200 OK with customer in body
     }
 
     // POST: api/boxes
@@ -58,7 +62,8 @@ public class BoxesController : ControllerBase
             return BadRequest("Wrong model for the box."); // 400 Bad request
         }
 
-        Box? addedBox = await repo.CreateAsync(box.ToCommonModel());
+        //var addedBox = await repo.CreateAsync(box.ToCommonModel());
+        var addedBox = await repo.CreateAsync(mapper.Map<Box>(box));
 
         if (addedBox == null)
         {
@@ -84,7 +89,8 @@ public class BoxesController : ControllerBase
             return BadRequest("Wrong model or ID for the box."); // 400 Bad request
         }
 
-        var existing = await repo.UpdateAsync(box.ToCommonModel());
+        //var existing = await repo.UpdateAsync(box.ToCommonModel());
+        var existing = await repo.UpdateAsync(mapper.Map<Box>(box));
 
         if (existing == null)
         {

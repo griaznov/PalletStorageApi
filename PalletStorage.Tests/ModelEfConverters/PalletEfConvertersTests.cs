@@ -3,11 +3,24 @@ using DataContext.Models.Models;
 using FluentAssertions;
 using PalletStorage.Common.CommonClasses;
 using Xunit;
+using AutoMapper;
 
 namespace PalletStorage.Tests.ModelEfConverters;
 
-public class PalletApiConvertersTests
+public class PalletEfConvertersTests
 {
+    private readonly IMapper mapper;
+
+    public PalletEfConvertersTests()
+    {
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(typeof(MappingProfileEf));
+        });
+
+        mapper = config.CreateMapper();
+    }
+
     [Fact(DisplayName = "1. Pallet with Boxes convert to PalletEfModel with BoxesEfModel")]
     public void PalletConvertToBoxEfModel()
     {
@@ -18,7 +31,8 @@ public class PalletApiConvertersTests
         pallet.AddBox(box);
 
         // Act
-        var palletModel = pallet.ToEfModel();
+        //var palletModel = pallet.ToEfModel();
+        var palletModel = mapper.Map<PalletEfModel>(pallet);
 
         // Assert
         palletModel.Boxes.Should().HaveCount(1);
@@ -50,7 +64,8 @@ public class PalletApiConvertersTests
         };
 
         // Act
-       var pallet = palletModel.ToCommonModel();
+        //var pallet = palletModel.ToCommonModel();
+        var pallet = mapper.Map<Pallet>(palletModel);
 
         // Assert
         pallet.Boxes.Should().HaveCount(1);

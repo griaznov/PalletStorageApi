@@ -17,7 +17,7 @@ public class Pallet : UniversalBox
     public Pallet(double width,
         double length,
         double height,
-        double weight = 0,
+        double weight = DefaultPalletWeight,
         int id = default,
         List<Box>? boxes = null)
         : base(width, length, height, weight)
@@ -35,7 +35,7 @@ public class Pallet : UniversalBox
 
     public static Pallet Create(double width, double length, double height)
     {
-        return new Pallet(width, length, height, DefaultPalletWeight);
+        return new Pallet(width, length, height);
     }
 
     public override int GetHashCode() => Id;

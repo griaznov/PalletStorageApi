@@ -3,11 +3,24 @@ using PalletStorage.Common.CommonClasses;
 using PalletStorage.WebApi.Models.Converters;
 using PalletStorage.WebApi.Models.Models;
 using Xunit;
+using AutoMapper;
 
 namespace PalletStorage.Tests.ModelApiConverters;
 
 public class PalletApiConvertersTests
 {
+    private readonly IMapper mapper;
+
+    public PalletApiConvertersTests()
+    {
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(typeof(MappingProfileApi));
+        });
+
+        mapper = config.CreateMapper();
+    }
+
     [Fact(DisplayName = "1. Pallet with Boxes convert to PalletApiModel with BoxApiModel")]
     public void PalletConvertToPalletApiModel()
     {
@@ -18,7 +31,8 @@ public class PalletApiConvertersTests
         pallet.AddBox(box);
 
         // Act
-        var palletModel = pallet.ToApiModel();
+        //var palletModel = pallet.ToApiModel();
+        var palletModel = mapper.Map<PalletApiModel>(pallet);
 
         // Assert
         palletModel.Boxes.Should().HaveCount(1);
@@ -50,7 +64,8 @@ public class PalletApiConvertersTests
         };
 
         // Act
-        var pallet = palletModel.ToCommonModel();
+        //var pallet = palletModel.ToCommonModel();
+        var pallet = mapper.Map<Pallet>(palletModel);
 
         // Assert
         pallet.Boxes.Should().HaveCount(1);

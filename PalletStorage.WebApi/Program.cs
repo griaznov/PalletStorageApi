@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Swashbuckle.AspNetCore.SwaggerUI; // SubmitMethod
 using Microsoft.AspNetCore.HttpLogging;
 using PalletStorage.Repositories.Repositories;
-//using PalletStorage.WebApi.Repositories;
+using PalletStorage.WebApi.Models.Converters;
+using DataContext.Models.Converters;
+
 // HttpLoggingFields
 
 using static System.Console;
@@ -44,6 +46,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "PalletStorage Web API", Version = "v1" });
 });
+
+builder.Services.AddAutoMapper(typeof(MappingProfileApi));
+builder.Services.AddAutoMapper(typeof(MappingProfileEf));
 
 builder.Services.AddScoped<IBoxRepository, BoxRepository>();
 builder.Services.AddScoped<IPalletRepository, PalletRepository>();

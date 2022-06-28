@@ -1,13 +1,27 @@
-﻿using DataContext.Models.Converters;
+﻿using AutoMapper;
+using DataContext.Models.Converters;
 using DataContext.Models.Models;
 using FluentAssertions;
 using PalletStorage.Common.CommonClasses;
+using PalletStorage.WebApi.Models.Converters;
 using Xunit;
 
 namespace PalletStorage.Tests.ModelEfConverters;
 
-public class BoxApiConvertersTests
+public class BoxEfConvertersTests
 {
+    private readonly IMapper mapper;
+
+    public BoxEfConvertersTests()
+    {
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(typeof(MappingProfileEf));
+        });
+
+        mapper = config.CreateMapper();
+    }
+
     [Fact(DisplayName = "1. Box convert to BoxEfModel")]
     public void BoxConvertToBoxEfModel()
     {
@@ -15,7 +29,8 @@ public class BoxApiConvertersTests
         var box = Box.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
 
         // Act
-        Action action = () => { var boxModel = box.ToEfModel(); };
+        //Action action = () => { var boxModel = box.ToEfModel(); };
+        Action action = () => { var boxModel = mapper.Map<BoxEfModel>(box); };
 
         // Assert
         action.Should().NotThrow<Exception>();
@@ -37,7 +52,8 @@ public class BoxApiConvertersTests
         };
 
         // Act
-        Action action = () => { var box = boxModel.ToCommonModel(); };
+        //Action action = () => { var box = boxModel.ToCommonModel(); };
+        Action action = () => { var box = mapper.Map<Box>(boxModel); };
 
         // Assert
         action.Should().NotThrow<Exception>();

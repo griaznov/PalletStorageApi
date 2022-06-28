@@ -1,4 +1,6 @@
-﻿using DataContext;
+﻿using AutoMapper;
+using DataContext;
+using DataContext.Models.Converters;
 using FluentAssertions;
 using PalletStorage.Common.CommonClasses;
 using PalletStorage.Repositories.Repositories;
@@ -10,13 +12,21 @@ public class PalletRepositoryTests
 {
     private readonly StorageDataContext db;
     private readonly IPalletRepository palletRepo;
+    private readonly IMapper mapper;
 
     public PalletRepositoryTests()
     {
         var fileName = FilesOperations.GenerateFileName("db");
-
         db = DataContextCreator.CreateDataContextAsync(fileName).Result;
-        palletRepo = new PalletRepository(db);
+
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(typeof(MappingProfileEf));
+        });
+
+        mapper = config.CreateMapper();
+
+        palletRepo = new PalletRepository(db, mapper);
     }
 
     [Fact(DisplayName = "1. Save common model of Pallet")]

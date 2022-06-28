@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using PalletStorage.Common.CommonClasses;
 using PalletStorage.Repositories.Repositories;
 using PalletStorage.WebApi.Models.Converters;
@@ -11,12 +12,14 @@ namespace PalletStorage.WebApi.Controllers;
 [ApiController]
 public class PalletController : ControllerBase
 {
+    private readonly IMapper mapper;
     private readonly IPalletRepository repo;
 
     // constructor injects repository registered in Startup
-    public PalletController(IPalletRepository repo)
+    public PalletController(IPalletRepository repo, IMapper mapper)
     {
         this.repo = repo;
+        this.mapper = mapper;
     }
 
     // GET: api/pallets
@@ -26,7 +29,8 @@ public class PalletController : ControllerBase
     {
         var pallets = await repo.RetrieveAllAsync(count, skip);
 
-        return pallets.Select(box => box.ToApiModel()).AsEnumerable();
+        //return pallets.Select(box => box.ToApiModel()).AsEnumerable();
+        return pallets.Select(p => mapper.Map<PalletApiModel>(p)).AsEnumerable();
     }
 
     // GET: api/pallets/[id]
@@ -42,7 +46,8 @@ public class PalletController : ControllerBase
             return NotFound(); // 404 Resource not found
         }
 
-        return Ok(pallet.ToApiModel()); // 200 OK with customer in body
+        //return Ok(pallet.ToApiModel()); // 200 OK with customer in body
+        return Ok(mapper.Map<PalletApiModel>(pallet)); // 200 OK with customer in body
     }
 
     // POST: api/pallets
@@ -57,7 +62,8 @@ public class PalletController : ControllerBase
             return BadRequest(); // 400 Bad request
         }
 
-        Pallet? addedPallet = await repo.CreateAsync(pallet.ToCommonModel());
+        //var addedPallet = await repo.CreateAsync(pallet.ToCommonModel());
+        var addedPallet = await repo.CreateAsync(mapper.Map<Pallet>(pallet));
 
         if (addedPallet == null)
         {
@@ -83,7 +89,8 @@ public class PalletController : ControllerBase
             return BadRequest(); // 400 Bad request
         }
 
-        var existing = await repo.UpdateAsync(pallet.ToCommonModel());
+        //var existing = await repo.UpdateAsync(pallet.ToCommonModel());
+        var existing = await repo.UpdateAsync(mapper.Map<Pallet>(pallet));
 
         if (existing == null)
         {
@@ -131,7 +138,8 @@ public class PalletController : ControllerBase
             return BadRequest(); // 400 Bad request
         }
 
-        var existing = await repo.AddBoxToPalletAsync(box.ToCommonModel(), palletId);
+        //var existing = await repo.AddBoxToPalletAsync(box.ToCommonModel(), palletId);
+        var existing = await repo.AddBoxToPalletAsync(mapper.Map<Box>(box), palletId);
 
         if (existing == null)
         {
@@ -154,7 +162,8 @@ public class PalletController : ControllerBase
             return BadRequest(); // 400 Bad request
         }
 
-        var existing = await repo.DeleteBoxFromPalletAsync(box.ToCommonModel());
+        //var existing = await repo.DeleteBoxFromPalletAsync(box.ToCommonModel());
+        var existing = await repo.DeleteBoxFromPalletAsync(mapper.Map<Box>(box));
 
         if (existing == null)
         {
