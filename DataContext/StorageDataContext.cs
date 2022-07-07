@@ -1,73 +1,113 @@
 ﻿using DataContext.Models.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataContext
+namespace DataContext;
+
+public class StorageDataContext : DbContext
 {
-    public partial class StorageDataContext : DbContext
+    private readonly string dataFileName;
+
+    public StorageDataContext(string dataFileName = "../PalletStorage.db")
     {
-        private readonly string dataFileName;
+        this.dataFileName = dataFileName;
+        CheckTablesCreated();
+    }
 
-        public StorageDataContext(string dataFileName = "../PalletStorage.db")
+    public StorageDataContext(DbContextOptions<StorageDataContext> options, string dataFileName = "../PalletStorage.db") : base(options)
+    {
+        this.dataFileName = dataFileName;
+        CheckTablesCreated();
+    }
+
+    private void CheckTablesCreated()
+    {
+        if ((Boxes is null) || (Pallets is null))
         {
-            this.dataFileName = dataFileName;
-            CheckTablesCreated();
+            throw new DbUpdateException("False with reading main tables from database!");
         }
+    }
 
-        public StorageDataContext(DbContextOptions<StorageDataContext> options, string dataFileName = "../PalletStorage.db") : base(options)
+    public virtual DbSet<BoxEfModel> Boxes => Set<BoxEfModel>();
+    public virtual DbSet<PalletEfModel> Pallets => Set<PalletEfModel>();
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
         {
-            this.dataFileName = dataFileName;
-            CheckTablesCreated();
+            optionsBuilder.UseSqlite($"Filename={dataFileName}");
         }
+    }
 
-        private void CheckTablesCreated()
-        {
-            if ((Boxes is null) || (Pallets is null))
-            {
-                throw new DbUpdateException("False with reading main tables from database!");
-            }
-        }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Box
+        modelBuilder.Entity<BoxEfModel>()
+            .HasKey(box => box.Id);
 
-        public virtual DbSet<BoxEfModel> Boxes { get; set; } = null!;
+        modelBuilder.Entity<BoxEfModel>()
+            .Property(box => box.Length)
+            .HasColumnType("DOUBLE")
+            .IsRequired();
 
-        public virtual DbSet<PalletEfModel> Pallets { get; set; } = null!;
+        modelBuilder.Entity<BoxEfModel>()
+            .Property(box => box.Width)
+            .HasColumnType("DOUBLE")
+            .IsRequired();
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlite($"Filename={dataFileName}");
-            }
-        }
+        modelBuilder.Entity<BoxEfModel>()
+            .Property(box => box.Height)
+            .HasColumnType("DOUBLE")
+            .IsRequired();
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<BoxEfModel>(entity =>
-            {
-                entity.Property(e => e.Height).HasDefaultValueSql("0");
-                entity.Property(e => e.Length).HasDefaultValueSql("0");
-                entity.Property(e => e.Weight).HasDefaultValueSql("0");
-                entity.Property(e => e.Width).HasDefaultValueSql("0");
-            });
+        modelBuilder.Entity<BoxEfModel>()
+            .Property(box => box.Weight)
+            .HasColumnType("DOUBLE")
+            .IsRequired();
 
-            modelBuilder.Entity<BoxEfModel>()
-                .HasOne(p => p.Pallet)
-                .WithMany(t => t.Boxes)
-                .HasForeignKey(p => p.PalletId);
+        modelBuilder.Entity<BoxEfModel>()
+            .Property(box => box.ProductionDate)
+            .HasColumnType("DATETIME")
+            .IsRequired();
 
-            modelBuilder.Entity<PalletEfModel>(entity =>
-            {
-                entity.Property(e => e.Height).HasDefaultValueSql("0");
-                entity.Property(e => e.Length).HasDefaultValueSql("0");
-                entity.Property(e => e.PalletWeight).HasDefaultValueSql("0");
-                entity.Property(e => e.Width).HasDefaultValueSql("0");
-            });
+        modelBuilder.Entity<BoxEfModel>()
+            .Property(box => box.ExpirationDate)
+            .HasColumnType("DATETIME")
+            .IsRequired();
 
-            modelBuilder.Entity<PalletEfModel>()
-                .HasMany(p => p.Boxes);
+        modelBuilder.Entity<BoxEfModel>()
+            .Property(box => box.PalletId)
+            .HasColumnType("INTEGER");
 
-            OnModelCreatingPartial(modelBuilder);
-        }
+        modelBuilder.Entity<BoxEfModel>()
+            .HasOne(b => b.Pallet)
+            .WithMany(p => p.Boxes)
+            .HasForeignKey(b => b.PalletId);
 
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+        // Pallet
+        modelBuilder.Entity<PalletEfModel>()
+            .HasKey(p => p.Id);
+
+        modelBuilder.Entity<PalletEfModel>()
+            .Property(p => p.Length)
+            .HasColumnType("DOUBLE")
+            .IsRequired();
+
+        modelBuilder.Entity<PalletEfModel>()
+            .Property(p => p.Width)
+            .HasColumnType("DOUBLE")
+            .IsRequired();
+
+        modelBuilder.Entity<PalletEfModel>()
+            .Property(p => p.Height)
+            .HasColumnType("DOUBLE")
+            .IsRequired();
+
+        modelBuilder.Entity<PalletEfModel>()
+            .Property(p => p.PalletWeight)
+            .HasColumnType("DOUBLE")
+            .IsRequired();
+
+        modelBuilder.Entity<PalletEfModel>()
+            .HasMany(p => p.Boxes);
     }
 }

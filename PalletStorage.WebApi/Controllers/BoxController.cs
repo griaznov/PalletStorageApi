@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PalletStorage.Common.CommonClasses;
 using PalletStorage.Repositories.Repositories;
-using PalletStorage.WebApi.Models.Converters;
 using PalletStorage.WebApi.Models.Models;
 using AutoMapper;
 using FluentValidation;
-using FluentValidation.Results;
 
 namespace PalletStorage.WebApi.Controllers;
 
@@ -31,7 +29,7 @@ public class BoxesController : ControllerBase
     [ProducesResponseType(200, Type = typeof(IEnumerable<BoxApiModel>))]
     public async Task<IEnumerable<BoxApiModel>> GetBoxes(int count = 0, int skip = 0)
     {
-        var boxes = await repo.RetrieveAllAsync(count, skip);
+        var boxes = await repo.GetAllAsync(count, skip);
 
         return boxes.Select(box => mapper.Map<BoxApiModel>(box)).AsEnumerable();
     }
@@ -42,7 +40,7 @@ public class BoxesController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetBox(int id)
     {
-        Box? box = await repo.RetrieveAsync(id);
+        Box? box = await repo.GetAsync(id);
 
         if (box == null)
         {
@@ -59,11 +57,6 @@ public class BoxesController : ControllerBase
     [ProducesResponseType(400)]
     public async Task<ActionResult<BoxApiModel>> Create([FromBody] BoxApiModel box)
     {
-        if (box == null)
-        {
-            return BadRequest("Wrong model for the box."); // 400 Bad request
-        }
-
         var result = await validator.ValidateAsync(box);
         if (!result.IsValid)
         {
@@ -77,10 +70,6 @@ public class BoxesController : ControllerBase
             return BadRequest("Repository failed to create box.");
         }
 
-        //return CreatedAtRoute( // 201 Created
-        //    routeName: nameof(GetBox),
-        //    routeValues: new { id = addedBox.Id },
-        //    value: addedBox);
         return mapper.Map<BoxApiModel>(addedBox);
     }
 
@@ -92,7 +81,7 @@ public class BoxesController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> Update([FromBody] BoxApiModel box)
     {
-        if (box?.Id == null)
+        if (box.Id == null)
         {
             return BadRequest("Wrong model or ID for the box."); // 400 Bad request
         }
@@ -117,24 +106,18 @@ public class BoxesController : ControllerBase
     [HttpDelete("{id:int}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
-    [ProducesResponseType(404)]
     public async Task<IActionResult> Delete(int id)
     {
         var deleted = await repo.DeleteAsync(id);
 
-        if (deleted == null)
-        {
-            return NotFound(); // 404 Resource not found
-        }
-
-        if (deleted.Value)
+        if (deleted)
         {
             return new NoContentResult(); // 204 No content
         }
         else
         {
             return BadRequest( // 400 Bad request
-                $"Box {id} was found but failed to delete.");
+                $"Box {id} was not found or failed to delete.");
         }
     }
 

@@ -1,13 +1,11 @@
 using DataContext;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Swashbuckle.AspNetCore.SwaggerUI; // SubmitMethod
 using Microsoft.AspNetCore.HttpLogging;
 using PalletStorage.Repositories.Repositories;
 using PalletStorage.WebApi.Models.Converters;
 using DataContext.Models.Converters;
 using FluentValidation;
-using FluentValidation.Results;
 using PalletStorage.WebApi.Validators;
 
 // HttpLoggingFields
@@ -19,7 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 await builder.Services.AddStorageDataContextAsync();
 
-//builder.Services.AddControllers();
 builder.Services.AddControllers(options =>
     {
         WriteLine("Default output formatters:");

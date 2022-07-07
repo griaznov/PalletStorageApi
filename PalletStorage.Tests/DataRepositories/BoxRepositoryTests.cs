@@ -63,7 +63,7 @@ public class BoxRepositoryTests
         await boxRepo.DeleteAsync(box.Id);
 
         // Assert
-        var boxSaved = await boxRepo.RetrieveAsync(box.Id);
+        var boxSaved = await boxRepo.GetAsync(box.Id);
         boxSaved?.Should().BeNull();
     }
 
@@ -79,7 +79,7 @@ public class BoxRepositoryTests
         await boxRepo.UpdateAsync(box);
 
         // Assert
-        var boxSaved = await boxRepo.RetrieveAsync(box.Id);
+        var boxSaved = await boxRepo.GetAsync(box.Id);
 
         boxSaved.Should().NotBeNull();
 
@@ -104,7 +104,7 @@ public class BoxRepositoryTests
         await boxRepo.CreateAsync(box4);
 
         // Act
-        var collection = await boxRepo.RetrieveAllAsync(skip: 1);
+        var collection = await boxRepo.GetAllAsync(20, 1);
 
         // Assert
         collection.Should().HaveCount(3);
@@ -125,7 +125,7 @@ public class BoxRepositoryTests
         await boxRepo.CreateAsync(box4);
 
         // Act
-        var collection = await boxRepo.RetrieveAllAsync(2);
+        var collection = await boxRepo.GetAllAsync(2);
 
         // Assert
         collection.Should().HaveCount(2);

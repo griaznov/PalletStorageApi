@@ -29,7 +29,7 @@ public class PalletController : ControllerBase
     [ProducesResponseType(200, Type = typeof(IEnumerable<PalletApiModel>))]
     public async Task<IEnumerable<PalletApiModel>> GetPallets(int count = 0, int skip = 0)
     {
-        var pallets = await repo.RetrieveAllAsync(count, skip);
+        var pallets = await repo.GetAllAsync(count, skip);
 
         return pallets.Select(p => mapper.Map<PalletApiModel>(p)).AsEnumerable();
     }
@@ -40,7 +40,7 @@ public class PalletController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetPallet(int id)
     {
-        Pallet? pallet = await repo.RetrieveAsync(id);
+        Pallet? pallet = await repo.GetAsync(id);
 
         if (pallet == null)
         {
@@ -57,11 +57,6 @@ public class PalletController : ControllerBase
     [ProducesResponseType(400)]
     public async Task<ActionResult<PalletApiModel>> Create([FromBody] PalletApiModel pallet)
     {
-        if (pallet == null)
-        {
-            return BadRequest(); // 400 Bad request
-        }
-
         var result = await validator.ValidateAsync(pallet);
         if (!result.IsValid)
         {
@@ -75,10 +70,6 @@ public class PalletController : ControllerBase
             return BadRequest("Repository failed to create new pallet.");
         }
 
-        //return CreatedAtRoute( // 201 Created
-        //    routeName: nameof(GetPallet),
-        //    routeValues: new { id = addedPallet.Id },
-        //    value: addedPallet);
         return mapper.Map<PalletApiModel>(addedPallet);
     }
 
@@ -90,7 +81,7 @@ public class PalletController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> Update([FromBody] PalletApiModel pallet)
     {
-        if (pallet?.Id == null)
+        if (pallet.Id == null)
         {
             return BadRequest(); // 400 Bad request
         }
@@ -115,24 +106,18 @@ public class PalletController : ControllerBase
     [HttpDelete("{id:int}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
-    [ProducesResponseType(404)]
     public async Task<IActionResult> Delete(int id)
     {
         var deleted = await repo.DeleteAsync(id);
 
-        if (deleted == null)
-        {
-            return NotFound(); // 404 Resource not found
-        }
-
-        if (deleted.Value) // short circuit AND
+        if (deleted) // short circuit AND
         {
             return new NoContentResult(); // 204 No content
         }
         else
         {
             return BadRequest( // 400 Bad request
-                $"Pallet {id} was found but failed to delete.");
+                $"Pallet {id} was not found or failed to delete.");
         }
     }
 
@@ -144,7 +129,7 @@ public class PalletController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> AddBoxToPallet([FromBody] BoxApiModel box, int palletId)
     {
-        if (box?.Id == null)
+        if (box.Id == null)
         {
             return BadRequest(); // 400 Bad request
         }
@@ -167,7 +152,7 @@ public class PalletController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> DeleteBoxFromPallet([FromBody] BoxApiModel box)
     {
-        if (box?.Id == null)
+        if (box.Id == null)
         {
             return BadRequest(); // 400 Bad request
         }

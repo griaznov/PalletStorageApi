@@ -1,6 +1,4 @@
-﻿using System.Text;
-using static System.Console;
-
+﻿
 namespace PalletStorage.Common.CommonClasses;
 
 public class Pallet : UniversalBox

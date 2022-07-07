@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DataContext;
-using DataContext.Models.Converters;
 using DataContext.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.Common.CommonClasses;
@@ -14,27 +13,22 @@ public class BoxRepository : IBoxRepository
     private readonly StorageDataContext db;
     private readonly IMapper mapper;
 
-    public BoxRepository(StorageDataContext injectedDb, IMapper injectedMapper)
+    public BoxRepository(StorageDataContext dbContext, IMapper mapper)
     {
-        db = injectedDb;
-        mapper = injectedMapper;
+        db = dbContext;
+        this.mapper = mapper;
     }
 
-    public async Task<List<Box>> RetrieveAllAsync(int count = 0, int skip = 0)
+    public async Task<List<Box>> GetAllAsync(int take = 1000, int skip = 0)
     {
-        if (count == 0)
-        {
-            count = 10000;
-        }
-
         return await db.Boxes
             .Skip(skip)
-            .Take(count)
+            .Take(take)
             .Select(box => mapper.Map<Box>(box))
             .ToListAsync();
     }
 
-    public async Task<Box?> RetrieveAsync(int id)
+    public async Task<Box?> GetAsync(int id)
     {
         var boxEf = await db.Boxes.FindAsync(id);
 
@@ -61,8 +55,8 @@ public class BoxRepository : IBoxRepository
         }
         else
         {
-            // update in database
-            db.Entry(boxFounded).CurrentValues.SetValues(mapper.Map<BoxEfModel>(box));
+            // update in database new values for entry
+            mapper.Map(box, boxFounded);
         }
 
         var affected = await db.SaveChangesAsync();
@@ -70,19 +64,19 @@ public class BoxRepository : IBoxRepository
         return affected == 1 ? box : null;
     }
 
-    public async Task<bool?> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
         // remove from database
         BoxEfModel? boxFounded = await db.Boxes.FindAsync(id);
 
         if (boxFounded is null)
         {
-            return null;
+            return false;
         }
 
         db.Boxes.Remove(boxFounded);
         var affected = await db.SaveChangesAsync();
 
-        return affected == 1 ? true : null;
+        return affected == 1;
     }
 }

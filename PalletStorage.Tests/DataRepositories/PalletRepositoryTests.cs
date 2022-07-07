@@ -87,7 +87,7 @@ public class PalletRepositoryTests
         await palletRepo.AddBoxToPalletAsync(box, pallet.Id);
 
         // Assert
-        var palletSaved = await palletRepo.RetrieveAsync(pallet.Id);
+        var palletSaved = await palletRepo.GetAsync(pallet.Id);
 
         palletSaved.Should().NotBeNull();
         palletSaved?.Boxes.Should().HaveCount(1);
@@ -107,7 +107,7 @@ public class PalletRepositoryTests
         await palletRepo.DeleteBoxFromPalletAsync(box);
 
         // Assert
-        var palletSaved = await palletRepo.RetrieveAsync(pallet.Id);
+        var palletSaved = await palletRepo.GetAsync(pallet.Id);
 
         palletSaved.Should().NotBeNull();
         palletSaved?.Boxes.Should().HaveCount(0);
@@ -125,7 +125,7 @@ public class PalletRepositoryTests
         await palletRepo.DeleteAsync(pallet.Id);
 
         // Assert
-        var palletSaved = await palletRepo.RetrieveAsync(pallet.Id);
+        var palletSaved = await palletRepo.GetAsync(pallet.Id);
         palletSaved?.Should().BeNull();
     }
 
@@ -141,7 +141,7 @@ public class PalletRepositoryTests
         await palletRepo.UpdateAsync(pallet);
 
         // Assert
-        var palletSaved = await palletRepo.RetrieveAsync(pallet.Id);
+        var palletSaved = await palletRepo.GetAsync(pallet.Id);
 
         palletSaved.Should().NotBeNull();
 
@@ -165,7 +165,7 @@ public class PalletRepositoryTests
         await palletRepo.CreateAsync(pallet4);
 
         // Act
-        var collection = await palletRepo.RetrieveAllAsync(skip: 1);
+        var collection = await palletRepo.GetAllAsync(skip: 1);
 
         // Assert
         collection.Should().HaveCount(3);
@@ -186,7 +186,7 @@ public class PalletRepositoryTests
         await palletRepo.CreateAsync(pallet4);
 
         // Act
-        var collection = await palletRepo.RetrieveAllAsync(3);
+        var collection = await palletRepo.GetAllAsync(3);
 
         // Assert
         collection.Should().HaveCount(3);
