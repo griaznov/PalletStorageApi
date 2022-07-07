@@ -11,14 +11,15 @@ using Xunit;
 
 namespace PalletStorage.Tests.ModelApiControllers;
 
-public class PalletControllerTests
+public class PalletControllerTests : IDisposable
 {
+    private readonly StorageDataContext db;
     private readonly PalletController controller;
 
     public PalletControllerTests()
     {
         var fileName = FilesOperations.GenerateFileName("db");
-        var db = DataContextCreator.CreateDataContextAsync(fileName).Result;
+        db = DataContextCreator.CreateDataContextAsync(fileName).Result;
 
         var config = new MapperConfiguration(cfg =>
         {
@@ -48,6 +49,11 @@ public class PalletControllerTests
         var response = await controller.Create(palletModel);
 
         // Assert
-        response?.Value.Should().NotBeNull().And.BeAssignableTo<PalletApiModel>();
+        response.Value.Should().NotBeNull().And.BeAssignableTo<PalletApiModel>();
+    }
+
+    public void Dispose()
+    {
+        db.Database.EnsureDeleted();
     }
 }

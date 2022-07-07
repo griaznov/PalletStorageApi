@@ -8,7 +8,7 @@ using Xunit;
 
 namespace PalletStorage.Tests.DataRepositories;
 
-public class BoxRepositoryTests
+public class BoxRepositoryTests : IDisposable
 {
     private readonly StorageDataContext db;
     private readonly IBoxRepository boxRepo;
@@ -45,9 +45,9 @@ public class BoxRepositoryTests
         // Assert
         var boxEfModel = db.Boxes.FirstOrDefault(boxes => boxes.ExpirationDate == date
                                                           && boxes.ProductionDate == date
-                                                          && boxes.Width == width
-                                                          && boxes.Length == length
-                                                          && boxes.Height == height);
+                                                          && Math.Abs(boxes.Width - width) == 0 
+                                                          && Math.Abs(boxes.Length - length) == 0
+                                                          && Math.Abs(boxes.Height - height) == 0);
         boxEfModel.Should().NotBeNull();
     }
 
@@ -129,5 +129,10 @@ public class BoxRepositoryTests
 
         // Assert
         collection.Should().HaveCount(2);
+    }
+
+    public void Dispose()
+    {
+        db.Database.EnsureDeleted();
     }
 }

@@ -6,31 +6,28 @@ using Xunit;
 
 namespace PalletStorage.Tests.DataContext;
 
-public class DataContextTests
+public class DataContextTests : IDisposable
 {
-    [Fact(DisplayName = "1. The database can be created by models")]
-    public async Task CreateDatabase()
+    private readonly StorageDataContext db;
+    private readonly string fileName;
+
+    public DataContextTests()
     {
-        // Arrange
-        var fileName = FilesOperations.GenerateFileName("db");
+        fileName = FilesOperations.GenerateFileName("db");
+        db = DataContextCreator.CreateDataContextAsync(fileName).Result;
+    }
 
-        // Act
-        await using StorageDataContext dbTest = await DataContextCreator.CreateDataContextAsync(fileName);
-
+    [Fact(DisplayName = "1. The database can be created by models")]
+    public void CreateDatabase()
+    {
         // Assert
         File.Exists(fileName).Should().BeTrue("Because database must be created by models");
-
-        //FilesOperations.DeleteFile(fileName);
     }
 
     [Fact(DisplayName = "2. Add a box model to the database")]
     public async void AddBox()
     {
         // Arrange
-        var fileName = FilesOperations.GenerateFileName("db");
-
-        await using StorageDataContext db = await DataContextCreator.CreateDataContextAsync(fileName);
-
         var box = new BoxEfModel()
         {
             Width = 1,
@@ -48,18 +45,12 @@ public class DataContextTests
         // Assert
         db.Boxes.Should().HaveCount(1);
         db.Boxes.Should().Contain(box);
-
-        //DeleteFile(fileName);
     }
 
     [Fact(DisplayName = "3. Add a pallet model to the database")]
     public async void AddPallet()
     {
         // Arrange
-        var fileName = FilesOperations.GenerateFileName("db");
-
-        await using StorageDataContext db = await DataContextCreator.CreateDataContextAsync(fileName);
-
         var pallet = new PalletEfModel()
         {
             Width = 1,
@@ -74,18 +65,12 @@ public class DataContextTests
         // Assert
         db.Pallets.Should().HaveCount(1);
         db.Pallets.Should().Contain(pallet);
-
-        //DeleteFile(fileName);
     }
 
     [Fact(DisplayName = "4. Add a pallet model containing box models to the database")]
     public async void AddPalletWithBoxes()
     {
         // Arrange
-        var fileName = FilesOperations.GenerateFileName("db");
-
-        await using StorageDataContext db = await DataContextCreator.CreateDataContextAsync(fileName);
-
         // Pallet - owner
         var pallet = new PalletEfModel()
         {
@@ -120,7 +105,10 @@ public class DataContextTests
             .First(p => p.Id == pallet.Id)
             .Boxes.Contains(box)
             .Should().BeTrue();
+    }
 
-        //DeleteFile(fileName);
+    public void Dispose()
+    {
+        db.Database.EnsureDeleted();
     }
 }

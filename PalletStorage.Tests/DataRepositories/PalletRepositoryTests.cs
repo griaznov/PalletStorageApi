@@ -8,7 +8,7 @@ using Xunit;
 
 namespace PalletStorage.Tests.DataRepositories;
  
-public class PalletRepositoryTests
+public class PalletRepositoryTests : IDisposable
 {
     private readonly StorageDataContext db;
     private readonly IPalletRepository palletRepo;
@@ -190,5 +190,10 @@ public class PalletRepositoryTests
 
         // Assert
         collection.Should().HaveCount(3);
+    }
+
+    public void Dispose()
+    {
+        db.Database.EnsureDeleted();
     }
 }
