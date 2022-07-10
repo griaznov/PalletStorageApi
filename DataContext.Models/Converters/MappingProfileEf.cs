@@ -8,7 +8,9 @@ namespace DataContext.Models.Converters
     {
         public MappingProfileEf()
         {
-            CreateMap<Box, BoxEfModel>();
+            CreateMap<Box, BoxEfModel>()
+                .ForMember(b => b.PalletId, opt => opt.Ignore())
+                .ForMember(b => b.Pallet, opt => opt.Ignore());
             CreateMap<BoxEfModel, Box>();
 
             CreateMap<Pallet, PalletEfModel>();
