@@ -1,15 +1,12 @@
-using DataContext;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.HttpLogging;
+using FluentValidation;
 using PalletStorage.Repositories.Repositories;
 using PalletStorage.WebApi.Models.Converters;
+using DataContext;
 using DataContext.Models.Converters;
-using FluentValidation;
 using PalletStorage.WebApi.Validators;
-
-// HttpLoggingFields
-
 using static System.Console;
 
 var builder = WebApplication.CreateBuilder(args);
