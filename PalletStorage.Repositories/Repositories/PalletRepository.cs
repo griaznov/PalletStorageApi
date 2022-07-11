@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DataContext;
 using DataContext.Models.Models;
 using Microsoft.EntityFrameworkCore;
@@ -19,13 +20,14 @@ public class PalletRepository : IPalletRepository
         this.mapper = mapper;
     }
 
-    public async Task<List<Pallet>> GetAllAsync(int take = 1000, int skip = 0)
+    public async Task<List<Pallet>> GetAllAsync(int take, int skip = 0)
     {
         return await db.Pallets
             .Skip(skip)
             .Take(take)
             .Include(p => p.Boxes)
             .Select(p => mapper.Map<Pallet>(p))
+            //.ProjectTo<Pallet>(mapper.ConfigurationProvider)
             .ToListAsync();
     }
 

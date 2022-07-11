@@ -5,7 +5,7 @@ namespace PalletStorage.Repositories.Repositories;
 public interface IPalletRepository
 {
     Task<Pallet?> CreateAsync(Pallet pallet);
-    Task<List<Pallet>> GetAllAsync(int take = 1000, int skip = 0);
+    Task<List<Pallet>> GetAllAsync(int take, int skip = 0);
     Task<Pallet?> GetAsync(int id);
     Task<Pallet?> UpdateAsync(Pallet pallet);
     Task<bool> DeleteAsync(int id);

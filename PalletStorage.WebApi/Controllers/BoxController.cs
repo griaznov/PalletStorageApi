@@ -27,9 +27,9 @@ public class BoxesController : ControllerBase
     // GET: api/boxes
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(IEnumerable<BoxApiModel>))]
-    public async Task<IEnumerable<BoxApiModel>> GetBoxes(int count = 0, int skip = 0)
+    public async Task<IEnumerable<BoxApiModel>> GetBoxes(int take = 100, int skip = 0)
     {
-        var boxes = await repo.GetAllAsync(count, skip);
+        var boxes = await repo.GetAllAsync(take, skip);
 
         return boxes.Select(box => mapper.Map<BoxApiModel>(box)).AsEnumerable();
     }

@@ -165,7 +165,7 @@ public class PalletRepositoryTests : IDisposable
         await palletRepo.CreateAsync(pallet4);
 
         // Act
-        var collection = await palletRepo.GetAllAsync(skip: 1);
+        var collection = await palletRepo.GetAllAsync(100, 1);
 
         // Assert
         collection.Should().HaveCount(3);

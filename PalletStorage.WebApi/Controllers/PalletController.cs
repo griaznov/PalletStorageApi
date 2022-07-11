@@ -27,9 +27,9 @@ public class PalletController : ControllerBase
     // GET: api/pallets
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(IEnumerable<PalletApiModel>))]
-    public async Task<IEnumerable<PalletApiModel>> GetPallets(int count = 0, int skip = 0)
+    public async Task<IEnumerable<PalletApiModel>> GetPallets(int take = 100, int skip = 0)
     {
-        var pallets = await repo.GetAllAsync(count, skip);
+        var pallets = await repo.GetAllAsync(take, skip);
 
         return pallets.Select(p => mapper.Map<PalletApiModel>(p)).AsEnumerable();
     }

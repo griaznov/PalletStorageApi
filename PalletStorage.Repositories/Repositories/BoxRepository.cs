@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DataContext;
 using DataContext.Models.Models;
 using Microsoft.EntityFrameworkCore;
@@ -19,12 +20,13 @@ public class BoxRepository : IBoxRepository
         this.mapper = mapper;
     }
 
-    public async Task<List<Box>> GetAllAsync(int take = 1000, int skip = 0)
+    public async Task<List<Box>> GetAllAsync(int take, int skip = 0)
     {
         return await db.Boxes
             .Skip(skip)
             .Take(take)
-            .Select(box => mapper.Map<Box>(box))
+            //.Select(box => mapper.Map<Box>(box))
+            .ProjectTo<Box>(mapper.ConfigurationProvider)
             .ToListAsync();
     }
 

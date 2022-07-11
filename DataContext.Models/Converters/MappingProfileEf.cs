@@ -14,7 +14,8 @@ namespace DataContext.Models.Converters
             CreateMap<BoxEfModel, Box>();
 
             CreateMap<Pallet, PalletEfModel>();
-            CreateMap<PalletEfModel, Pallet>();
+            CreateMap<PalletEfModel, Pallet>()
+                .ForMember(b => b.Weight, opt => opt.Ignore());
         }
     }
 }
