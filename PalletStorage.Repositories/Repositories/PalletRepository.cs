@@ -3,7 +3,7 @@ using AutoMapper.QueryableExtensions;
 using DataContext;
 using DataContext.Models.Models;
 using Microsoft.EntityFrameworkCore;
-using PalletStorage.Common.CommonClasses;
+using PalletStorage.Common.Models;
 
 namespace PalletStorage.Repositories.Repositories;
 
@@ -11,12 +11,12 @@ public class PalletRepository : IPalletRepository
 {
     // use an instance data context field because it should not be
     // cached due to their internal caching
-    private readonly StorageDataContext db;
+    private readonly IStorageContext db;
     private readonly IMapper mapper;
 
-    public PalletRepository(StorageDataContext dbContext, IMapper mapper)
+    public PalletRepository(IStorageContext storageContext, IMapper mapper)
     {
-        db = dbContext;
+        db = storageContext;
         this.mapper = mapper;
     }
 

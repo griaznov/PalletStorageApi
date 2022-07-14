@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
-using PalletStorage.Common.CommonClasses;
+﻿using Xunit;
+using FluentAssertions;
+using AutoMapper;
+using PalletStorage.Common.Models;
 using PalletStorage.WebApi.Models.Converters;
 using PalletStorage.WebApi.Models.Models;
-using Xunit;
-using AutoMapper;
 
 namespace PalletStorage.Tests.ModelApiConverters;
 

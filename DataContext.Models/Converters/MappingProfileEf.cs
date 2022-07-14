@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DataContext.Models.Models;
-using PalletStorage.Common.CommonClasses;
+using PalletStorage.Common.Models;
 
 namespace DataContext.Models.Converters
 {

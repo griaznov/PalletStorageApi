@@ -13,13 +13,13 @@ namespace PalletStorage.Tests.ModelApiControllers;
 
 public class PalletControllerTests : IDisposable
 {
-    private readonly StorageDataContext db;
+    private readonly IStorageContext db;
     private readonly PalletController controller;
 
     public PalletControllerTests()
     {
         var fileName = FilesOperations.GenerateFileName("db");
-        db = DataContextCreator.CreateDataContextAsync(fileName).Result;
+        db = StorageContext.CreateContextAsync(fileName).GetAwaiter().GetResult();
 
         var config = new MapperConfiguration(cfg =>
         {

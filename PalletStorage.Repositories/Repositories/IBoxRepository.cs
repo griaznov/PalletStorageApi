@@ -1,4 +1,4 @@
-﻿using PalletStorage.Common.CommonClasses;
+﻿using PalletStorage.Common.Models;
 
 namespace PalletStorage.Repositories.Repositories;
 

@@ -1,9 +1,9 @@
-﻿using DataContext.Models.Converters;
-using DataContext.Models.Models;
+﻿using Xunit;
 using FluentAssertions;
-using PalletStorage.Common.CommonClasses;
-using Xunit;
 using AutoMapper;
+using PalletStorage.Common.Models;
+using DataContext.Models.Converters;
+using DataContext.Models.Models;
 
 namespace PalletStorage.Tests.ModelEfConverters;
 

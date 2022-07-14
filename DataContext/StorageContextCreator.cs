@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataContext;
 
-public static class DataContextCreator
+public static class StorageContextCreator
 {
     /// <summary>
     /// Adds DataContext to the specified IServiceCollection. Uses the Sqlite database provider.
@@ -15,30 +15,13 @@ public static class DataContextCreator
     {
         var databasePath = Path.Combine(relativePath, "PalletStorage.db");
 
-        await CreateDataContextAsync(databasePath);
+        await using var context = await StorageContext.CreateContextAsync(databasePath);
 
-        services.AddDbContext<StorageDataContext>(options =>
+        services.AddDbContext<IStorageContext, StorageContext>(options =>
             options.UseSqlite($"Data Source={databasePath}")
                 .UseLoggerFactory(new ConsoleLoggerFactory())
         );
 
         return services;
-    }
-
-    public static async Task<StorageDataContext> CreateDataContextAsync(string dataPath)
-    {
-        var db = new StorageDataContext(dataPath);
-
-        if (!File.Exists(dataPath))
-        {
-            var dbIsCreated = await db.Database.EnsureCreatedAsync();
-
-            if (!dbIsCreated)
-            {
-                throw new DbUpdateException($"Error with creating database in {dataPath}");
-            }
-        }
-
-        return db;
     }
 }

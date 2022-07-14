@@ -3,17 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataContext;
 
-public class StorageDataContext : DbContext
+public class StorageContext : DbContext, IStorageContext
 {
     private readonly string dataFileName;
 
-    public StorageDataContext(string dataFileName = "../PalletStorage.db")
+    public StorageContext(string dataFileName = "../PalletStorage.db")
     {
         this.dataFileName = dataFileName;
         CheckTablesCreated();
     }
 
-    public StorageDataContext(DbContextOptions<StorageDataContext> options, string dataFileName = "../PalletStorage.db") : base(options)
+    public StorageContext(DbContextOptions<StorageContext> options, string dataFileName = "../PalletStorage.db") : base(options)
     {
         this.dataFileName = dataFileName;
         CheckTablesCreated();
@@ -27,8 +27,30 @@ public class StorageDataContext : DbContext
         }
     }
 
+    public static async Task<IStorageContext> CreateContextAsync(string dataPath)
+    {
+        var db = new StorageContext(dataPath);
+
+        if (!File.Exists(dataPath))
+        {
+            var dbIsCreated = await db.Database.EnsureCreatedAsync();
+
+            if (!dbIsCreated)
+            {
+                throw new DbUpdateException($"Error with creating database in {dataPath}");
+            }
+        }
+
+        return db;
+    }
+
     public virtual DbSet<BoxEfModel> Boxes => Set<BoxEfModel>();
     public virtual DbSet<PalletEfModel> Pallets => Set<PalletEfModel>();
+
+    public async Task<int> SaveChangesAsync()
+    {
+        return await base.SaveChangesAsync();
+    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

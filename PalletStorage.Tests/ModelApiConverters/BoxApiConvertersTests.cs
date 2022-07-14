@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using PalletStorage.Common.CommonClasses;
+using PalletStorage.Common.Models;
 using PalletStorage.WebApi.Models.Converters;
 using PalletStorage.WebApi.Models.Models;
 using Xunit;

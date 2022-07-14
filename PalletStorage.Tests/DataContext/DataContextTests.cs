@@ -8,24 +8,24 @@ namespace PalletStorage.Tests.DataContext;
 
 public class DataContextTests : IDisposable
 {
-    private readonly StorageDataContext db;
+    private readonly IStorageContext db;
     private readonly string fileName;
 
     public DataContextTests()
     {
         fileName = FilesOperations.GenerateFileName("db");
-        db = DataContextCreator.CreateDataContextAsync(fileName).Result;
+        db = StorageContext.CreateContextAsync(fileName).GetAwaiter().GetResult();
     }
 
     [Fact(DisplayName = "1. The database can be created by models")]
-    public void CreateDatabase()
+    protected void CreateDatabase()
     {
         // Assert
         File.Exists(fileName).Should().BeTrue("Because database must be created by models");
     }
 
     [Fact(DisplayName = "2. Add a box model to the database")]
-    public async void AddBox()
+    protected async void AddBox()
     {
         // Arrange
         var box = new BoxEfModel()
@@ -48,7 +48,7 @@ public class DataContextTests : IDisposable
     }
 
     [Fact(DisplayName = "3. Add a pallet model to the database")]
-    public async void AddPallet()
+    protected async void AddPallet()
     {
         // Arrange
         var pallet = new PalletEfModel()
@@ -68,7 +68,7 @@ public class DataContextTests : IDisposable
     }
 
     [Fact(DisplayName = "4. Add a pallet model containing box models to the database")]
-    public async void AddPalletWithBoxes()
+    protected async void AddPalletWithBoxes()
     {
         // Arrange
         // Pallet - owner

@@ -2,8 +2,7 @@
 using DataContext.Models.Converters;
 using DataContext.Models.Models;
 using FluentAssertions;
-using PalletStorage.Common.CommonClasses;
-using PalletStorage.WebApi.Models.Converters;
+using PalletStorage.Common.Models;
 using Xunit;
 
 namespace PalletStorage.Tests.ModelEfConverters;

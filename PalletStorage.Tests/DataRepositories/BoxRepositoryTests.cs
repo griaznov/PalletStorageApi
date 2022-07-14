@@ -2,7 +2,7 @@
 using DataContext;
 using DataContext.Models.Converters;
 using FluentAssertions;
-using PalletStorage.Common.CommonClasses;
+using PalletStorage.Common.Models;
 using PalletStorage.Repositories.Repositories;
 using Xunit;
 
@@ -10,13 +10,13 @@ namespace PalletStorage.Tests.DataRepositories;
 
 public class BoxRepositoryTests : IDisposable
 {
-    private readonly StorageDataContext db;
+    private readonly IStorageContext db;
     private readonly IBoxRepository boxRepo;
 
     public BoxRepositoryTests()
     {
         var fileName = FilesOperations.GenerateFileName("db");
-        db = DataContextCreator.CreateDataContextAsync(fileName).Result;
+        db = StorageContext.CreateContextAsync(fileName).GetAwaiter().GetResult();
 
         var config = new MapperConfiguration(cfg =>
         {

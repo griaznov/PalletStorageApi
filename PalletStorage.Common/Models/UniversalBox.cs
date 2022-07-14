@@ -1,4 +1,4 @@
-﻿namespace PalletStorage.Common.CommonClasses;
+﻿namespace PalletStorage.Common.Models;
 
 public class UniversalBox
 {

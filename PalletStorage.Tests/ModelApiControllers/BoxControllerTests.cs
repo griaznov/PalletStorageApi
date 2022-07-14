@@ -13,13 +13,13 @@ namespace PalletStorage.Tests.ModelApiControllers;
 
 public class BoxControllerTests : IDisposable
 {
-    private readonly StorageDataContext db;
+    private readonly IStorageContext db;
     private readonly BoxesController controller;
 
     public BoxControllerTests()
     {
         var fileName = FilesOperations.GenerateFileName("db");
-        db = DataContextCreator.CreateDataContextAsync(fileName).Result;
+        db = StorageContext.CreateContextAsync(fileName).GetAwaiter().GetResult();
 
         var config = new MapperConfiguration(cfg =>
         {
@@ -52,7 +52,7 @@ public class BoxControllerTests : IDisposable
         var response = await controller.Create(modelApi);
 
         // Assert
-        response?.Value.Should().NotBeNull().And.BeAssignableTo<BoxApiModel>();
+        response.Value.Should().NotBeNull().And.BeAssignableTo<BoxApiModel>();
     }
 
     public void Dispose()

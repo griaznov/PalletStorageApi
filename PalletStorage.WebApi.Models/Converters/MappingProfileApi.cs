@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using PalletStorage.Common.CommonClasses;
+using PalletStorage.Common.Models;
 using PalletStorage.WebApi.Models.Models;
 
 namespace PalletStorage.WebApi.Models.Converters
