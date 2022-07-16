@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using static System.Console;
 
-namespace PalletStorage.Common.Models;
+namespace PalletStorage.Business.Models;
 
-public class Box : UniversalBox
+public class BoxModel : UniversalBoxModel
 {
     private const int MinDaysExpirationDate = 100;
 
@@ -11,7 +11,7 @@ public class Box : UniversalBox
     public DateTime ProductionDate { get; }
     public DateTime ExpirationDate { get; }
 
-    public Box(
+    public BoxModel(
         double width,
         double length,
         double height,
@@ -46,14 +46,14 @@ public class Box : UniversalBox
         Id = id;
     }
 
-    public static Box Create(double width,
+    public static BoxModel Create(double width,
         double length,
         double height,
         double weight,
         DateTime prodDate = default,
         DateTime expDate = default)
     {
-        return new Box(width, length, height, weight, prodDate, expDate);
+        return new BoxModel(width, length, height, weight, prodDate, expDate);
     }
 
     public static bool ValidateDateParams(DateTime prodDate = default, DateTime expDate = default)
@@ -63,5 +63,5 @@ public class Box : UniversalBox
 
     public override int GetHashCode() => Id;
 
-    public override bool Equals(object? obj) => obj is Box box && box.Id == Id;
+    public override bool Equals(object? obj) => obj is BoxModel box && box.Id == Id;
 }

@@ -1,6 +1,6 @@
 ﻿using Xunit;
 using AutoMapper;
-using PalletStorage.WebApi.Models.Converters;
+using PalletStorage.WebApi.Models.MappingProfiles;
 
 namespace PalletStorage.Tests.ModelApiConverters;
 

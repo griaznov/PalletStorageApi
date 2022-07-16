@@ -1,6 +1,6 @@
-﻿namespace PalletStorage.Common.Models;
+﻿namespace PalletStorage.Business.Models;
 
-public class UniversalBox
+public class UniversalBoxModel
 {
     // auto properties
     public virtual double Height { get; }
@@ -9,7 +9,7 @@ public class UniversalBox
     public virtual double Weight { get; }
     public virtual double Volume { get; }
 
-    public UniversalBox(double width, double length, double height, double weight)
+    public UniversalBoxModel(double width, double length, double height, double weight)
     {
         // Verifying parameters
         if (!IsValidBoxParams(width, length, height) || !IsValidWeight(weight))
@@ -22,6 +22,21 @@ public class UniversalBox
         Width = width;
         Length = length;
         Weight = weight;
+        Volume = height * width * length;
+    }
+
+    public UniversalBoxModel(double width, double length, double height)
+    {
+        // Verifying parameters
+        if (!IsValidBoxParams(width, length, height))
+        {
+            var errorMessage = "You need to enter the following required parameters: width, length, height";
+            throw new ArgumentOutOfRangeException(errorMessage);
+        }
+
+        Height = height;
+        Width = width;
+        Length = length;
         Volume = height * width * length;
     }
 

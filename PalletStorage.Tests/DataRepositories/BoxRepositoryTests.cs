@@ -1,31 +1,21 @@
-﻿using AutoMapper;
-using DataContext;
-using DataContext.Models.Converters;
+﻿using Xunit;
 using FluentAssertions;
-using PalletStorage.Common.Models;
+using DataContext;
+using PalletStorage.Business.Models;
 using PalletStorage.Repositories.Repositories;
-using Xunit;
 
 namespace PalletStorage.Tests.DataRepositories;
 
-public class BoxRepositoryTests : IDisposable
+[Collection("StorageContextCollectionFixture")]
+public class BoxRepositoryTests
 {
     private readonly IStorageContext db;
     private readonly IBoxRepository boxRepo;
 
-    public BoxRepositoryTests()
+    public BoxRepositoryTests(StorageContextFixture contextFixture)
     {
-        var fileName = FilesOperations.GenerateFileName("db");
-        db = StorageContext.CreateContextAsync(fileName).GetAwaiter().GetResult();
-
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(typeof(MappingProfileEf));
-        });
-
-        var mapper = config.CreateMapper();
-
-        boxRepo = new BoxRepository(db, mapper);
+        db = contextFixture.Db;
+        boxRepo = contextFixture.BoxRepo;
     }
 
     [Fact(DisplayName = "1. Save common model of Box")]
@@ -37,7 +27,7 @@ public class BoxRepositoryTests : IDisposable
         const int length = 31;
         const int height = 43;
 
-        var box = Box.Create(width, length, height, 11, date, date);
+        var box = BoxModel.Create(width, length, height, 11, date, date);
 
         // Act
         await boxRepo.CreateAsync(box);
@@ -45,9 +35,9 @@ public class BoxRepositoryTests : IDisposable
         // Assert
         var boxEfModel = db.Boxes.FirstOrDefault(boxes => boxes.ExpirationDate == date
                                                           && boxes.ProductionDate == date
-                                                          && Math.Abs(boxes.Width - width) == 0 
-                                                          && Math.Abs(boxes.Length - length) == 0
-                                                          && Math.Abs(boxes.Height - height) == 0);
+                                                          && (boxes.Width - width) == 0 
+                                                          && (boxes.Length - length) == 0
+                                                          && (boxes.Height - height) == 0);
         boxEfModel.Should().NotBeNull();
     }
 
@@ -55,7 +45,7 @@ public class BoxRepositoryTests : IDisposable
     public async Task DeleteBox()
     {
         // Arrange
-        var box = new Box(1, 2, 3, 4, DateTime.Today, DateTime.Today, 12);
+        var box = new BoxModel(1, 2, 3, 4, DateTime.Today, DateTime.Today, 12);
 
         await boxRepo.CreateAsync(box);
 
@@ -71,11 +61,11 @@ public class BoxRepositoryTests : IDisposable
     public async Task UpdateBox()
     {
         // Arrange
-        var box = new Box(1, 2, 3, 4, DateTime.Today, DateTime.Today, 13);
+        var box = new BoxModel(1, 2, 3, 4, DateTime.Today, DateTime.Today, 13);
         await boxRepo.CreateAsync(box);
 
         // Act
-        box = new Box(2, 3, 4, 5, DateTime.Today, DateTime.Today, 13);
+        box = new BoxModel(2, 3, 4, 5, DateTime.Today, DateTime.Today, 13);
         await boxRepo.UpdateAsync(box);
 
         // Assert
@@ -93,46 +83,37 @@ public class BoxRepositoryTests : IDisposable
     public async Task RetrieveWithSkipAsync()
     {
         // Arrange
-        var box1 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
-        var box2 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
-        var box3 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
-        var box4 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
-
-        await boxRepo.CreateAsync(box1);
-        await boxRepo.CreateAsync(box2);
-        await boxRepo.CreateAsync(box3);
-        await boxRepo.CreateAsync(box4);
+        const int countToSkip = 3;
+        await CreateTestCollectionAsync(4);
+        var countNow = await boxRepo.CountAsync();
 
         // Act
-        var collection = await boxRepo.GetAllAsync(20, 1);
+        var collection = await boxRepo.GetAllAsync(countNow, countToSkip);
 
         // Assert
-        collection.Should().HaveCount(3);
+        collection.Should().HaveCount(countNow - countToSkip);
     }
 
     [Fact(DisplayName = "5. Retrieve Boxes with pagination - Take")]
     public async Task RetrieveWithTakeAsync()
     {
         // Arrange
-        var box1 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
-        var box2 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
-        var box3 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
-        var box4 = Box.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today);
+        const int countMustBe = 4;
 
-        await boxRepo.CreateAsync(box1);
-        await boxRepo.CreateAsync(box2);
-        await boxRepo.CreateAsync(box3);
-        await boxRepo.CreateAsync(box4);
+        await CreateTestCollectionAsync(countMustBe);
 
         // Act
-        var collection = await boxRepo.GetAllAsync(2);
+        var collection = await boxRepo.GetAllAsync(countMustBe);
 
         // Assert
-        collection.Should().HaveCount(2);
+        collection.Should().HaveCount(countMustBe);
     }
 
-    public void Dispose()
+    private async Task CreateTestCollectionAsync(int count)
     {
-        db.Database.EnsureDeleted();
+        for (var i = 0; i < count; i++)
+        {
+            await boxRepo.CreateAsync(BoxModel.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today));
+        }
     }
 }

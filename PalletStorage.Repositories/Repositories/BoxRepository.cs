@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DataContext;
-using DataContext.Models.Models;
+using DataContext.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using PalletStorage.Common.Models;
+using PalletStorage.Business.Models;
 
 namespace PalletStorage.Repositories.Repositories;
 
@@ -20,40 +20,39 @@ public class BoxRepository : IBoxRepository
         this.mapper = mapper;
     }
 
-    public async Task<List<Box>> GetAllAsync(int take, int skip = 0)
+    public async Task<List<BoxModel>> GetAllAsync(int take, int skip = 0)
     {
         return await db.Boxes
             .Skip(skip)
             .Take(take)
-            //.Select(box => mapper.Map<Box>(box))
-            .ProjectTo<Box>(mapper.ConfigurationProvider)
+            .ProjectTo<BoxModel>(mapper.ConfigurationProvider)
             .ToListAsync();
     }
 
-    public async Task<Box?> GetAsync(int id)
+    public async Task<BoxModel?> GetAsync(int id)
     {
         var boxEf = await db.Boxes.FindAsync(id);
 
-        return mapper.Map<Box>(boxEf);
+        return mapper.Map<BoxModel>(boxEf);
     }
 
-    public async Task<Box?> CreateAsync(Box box)
+    public async Task<BoxModel?> CreateAsync(BoxModel box)
     {
         // add to database using EF Core
-        await db.Boxes.AddAsync(mapper.Map<BoxEfModel>(box));
+        await db.Boxes.AddAsync(mapper.Map<Box>(box));
 
         var affected = await db.SaveChangesAsync();
 
         return affected == 1 ? box : null;
     }
 
-    public async Task<Box?> UpdateAsync(Box box)
+    public async Task<BoxModel?> UpdateAsync(BoxModel box)
     {
-        BoxEfModel? boxFounded = await db.Boxes.FindAsync(box.Id);
+        Box? boxFounded = await db.Boxes.FindAsync(box.Id);
 
         if (boxFounded is null)
         {
-            await db.Boxes.AddAsync(mapper.Map<BoxEfModel>(box));
+            await db.Boxes.AddAsync(mapper.Map<Box>(box));
         }
         else
         {
@@ -69,7 +68,7 @@ public class BoxRepository : IBoxRepository
     public async Task<bool> DeleteAsync(int id)
     {
         // remove from database
-        BoxEfModel? boxFounded = await db.Boxes.FindAsync(id);
+        Box? boxFounded = await db.Boxes.FindAsync(id);
 
         if (boxFounded is null)
         {
@@ -80,5 +79,10 @@ public class BoxRepository : IBoxRepository
         var affected = await db.SaveChangesAsync();
 
         return affected == 1;
+    }
+
+    public async Task<int> CountAsync()
+    {
+        return await db.Boxes.CountAsync();
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataContext.Models.Models
+namespace DataContext.Models.Entities
 {
     [Index(nameof(Id), Name = "Id")]
-    public class PalletEfModel
+    public class Pallet
     {
         public int Id { get; set; }
         public double PalletWeight { get; set; }
@@ -13,6 +13,6 @@ namespace DataContext.Models.Models
         public double Length { get; set; }
 
         [XmlIgnore]
-        public virtual ICollection<BoxEfModel> Boxes { get; set; } = new List<BoxEfModel>();
+        public virtual ICollection<Box> Boxes { get; set; } = new List<Box>();
     }
 }

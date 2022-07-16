@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.HttpLogging;
 using FluentValidation;
 using PalletStorage.Repositories.Repositories;
-using PalletStorage.WebApi.Models.Converters;
 using DataContext;
-using DataContext.Models.Converters;
+using DataContext.Models.MappingProfiles;
+using PalletStorage.WebApi.Models.MappingProfiles;
 using PalletStorage.WebApi.Validators;
 using static System.Console;
 
@@ -47,7 +47,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<BoxValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<PalletValidator>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfileApi));
-builder.Services.AddAutoMapper(typeof(MappingProfileEf));
+builder.Services.AddAutoMapper(typeof(MappingProfileEntity));
 
 builder.Services.AddScoped<IBoxRepository, BoxRepository>();
 builder.Services.AddScoped<IPalletRepository, PalletRepository>();

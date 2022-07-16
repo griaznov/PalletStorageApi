@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using PalletStorage.Common.Models;
+using PalletStorage.Business.Models;
 using PalletStorage.Repositories.Repositories;
 using PalletStorage.WebApi.Models.Models;
 
@@ -40,7 +40,7 @@ public class PalletController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetPallet(int id)
     {
-        Pallet? pallet = await repo.GetAsync(id);
+        PalletModel? pallet = await repo.GetAsync(id);
 
         if (pallet == null)
         {
@@ -63,7 +63,7 @@ public class PalletController : ControllerBase
             return BadRequest(result.Errors.ToList()); // 400 Bad request
         }
 
-        var addedPallet = await repo.CreateAsync(mapper.Map<Pallet>(pallet));
+        var addedPallet = await repo.CreateAsync(mapper.Map<PalletModel>(pallet));
 
         if (addedPallet == null)
         {
@@ -92,7 +92,7 @@ public class PalletController : ControllerBase
             return BadRequest(result.Errors.ToList()); // 400 Bad request
         }
 
-        var existing = await repo.UpdateAsync(mapper.Map<Pallet>(pallet));
+        var existing = await repo.UpdateAsync(mapper.Map<PalletModel>(pallet));
 
         if (existing == null)
         {
@@ -134,7 +134,7 @@ public class PalletController : ControllerBase
             return BadRequest(); // 400 Bad request
         }
 
-        var existing = await repo.AddBoxToPalletAsync(mapper.Map<Box>(box), palletId);
+        var existing = await repo.AddBoxToPalletAsync(mapper.Map<BoxModel>(box), palletId);
 
         if (existing == null)
         {
@@ -157,7 +157,7 @@ public class PalletController : ControllerBase
             return BadRequest(); // 400 Bad request
         }
 
-        var existing = await repo.DeleteBoxFromPalletAsync(mapper.Map<Box>(box));
+        var existing = await repo.DeleteBoxFromPalletAsync(mapper.Map<BoxModel>(box));
 
         if (existing == null)
         {

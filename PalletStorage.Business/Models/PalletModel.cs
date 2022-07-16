@@ -1,41 +1,41 @@
-﻿namespace PalletStorage.Common.Models;
+﻿namespace PalletStorage.Business.Models;
 
-public class Pallet : UniversalBox
+public class PalletModel : UniversalBoxModel
 {
     private const double DefaultPalletWeight = 30;
 
     public double PalletWeight { get; }
     public int Id { get; }
-    public List<Box> Boxes { get; }
+    public List<BoxModel> Boxes { get; }
     public override double Weight => PalletWeight + Boxes.Sum(b => b.Weight);
+
     public override double Volume => base.Volume + Boxes.Sum(b => b.Volume);
     public DateTime ExpirationDate => Boxes.Count == 0 ? default : Boxes.Min(box => box.ExpirationDate);
 
-    public Pallet(double width,
+    public PalletModel(double width,
         double length,
         double height,
-        double weight = DefaultPalletWeight,
         int id = default,
-        List<Box>? boxes = null)
-        : base(width, length, height, weight)
+        List<BoxModel>? boxes = null)
+        : base(width, length, height)
     {
         // default weight value for the pallet
         PalletWeight = DefaultPalletWeight;
-        Boxes = boxes ?? new List<Box>();
+        Boxes = boxes ?? new List<BoxModel>();
         Id = id;
     }
 
-    public void AddBox(Box box)
+    public void AddBox(BoxModel box)
     {
         Boxes.Add(box);
     }
 
-    public static Pallet Create(double width, double length, double height)
+    public static PalletModel Create(double width, double length, double height)
     {
-        return new Pallet(width, length, height);
+        return new PalletModel(width, length, height);
     }
 
     public override int GetHashCode() => Id;
 
-    public override bool Equals(object? obj) => obj is Pallet pallet && pallet.Id == Id;
+    public override bool Equals(object? obj) => obj is PalletModel pallet && pallet.Id == Id;
 }

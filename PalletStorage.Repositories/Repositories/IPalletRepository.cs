@@ -1,14 +1,15 @@
-﻿using PalletStorage.Common.Models;
+﻿using PalletStorage.Business.Models;
 
 namespace PalletStorage.Repositories.Repositories;
 
 public interface IPalletRepository
 {
-    Task<Pallet?> CreateAsync(Pallet pallet);
-    Task<List<Pallet>> GetAllAsync(int take, int skip = 0);
-    Task<Pallet?> GetAsync(int id);
-    Task<Pallet?> UpdateAsync(Pallet pallet);
+    Task<PalletModel?> CreateAsync(PalletModel pallet);
+    Task<List<PalletModel>> GetAllAsync(int take, int skip = 0);
+    Task<PalletModel?> GetAsync(int id);
+    Task<PalletModel?> UpdateAsync(PalletModel pallet);
     Task<bool> DeleteAsync(int id);
-    Task<bool?> AddBoxToPalletAsync(Box box, int id);
-    Task<bool?> DeleteBoxFromPalletAsync(Box box);
+    Task<int> CountAsync();
+    Task<bool?> AddBoxToPalletAsync(BoxModel box, int id);
+    Task<bool?> DeleteBoxFromPalletAsync(BoxModel box);
 }

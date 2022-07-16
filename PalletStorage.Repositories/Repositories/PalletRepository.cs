@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DataContext;
-using DataContext.Models.Models;
+using DataContext.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using PalletStorage.Common.Models;
+using PalletStorage.Business.Models;
 
 namespace PalletStorage.Repositories.Repositories;
 
@@ -20,41 +20,40 @@ public class PalletRepository : IPalletRepository
         this.mapper = mapper;
     }
 
-    public async Task<List<Pallet>> GetAllAsync(int take, int skip = 0)
+    public async Task<List<PalletModel>> GetAllAsync(int take, int skip = 0)
     {
         return await db.Pallets
             .Skip(skip)
             .Take(take)
             .Include(p => p.Boxes)
-            .Select(p => mapper.Map<Pallet>(p))
-            //.ProjectTo<Pallet>(mapper.ConfigurationProvider)
+            .ProjectTo<PalletModel>(mapper.ConfigurationProvider)
             .ToListAsync();
     }
 
-    public async Task<Pallet?> GetAsync(int id)
+    public async Task<PalletModel?> GetAsync(int id)
     {
         var palletEf = await db.Pallets.FindAsync(id);
 
-        return mapper.Map<Pallet>(palletEf);
+        return mapper.Map<PalletModel>(palletEf);
     }
 
-    public async Task<Pallet?> CreateAsync(Pallet pallet)
+    public async Task<PalletModel?> CreateAsync(PalletModel pallet)
     {
         // add to database using EF Core
-        await db.Pallets.AddAsync(mapper.Map<PalletEfModel>(pallet));
+        await db.Pallets.AddAsync(mapper.Map<Pallet>(pallet));
 
         var affected = await db.SaveChangesAsync();
 
         return affected == 1 ? pallet : null;
     }
 
-    public async Task<Pallet?> UpdateAsync(Pallet pallet)
+    public async Task<PalletModel?> UpdateAsync(PalletModel pallet)
     {
         var palletFounded = await db.Pallets.FindAsync(pallet.Id);
 
         if (palletFounded is null)
         {
-            await db.Pallets.AddAsync(mapper.Map<PalletEfModel>(pallet));
+            await db.Pallets.AddAsync(mapper.Map<Pallet>(pallet));
         }
         else
         {
@@ -70,7 +69,7 @@ public class PalletRepository : IPalletRepository
     public async Task<bool> DeleteAsync(int id)
     {
         // remove from database
-        PalletEfModel? palletFounded = await db.Pallets.FindAsync(id);
+        Pallet? palletFounded = await db.Pallets.FindAsync(id);
 
         if (palletFounded is null)
         {
@@ -83,7 +82,12 @@ public class PalletRepository : IPalletRepository
         return affected == 1;
     }
 
-    public async Task<bool?> AddBoxToPalletAsync(Box box, int palletId)
+    public async Task<int> CountAsync()
+    {
+        return await db.Pallets.CountAsync();
+    }
+
+    public async Task<bool?> AddBoxToPalletAsync(BoxModel box, int palletId)
     {
         var palletFounded = await db.Pallets.FindAsync(palletId);
 
@@ -96,7 +100,7 @@ public class PalletRepository : IPalletRepository
 
         if (boxEf is null)
         {
-            boxEf = mapper.Map<BoxEfModel>(box);
+            boxEf = mapper.Map<Box>(box);
             await db.Boxes.AddAsync(boxEf);
         }
 
@@ -105,7 +109,7 @@ public class PalletRepository : IPalletRepository
         return await db.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool?> DeleteBoxFromPalletAsync(Box box)
+    public async Task<bool?> DeleteBoxFromPalletAsync(BoxModel box)
     {
         var boxEf = await db.Boxes.FindAsync(box.Id);
 

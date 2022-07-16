@@ -1,31 +1,21 @@
-﻿using AutoMapper;
-using DataContext;
-using DataContext.Models.Converters;
+﻿using Xunit;
 using FluentAssertions;
-using PalletStorage.Common.Models;
+using DataContext;
+using PalletStorage.Business.Models;
 using PalletStorage.Repositories.Repositories;
-using Xunit;
 
 namespace PalletStorage.Tests.DataRepositories;
- 
-public class PalletRepositoryTests : IDisposable
+
+[Collection("StorageContextCollectionFixture")]
+public class PalletRepositoryTests
 {
     private readonly IStorageContext db;
     private readonly IPalletRepository palletRepo;
 
-    public PalletRepositoryTests()
+    public PalletRepositoryTests(StorageContextFixture contextFixture)
     {
-        var fileName = FilesOperations.GenerateFileName("db");
-        db = StorageContext.CreateContextAsync(fileName).GetAwaiter().GetResult();
-
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(typeof(MappingProfileEf));
-        });
-
-        var mapper = config.CreateMapper();
-
-        palletRepo = new PalletRepository(db, mapper);
+        db = contextFixture.Db;
+        palletRepo = contextFixture.PalletRepo;
     }
 
     [Fact(DisplayName = "1. Save common model of Pallet")]
@@ -36,7 +26,7 @@ public class PalletRepositoryTests : IDisposable
         const int length = 82;
         const int height = 13;
 
-        var pallet = Pallet.Create(width, length, height);
+        var pallet = PalletModel.Create(width, length, height);
 
         // Act
         await palletRepo.CreateAsync(pallet);
@@ -56,16 +46,16 @@ public class PalletRepositoryTests : IDisposable
         const int length = 32;
         const int height = 53;
 
-        var pallet = Pallet.Create(width, length, height);
-        var box1 = Box.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
-        var box2 = Box.Create(2, 3, 3, 2, DateTime.Today, DateTime.Today);
+        var pallet = PalletModel.Create(width, length, height);
+        var box1 = BoxModel.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
+        var box2 = BoxModel.Create(2, 3, 3, 2, DateTime.Today, DateTime.Today);
 
         pallet.AddBox(box1);
         pallet.AddBox(box2);
 
         // Act
         await palletRepo.CreateAsync(pallet);
-        
+
         // Assert
         var palletSaved = db.Pallets.FirstOrDefault(p => p.Width == width
                                                          && p.Length == length
@@ -78,8 +68,8 @@ public class PalletRepositoryTests : IDisposable
     public async Task AddBoxToPalletAsync()
     {
         // Arrange
-        var pallet = new Pallet(1, 2, 3, 4, 981);
-        var box = Box.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
+        var pallet = new PalletModel(1, 2, 3, 981);
+        var box = BoxModel.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
 
         await palletRepo.CreateAsync(pallet);
 
@@ -97,8 +87,8 @@ public class PalletRepositoryTests : IDisposable
     public async Task DeleteBoxFromPallet()
     {
         // Arrange
-        var pallet = new Pallet(1, 2, 3, 4, 980);
-        var box = new Box(1, 2, 3, 4, DateTime.Today, DateTime.Today, 101);
+        var pallet = new PalletModel(1, 2, 3, 980);
+        var box = new BoxModel(1, 2, 3, 4, DateTime.Today, DateTime.Today, 101);
 
         pallet.AddBox(box);
         await palletRepo.CreateAsync(pallet);
@@ -117,7 +107,7 @@ public class PalletRepositoryTests : IDisposable
     public async Task DeletePallet()
     {
         // Arrange
-        var pallet = new Pallet(1, 2, 3, 4, 979);
+        var pallet = new PalletModel(1, 2, 3, 979);
 
         await palletRepo.CreateAsync(pallet);
 
@@ -133,11 +123,11 @@ public class PalletRepositoryTests : IDisposable
     public async Task UpdatePallet()
     {
         // Arrange
-        var pallet = new Pallet(1, 2, 3, 4, 970);
+        var pallet = new PalletModel(1, 2, 3, 970);
         await palletRepo.CreateAsync(pallet);
 
         // Act
-        pallet = new Pallet(2, 3, 4, 5, 970);
+        pallet = new PalletModel(2, 3, 4, 970);
         await palletRepo.UpdateAsync(pallet);
 
         // Assert
@@ -154,46 +144,37 @@ public class PalletRepositoryTests : IDisposable
     public async Task RetrieveWithSkipAsync()
     {
         // Arrange
-        var pallet1 = Pallet.Create(1, 2, 3);
-        var pallet2 = Pallet.Create(1, 2, 3);
-        var pallet3 = Pallet.Create(1, 2, 3);
-        var pallet4 = Pallet.Create(1, 2, 3);
-
-        await palletRepo.CreateAsync(pallet1);
-        await palletRepo.CreateAsync(pallet2);
-        await palletRepo.CreateAsync(pallet3);
-        await palletRepo.CreateAsync(pallet4);
+        const int countToSkip = 3;
+        await CreateTestCollectionAsync(4);
+        var countNow = await palletRepo.CountAsync();
 
         // Act
-        var collection = await palletRepo.GetAllAsync(100, 1);
+        var collection = await palletRepo.GetAllAsync(countNow, countToSkip);
 
         // Assert
-        collection.Should().HaveCount(3);
+        collection.Should().HaveCount(countNow - countToSkip);
     }
 
     [Fact(DisplayName = "8. Retrieve Pallets with pagination - Take")]
     public async Task RetrieveWithTakeAsync()
     {
         // Arrange
-        var pallet1 = Pallet.Create(1, 2, 3);
-        var pallet2 = Pallet.Create(1, 2, 3);
-        var pallet3 = Pallet.Create(1, 2, 3);
-        var pallet4 = Pallet.Create(1, 2, 3);
+        const int countMustBe = 4;
 
-        await palletRepo.CreateAsync(pallet1);
-        await palletRepo.CreateAsync(pallet2);
-        await palletRepo.CreateAsync(pallet3);
-        await palletRepo.CreateAsync(pallet4);
+        await CreateTestCollectionAsync(countMustBe);
 
         // Act
-        var collection = await palletRepo.GetAllAsync(3);
+        var collection = await palletRepo.GetAllAsync(countMustBe);
 
         // Assert
-        collection.Should().HaveCount(3);
+        collection.Should().HaveCount(countMustBe);
     }
 
-    public void Dispose()
+    private async Task CreateTestCollectionAsync(int count)
     {
-        db.Database.EnsureDeleted();
+        for (var i = 0; i < count; i++)
+        {
+            await palletRepo.CreateAsync(PalletModel.Create(1, 2, 3));
+        }
     }
 }

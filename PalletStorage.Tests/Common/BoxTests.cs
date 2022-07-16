@@ -1,5 +1,5 @@
 using FluentAssertions;
-using PalletStorage.Common.Models;
+using PalletStorage.Business.Models;
 using Xunit;
 
 namespace PalletStorage.Tests.Common;
@@ -10,7 +10,7 @@ public class BoxTests
     public void CreationBox()
     {
         // Act
-        Box testBox = new(2, 3, 4, 1, DateTime.Today, DateTime.Today);
+        BoxModel testBox = new(2, 3, 4, 1, DateTime.Today, DateTime.Today);
 
         // Assert
         Assert.Equal(24, testBox.Volume);
@@ -20,7 +20,7 @@ public class BoxTests
     public void CreationBoxByCreate()
     {
         // Act
-        var testBox = Box.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
+        var testBox = BoxModel.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
 
         // Assert
         Assert.Equal(24, testBox.Volume);
@@ -30,7 +30,7 @@ public class BoxTests
     public void CreationWithoutDates()
     {
         // Act
-        Action action = () => { var box = new Box(2, 3, 4, 1); };
+        Action action = () => { var box = new BoxModel(2, 3, 4, 1); };
 
         // Assert
         action.Should().Throw<ArgumentOutOfRangeException>("Creating a box without dates must trow Exception!");
@@ -43,7 +43,7 @@ public class BoxTests
         var todayDate = DateTime.Today;
 
         // Act
-        Box testBox = new(2, 3, 4, 1, todayDate);
+        BoxModel testBox = new(2, 3, 4, 1, todayDate);
 
         // Assert
         Assert.Equal(testBox.ExpirationDate, todayDate.AddDays(100));

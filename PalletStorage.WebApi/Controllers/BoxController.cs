@@ -1,23 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PalletStorage.Repositories.Repositories;
-using PalletStorage.WebApi.Models.Models;
 using AutoMapper;
 using FluentValidation;
-using PalletStorage.Common.Models;
+using PalletStorage.Business.Models;
+using PalletStorage.Repositories.Repositories;
+using PalletStorage.WebApi.Models.Models;
 
 namespace PalletStorage.WebApi.Controllers;
 
 // base address: api/boxes
 [Route("api/[controller]")]
 [ApiController]
-public class BoxesController : ControllerBase
+public class BoxController : ControllerBase
 {
     private readonly IMapper mapper;
     private readonly IValidator<BoxApiModel> validator;
     private readonly IBoxRepository repo;
 
     // constructor injects repository registered in Startup
-    public BoxesController(IBoxRepository repo, IMapper mapper, IValidator<BoxApiModel> validator)
+    public BoxController(IBoxRepository repo, IMapper mapper, IValidator<BoxApiModel> validator)
     {
         this.repo = repo;
         this.mapper = mapper;
@@ -40,7 +40,7 @@ public class BoxesController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetBox(int id)
     {
-        Box? box = await repo.GetAsync(id);
+        BoxModel? box = await repo.GetAsync(id);
 
         if (box == null)
         {
@@ -63,7 +63,7 @@ public class BoxesController : ControllerBase
             return BadRequest(result.Errors.ToList()); // 400 Bad request
         }
 
-        var addedBox = await repo.CreateAsync(mapper.Map<Box>(box));
+        var addedBox = await repo.CreateAsync(mapper.Map<BoxModel>(box));
 
         if (addedBox == null)
         {
@@ -92,7 +92,7 @@ public class BoxesController : ControllerBase
             return BadRequest(result.Errors.ToList()); // 400 Bad request
         }
 
-        var existing = await repo.UpdateAsync(mapper.Map<Box>(box));
+        var existing = await repo.UpdateAsync(mapper.Map<BoxModel>(box));
 
         if (existing == null)
         {

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.Common", "PalletStorage.Common\PalletStorage.Common.csproj", "{E3B33271-1675-4D0C-9570-0784D9928781}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.Tests", "PalletStorage.Tests\PalletStorage.Tests.csproj", "{978096C4-2AAC-4D31-93BD-870247D82EC6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.WebApi", "PalletStorage.WebApi\PalletStorage.WebApi.csproj", "{965D2C67-EFB8-4549-AD67-3AF4C13B3814}"
@@ -17,16 +15,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataContext.Models", "DataC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataContext", "DataContext\DataContext.csproj", "{16A418FA-F1A3-4023-9175-537C82007390}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.Business", "PalletStorage.Business\PalletStorage.Business.csproj", "{A935F03A-49F6-433F-AD9D-0AF2C9B57F13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E3B33271-1675-4D0C-9570-0784D9928781}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E3B33271-1675-4D0C-9570-0784D9928781}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E3B33271-1675-4D0C-9570-0784D9928781}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E3B33271-1675-4D0C-9570-0784D9928781}.Release|Any CPU.Build.0 = Release|Any CPU
 		{978096C4-2AAC-4D31-93BD-870247D82EC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{978096C4-2AAC-4D31-93BD-870247D82EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{978096C4-2AAC-4D31-93BD-870247D82EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +47,10 @@ Global
 		{16A418FA-F1A3-4023-9175-537C82007390}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16A418FA-F1A3-4023-9175-537C82007390}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16A418FA-F1A3-4023-9175-537C82007390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A935F03A-49F6-433F-AD9D-0AF2C9B57F13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A935F03A-49F6-433F-AD9D-0AF2C9B57F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A935F03A-49F6-433F-AD9D-0AF2C9B57F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A935F03A-49F6-433F-AD9D-0AF2C9B57F13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

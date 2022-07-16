@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace DataContext.Models.Models
+namespace DataContext.Models.Entities
 {
     [Index(nameof(Id), Name = "Id")]
-    public class BoxEfModel
+    public class Box
     {
         public int Id { get; set; }
         public DateTime ProductionDate { get; set; }
@@ -13,6 +13,6 @@ namespace DataContext.Models.Models
         public double Length { get; set; }
         public double Weight { get; set; }
         public int? PalletId { get; set; }
-        public PalletEfModel? Pallet { get; set; }
+        public Pallet? Pallet { get; set; }
     }
 }

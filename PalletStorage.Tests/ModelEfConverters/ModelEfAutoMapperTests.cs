@@ -1,6 +1,6 @@
 ﻿using Xunit;
 using AutoMapper;
-using DataContext.Models.Converters;
+using DataContext.Models.MappingProfiles;
 
 namespace PalletStorage.Tests.ModelEfConverters;
 
@@ -12,7 +12,7 @@ public class ModelEfAutoMapperTests
     {
         var config = new MapperConfiguration(cfg =>
         {
-            cfg.AddProfile(typeof(MappingProfileEf));
+            cfg.AddProfile(typeof(MappingProfileEntity));
         });
 
         mapper = config.CreateMapper();
