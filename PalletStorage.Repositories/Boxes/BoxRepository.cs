@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DataContext;
-using DataContext.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.Business.Models;
+using DataContext.Models.Entities;
 
-namespace PalletStorage.Repositories.Repositories;
+namespace PalletStorage.Repositories.Boxes;
 
 public class BoxRepository : IBoxRepository
 {
@@ -48,7 +48,7 @@ public class BoxRepository : IBoxRepository
 
     public async Task<BoxModel?> UpdateAsync(BoxModel box)
     {
-        Box? boxFounded = await db.Boxes.FindAsync(box.Id);
+        var boxFounded = await db.Boxes.FindAsync(box.Id);
 
         if (boxFounded is null)
         {
@@ -68,7 +68,7 @@ public class BoxRepository : IBoxRepository
     public async Task<bool> DeleteAsync(int id)
     {
         // remove from database
-        Box? boxFounded = await db.Boxes.FindAsync(id);
+        var boxFounded = await db.Boxes.FindAsync(id);
 
         if (boxFounded is null)
         {

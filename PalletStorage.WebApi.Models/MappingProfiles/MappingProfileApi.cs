@@ -1,22 +1,33 @@
 ﻿using AutoMapper;
 using PalletStorage.Business.Models;
-using PalletStorage.WebApi.Models.Models;
+using PalletStorage.WebApi.Models.Models.Box;
+using PalletStorage.WebApi.Models.Models.Pallet;
 
-namespace PalletStorage.WebApi.Models.MappingProfiles
+namespace PalletStorage.WebApi.Models.MappingProfiles;
+
+public class MappingProfileApi : Profile
 {
-    public class MappingProfileApi : Profile
+    public MappingProfileApi()
     {
-        public MappingProfileApi()
-        {
-            CreateMap<BoxModel, BoxApiModel>();
-            CreateMap<BoxApiModel, BoxModel>()
-                .ForMember(b => b.Id, opt => opt.Condition(b => b.Id is not null));
+        // Boxes
+        CreateMap<BoxModel, BoxResponse>();
+        CreateMap<BoxResponse, BoxModel>();
 
-            CreateMap<PalletModel, PalletApiModel>()
-                .ForMember(p => p.Boxes, options => options.Condition(p => p.Boxes.Count > 0));
+        CreateMap<BoxModel, BoxCreateRequest>();
+        CreateMap<BoxCreateRequest, BoxModel>();
 
-            CreateMap<PalletApiModel, PalletModel>()
-                .ForMember(p => p.Id, options => options.Condition(p => p.Id is not null));
-        }
+        CreateMap<BoxModel, BoxUpdateRequest>();
+        CreateMap<BoxUpdateRequest, BoxModel>();
+
+        // Pallets
+        CreateMap<PalletModel, PalletResponse>()
+            .ForMember(p => p.Boxes, options => options.Condition(p => p.Boxes.Count > 0));
+        CreateMap<PalletResponse, PalletModel>();
+
+        CreateMap<PalletModel, PalletCreateRequest>();
+        CreateMap<PalletCreateRequest, PalletModel>();
+
+        CreateMap<PalletModel, PalletUpdateRequest>();
+        CreateMap<PalletUpdateRequest, PalletModel>();
     }
 }

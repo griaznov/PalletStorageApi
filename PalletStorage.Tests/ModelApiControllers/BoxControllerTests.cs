@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using PalletStorage.WebApi.Controllers;
-using PalletStorage.WebApi.Models.Models;
+using PalletStorage.WebApi.Models.Models.Box;
 
 namespace PalletStorage.Tests.ModelApiControllers;
 
@@ -19,9 +19,8 @@ public class BoxControllerTests
     public async Task CreateBox()
     {
         // Arrange
-        var modelApi = new BoxApiModel()
+        var box = new BoxCreateRequest()
         {
-            Id = 30,
             Width = 1,
             Length = 1,
             Height = 1,
@@ -31,9 +30,9 @@ public class BoxControllerTests
         };
 
         // Act
-        var response = await controller.Create(modelApi);
+        var response = await controller.Create(box);
 
         // Assert
-        response.Value.Should().NotBeNull().And.BeAssignableTo<BoxApiModel>();
+        response.Value.Should().NotBeNull().And.BeAssignableTo<BoxResponse>();
     }
 }

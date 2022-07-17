@@ -27,23 +27,6 @@ public class StorageContext : DbContext, IStorageContext
         }
     }
 
-    public static async Task<IStorageContext> CreateContextAsync(string dataPath)
-    {
-        var db = new StorageContext(dataPath);
-
-        if (!File.Exists(dataPath))
-        {
-            var dbIsCreated = await db.Database.EnsureCreatedAsync();
-
-            if (!dbIsCreated)
-            {
-                throw new DbUpdateException($"Error with creating database in {dataPath}");
-            }
-        }
-
-        return db;
-    }
-
     public virtual DbSet<Box> Boxes => Set<Box>();
     public virtual DbSet<Pallet> Pallets => Set<Pallet>();
 

@@ -10,8 +10,4 @@ public interface IStorageContext : IDisposable, IAsyncDisposable
     DbSet<Pallet> Pallets { get; }
     Task<int> SaveChangesAsync();
     DatabaseFacade Database { get; }
-    static Task<IStorageContext> CreateContextAsync(string dataPath)
-    {
-        throw new NotImplementedException();
-    }
 }

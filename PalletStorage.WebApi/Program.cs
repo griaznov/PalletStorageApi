@@ -2,12 +2,15 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.HttpLogging;
 using FluentValidation;
-using PalletStorage.Repositories.Repositories;
 using DataContext;
 using DataContext.Models.MappingProfiles;
 using PalletStorage.WebApi.Models.MappingProfiles;
-using PalletStorage.WebApi.Validators;
 using static System.Console;
+using PalletStorage.WebApi.Validators.Box;
+using PalletStorage.WebApi.Validators.Pallet;
+using PalletStorage.Repositories;
+using PalletStorage.Repositories.Boxes;
+using PalletStorage.Repositories.Pallets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,12 +46,20 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "PalletStorage Web API", Version = "v1" });
 });
 
-builder.Services.AddValidatorsFromAssemblyContaining<BoxValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<PalletValidator>();
+// Validators
+builder.Services.AddValidatorsFromAssemblyContaining<BoxResponseValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<BoxCreateRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<BoxUpdateRequestValidator>();
 
+builder.Services.AddValidatorsFromAssemblyContaining<PalletResponseValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<PalletCreateRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<PalletUpdateRequestValidator>();
+
+// AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfileApi));
 builder.Services.AddAutoMapper(typeof(MappingProfileEntity));
 
+// Repositories
 builder.Services.AddScoped<IBoxRepository, BoxRepository>();
 builder.Services.AddScoped<IPalletRepository, PalletRepository>();
 

@@ -5,7 +5,7 @@ using DataContext.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.Business.Models;
 
-namespace PalletStorage.Repositories.Repositories;
+namespace PalletStorage.Repositories.Pallets;
 
 public class PalletRepository : IPalletRepository
 {
@@ -69,7 +69,7 @@ public class PalletRepository : IPalletRepository
     public async Task<bool> DeleteAsync(int id)
     {
         // remove from database
-        Pallet? palletFounded = await db.Pallets.FindAsync(id);
+        var palletFounded = await db.Pallets.FindAsync(id);
 
         if (palletFounded is null)
         {

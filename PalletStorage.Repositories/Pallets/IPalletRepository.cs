@@ -1,6 +1,6 @@
 ﻿using PalletStorage.Business.Models;
 
-namespace PalletStorage.Repositories.Repositories;
+namespace PalletStorage.Repositories.Pallets;
 
 public interface IPalletRepository
 {

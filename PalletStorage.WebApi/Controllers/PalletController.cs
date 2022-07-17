@@ -2,8 +2,9 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using PalletStorage.Business.Models;
-using PalletStorage.Repositories.Repositories;
-using PalletStorage.WebApi.Models.Models;
+using PalletStorage.Repositories.Pallets;
+using PalletStorage.WebApi.Models.Models.Box;
+using PalletStorage.WebApi.Models.Models.Pallet;
 
 namespace PalletStorage.WebApi.Controllers;
 
@@ -13,30 +14,35 @@ namespace PalletStorage.WebApi.Controllers;
 public class PalletController : ControllerBase
 {
     private readonly IMapper mapper;
-    private readonly IValidator<PalletApiModel> validator;
+    private readonly IValidator<PalletCreateRequest> createValidator;
+    private readonly IValidator<PalletUpdateRequest> updateValidator;
     private readonly IPalletRepository repo;
 
     // constructor injects repository registered in Startup
-    public PalletController(IPalletRepository repo, IMapper mapper, IValidator<PalletApiModel> validator)
+    public PalletController(IPalletRepository repo,
+        IMapper mapper,
+        IValidator<PalletCreateRequest> createValidator,
+        IValidator<PalletUpdateRequest> updateValidator)
     {
         this.repo = repo;
         this.mapper = mapper;
-        this.validator = validator;
+        this.createValidator = createValidator;
+        this.updateValidator = updateValidator;
     }
 
     // GET: api/pallets
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<PalletApiModel>))]
-    public async Task<IEnumerable<PalletApiModel>> GetPallets(int take = 100, int skip = 0)
+    [ProducesResponseType(200, Type = typeof(IEnumerable<PalletResponse>))]
+    public async Task<IEnumerable<PalletResponse>> GetPallets(int take = 100, int skip = 0)
     {
         var pallets = await repo.GetAllAsync(take, skip);
 
-        return pallets.Select(p => mapper.Map<PalletApiModel>(p)).AsEnumerable();
+        return pallets.Select(p => mapper.Map<PalletResponse>(p)).AsEnumerable();
     }
 
     // GET: api/pallets/[id]
     [HttpGet("{id:int}", Name = nameof(GetPallet))] // named route
-    [ProducesResponseType(200, Type = typeof(PalletApiModel))]
+    [ProducesResponseType(200, Type = typeof(PalletResponse))]
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetPallet(int id)
     {
@@ -47,17 +53,18 @@ public class PalletController : ControllerBase
             return NotFound(); // 404 Resource not found
         }
 
-        return Ok(mapper.Map<PalletApiModel>(pallet)); // 200 OK with customer in body
+        return Ok(mapper.Map<PalletResponse>(pallet)); // 200 OK with customer in body
     }
 
     // POST: api/pallets
     // BODY: pallets (JSON, XML)
     [HttpPost]
-    [ProducesResponseType(201, Type = typeof(PalletApiModel))]
+    [ProducesResponseType(201, Type = typeof(PalletResponse))]
     [ProducesResponseType(400)]
-    public async Task<ActionResult<PalletApiModel>> Create([FromBody] PalletApiModel pallet)
+    public async Task<ActionResult<PalletResponse>> Create([FromBody] PalletCreateRequest pallet)
     {
-        var result = await validator.ValidateAsync(pallet);
+        var result = await createValidator.ValidateAsync(pallet);
+
         if (!result.IsValid)
         {
             return BadRequest(result.Errors.ToList()); // 400 Bad request
@@ -70,7 +77,7 @@ public class PalletController : ControllerBase
             return BadRequest("Repository failed to create new pallet.");
         }
 
-        return mapper.Map<PalletApiModel>(addedPallet);
+        return mapper.Map<PalletResponse>(addedPallet);
     }
 
     // PUT: api/pallets
@@ -79,14 +86,9 @@ public class PalletController : ControllerBase
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Update([FromBody] PalletApiModel pallet)
+    public async Task<IActionResult> Update([FromBody] PalletUpdateRequest pallet)
     {
-        if (pallet.Id == null)
-        {
-            return BadRequest(); // 400 Bad request
-        }
-
-        var result = await validator.ValidateAsync(pallet);
+        var result = await updateValidator.ValidateAsync(pallet);
         if (!result.IsValid)
         {
             return BadRequest(result.Errors.ToList()); // 400 Bad request
@@ -127,13 +129,8 @@ public class PalletController : ControllerBase
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> AddBoxToPallet([FromBody] BoxApiModel box, int palletId)
+    public async Task<IActionResult> AddBoxToPallet([FromBody] BoxUpdateRequest box, int palletId)
     {
-        if (box.Id == null)
-        {
-            return BadRequest(); // 400 Bad request
-        }
-
         var existing = await repo.AddBoxToPalletAsync(mapper.Map<BoxModel>(box), palletId);
 
         if (existing == null)
@@ -150,13 +147,8 @@ public class PalletController : ControllerBase
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> DeleteBoxFromPallet([FromBody] BoxApiModel box)
+    public async Task<IActionResult> DeleteBoxFromPallet([FromBody] BoxUpdateRequest box)
     {
-        if (box.Id == null)
-        {
-            return BadRequest(); // 400 Bad request
-        }
-
         var existing = await repo.DeleteBoxFromPalletAsync(mapper.Map<BoxModel>(box));
 
         if (existing == null)

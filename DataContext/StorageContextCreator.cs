@@ -15,7 +15,7 @@ public static class StorageContextCreator
     {
         var databasePath = Path.Combine(relativePath, "PalletStorage.db");
 
-        await using var context = await StorageContext.CreateContextAsync(databasePath);
+        await using var context = await CreateContextAsync(databasePath);
 
         services.AddDbContext<IStorageContext, StorageContext>(options =>
             options.UseSqlite($"Data Source={databasePath}")
@@ -23,5 +23,29 @@ public static class StorageContextCreator
         );
 
         return services;
+    }
+
+    public static async Task<IStorageContext> CreateContextAsync(string dataPath)
+    {
+        var db = new StorageContext(dataPath);
+
+        var dbIsExists = await db.CreateDatabaseAsync(dataPath);
+
+        if (!dbIsExists)
+        {
+            throw new DbUpdateException($"Error with creating database in {dataPath}");
+        }
+
+        return db;
+    }
+
+    public static async Task<bool> CreateDatabaseAsync(this IStorageContext context, string dataPath)
+    {
+        if (!File.Exists(dataPath))
+        {
+            return await context.Database.EnsureCreatedAsync();
+        }
+
+        return true;
     }
 }

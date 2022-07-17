@@ -1,8 +1,8 @@
-﻿namespace PalletStorage.WebApi.Models.Models
+﻿namespace PalletStorage.WebApi.Models.Models.Box
 {
-    public class BoxApiModel
+    public class BoxResponse
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public DateTime ProductionDate { get; set; }
         public DateTime ExpirationDate { get; set; }
         public double Height { get; set; }

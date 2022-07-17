@@ -2,7 +2,7 @@
 using FluentAssertions;
 using DataContext;
 using PalletStorage.Business.Models;
-using PalletStorage.Repositories.Repositories;
+using PalletStorage.Repositories;
 
 namespace PalletStorage.Tests.DataRepositories;
 

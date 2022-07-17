@@ -3,7 +3,8 @@ using FluentAssertions;
 using AutoMapper;
 using PalletStorage.Business.Models;
 using PalletStorage.WebApi.Models.MappingProfiles;
-using PalletStorage.WebApi.Models.Models;
+using PalletStorage.WebApi.Models.Models.Box;
+using PalletStorage.WebApi.Models.Models.Pallet;
 
 namespace PalletStorage.Tests.ModelApiConverters;
 
@@ -31,7 +32,7 @@ public class PalletApiConvertersTests
         pallet.AddBox(box);
 
         // Act
-        var palletModel = mapper.Map<PalletApiModel>(pallet);
+        var palletModel = mapper.Map<PalletResponse>(pallet);
 
         // Assert
         palletModel.Boxes.Should().HaveCount(1);
@@ -41,7 +42,7 @@ public class PalletApiConvertersTests
     public void PalletApiModelConvertToBox()
     {
         // Arrange
-        var boxModel = new BoxApiModel()
+        var boxModel = new BoxResponse()
         {
             Id = 33,
             Width = 1,
@@ -52,14 +53,14 @@ public class PalletApiConvertersTests
             ExpirationDate = DateTime.Today,
         };
 
-        var palletModel = new PalletApiModel()
+        var palletModel = new PalletResponse()
         {
             Id = 36,
             Width = 1,
             Length = 1,
             Height = 1,
             PalletWeight = 10,
-            Boxes = new List<BoxApiModel> { boxModel }
+            Boxes = new List<BoxResponse> { boxModel }
         };
 
         // Act

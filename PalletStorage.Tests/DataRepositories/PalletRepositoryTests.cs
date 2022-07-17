@@ -2,7 +2,7 @@
 using FluentAssertions;
 using DataContext;
 using PalletStorage.Business.Models;
-using PalletStorage.Repositories.Repositories;
+using PalletStorage.Repositories.Pallets;
 
 namespace PalletStorage.Tests.DataRepositories;
 
@@ -32,9 +32,9 @@ public class PalletRepositoryTests
         await palletRepo.CreateAsync(pallet);
 
         // Assert
-        var palletSaved = db.Pallets.FirstOrDefault(p => p.Width == width
-                                                         && p.Length == length
-                                                         && p.Height == height);
+        var palletSaved = db.Pallets.FirstOrDefault(p => (p.Width - width) == 0
+                                                         && (p.Length - length) == 0
+                                                         && (p.Height - height) == 0);
         palletSaved.Should().NotBeNull();
     }
 
@@ -57,9 +57,9 @@ public class PalletRepositoryTests
         await palletRepo.CreateAsync(pallet);
 
         // Assert
-        var palletSaved = db.Pallets.FirstOrDefault(p => p.Width == width
-                                                         && p.Length == length
-                                                         && p.Height == height);
+        var palletSaved = db.Pallets.FirstOrDefault(p => (p.Width - width) == 0
+                                                         && (p.Length - length) == 0
+                                                         && (p.Height - height) == 0);
         palletSaved.Should().NotBeNull();
         palletSaved?.Boxes.Should().HaveCount(2);
     }
