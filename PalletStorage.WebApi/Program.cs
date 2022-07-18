@@ -5,12 +5,12 @@ using FluentValidation;
 using DataContext;
 using DataContext.Entities.MappingProfiles;
 using PalletStorage.WebApi.Models.MappingProfiles;
-using static System.Console;
 using PalletStorage.WebApi.Validators.Box;
 using PalletStorage.WebApi.Validators.Pallet;
 using PalletStorage.Repositories;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
+using static System.Console;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,8 +56,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<PalletCreateRequestValidato
 builder.Services.AddValidatorsFromAssemblyContaining<PalletUpdateRequestValidator>();
 
 // AutoMapper
-builder.Services.AddAutoMapper(typeof(MappingProfileApi));
-builder.Services.AddAutoMapper(typeof(MappingProfileEntity));
+builder.Services.AddAutoMapper(typeof(MappingProfileApi), typeof(MappingProfileEntity));
 
 // Repositories
 builder.Services.AddScoped<IBoxRepository, BoxRepository>();

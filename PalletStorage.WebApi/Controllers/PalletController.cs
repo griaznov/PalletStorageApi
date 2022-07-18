@@ -77,7 +77,7 @@ public class PalletController : ControllerBase
             return BadRequest("Repository failed to create new pallet.");
         }
 
-        return mapper.Map<PalletResponse>(addedPallet);
+        return Created($"{Request.Path}/{addedPallet.Id}", mapper.Map<PalletResponse>(addedPallet));
     }
 
     // PUT: api/pallets

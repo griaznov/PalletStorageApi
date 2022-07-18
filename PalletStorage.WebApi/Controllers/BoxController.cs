@@ -75,7 +75,7 @@ public class BoxController : ControllerBase
             return BadRequest("Repository failed to create box.");
         }
 
-        return mapper.Map<BoxResponse>(addedBox);
+        return Created($"{Request.Path}/{addedBox.Id}", mapper.Map<BoxResponse>(addedBox));
     }
 
     // PUT: api/boxes

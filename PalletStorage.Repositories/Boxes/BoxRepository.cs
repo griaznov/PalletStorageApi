@@ -31,9 +31,9 @@ public class BoxRepository : IBoxRepository
 
     public async Task<BoxModel?> GetAsync(int id)
     {
-        var boxEf = await db.Boxes.FindAsync(id);
+        var boxEntity = await db.Boxes.FirstOrDefaultAsync(b => b.Id == id);
 
-        return mapper.Map<BoxModel>(boxEf);
+        return mapper.Map<BoxModel>(boxEntity);
     }
 
     public async Task<BoxModel?> CreateAsync(BoxModel box)
