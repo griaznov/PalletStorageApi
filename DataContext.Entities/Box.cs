@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace DataContext.Models.Entities
+namespace DataContext.Entities
 {
     [Index(nameof(Id), Name = "Id")]
     public class Box

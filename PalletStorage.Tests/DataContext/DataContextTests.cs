@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using DataContext;
-using DataContext.Models.Entities;
+using DataContext.Entities;
 
 namespace PalletStorage.Tests.DataContext;
 

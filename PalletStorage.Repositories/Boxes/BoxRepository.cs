@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DataContext;
+using DataContext.Entities;
 using Microsoft.EntityFrameworkCore;
-using PalletStorage.Business.Models;
-using DataContext.Models.Entities;
+using PalletStorage.BusinessModels;
 
 namespace PalletStorage.Repositories.Boxes;
 
@@ -38,31 +38,34 @@ public class BoxRepository : IBoxRepository
 
     public async Task<BoxModel?> CreateAsync(BoxModel box)
     {
+        var boxEntity = mapper.Map<Box>(box);
+
         // add to database using EF Core
-        await db.Boxes.AddAsync(mapper.Map<Box>(box));
+        await db.Boxes.AddAsync(boxEntity);
 
         var affected = await db.SaveChangesAsync();
 
-        return affected == 1 ? box : null;
+        return affected == 1 ? mapper.Map<BoxModel>(boxEntity) : null;
     }
 
     public async Task<BoxModel?> UpdateAsync(BoxModel box)
     {
-        var boxFounded = await db.Boxes.FindAsync(box.Id);
+        var boxEntity = await db.Boxes.FindAsync(box.Id);
 
-        if (boxFounded is null)
+        if (boxEntity is null)
         {
-            await db.Boxes.AddAsync(mapper.Map<Box>(box));
+            boxEntity = mapper.Map<Box>(box);
+            await db.Boxes.AddAsync(boxEntity);
         }
         else
         {
             // update in database new values for entry
-            mapper.Map(box, boxFounded);
+            mapper.Map(box, boxEntity);
         }
 
         var affected = await db.SaveChangesAsync();
 
-        return affected == 1 ? box : null;
+        return affected == 1 ? mapper.Map<BoxModel>(boxEntity) : null;
     }
 
     public async Task<bool> DeleteAsync(int id)

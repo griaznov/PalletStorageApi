@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataContext.Models.Entities
+namespace DataContext.Entities
 {
     [Index(nameof(Id), Name = "Id")]
     public class Pallet

@@ -1,10 +1,10 @@
 ﻿using Xunit;
 using FluentAssertions;
 using AutoMapper;
-using PalletStorage.Business.Models;
 using PalletStorage.WebApi.Models.MappingProfiles;
 using PalletStorage.WebApi.Models.Models.Box;
 using PalletStorage.WebApi.Models.Models.Pallet;
+using PalletStorage.BusinessModels;
 
 namespace PalletStorage.Tests.ModelApiConverters;
 

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using PalletStorage.Business.Models;
+using PalletStorage.BusinessModels;
 using PalletStorage.WebApi.Models.Models.Box;
 using PalletStorage.WebApi.Models.Models.Pallet;
 

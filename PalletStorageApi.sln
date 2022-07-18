@@ -11,11 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.WebApi.Models
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.Repositories", "PalletStorage.Repositories\PalletStorage.Repositories.csproj", "{F1854F70-BEEC-4DA3-B4C5-B2761B885662}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataContext.Models", "DataContext.Models\DataContext.Models.csproj", "{2D4E7063-5D4A-4E91-B299-4A1C27199E3D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataContext", "DataContext\DataContext.csproj", "{16A418FA-F1A3-4023-9175-537C82007390}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.Business", "PalletStorage.Business\PalletStorage.Business.csproj", "{A935F03A-49F6-433F-AD9D-0AF2C9B57F13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataContext.Entities", "DataContext.Entities\DataContext.Entities.csproj", "{EA7D4B34-0FF9-4AF0-93BD-1D18FC613093}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PalletStorage.BusinessModels", "PalletStorage.BusinessModels\PalletStorage.BusinessModels.csproj", "{422475E6-C55E-4896-B68B-5061E64500E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,18 +39,18 @@ Global
 		{F1854F70-BEEC-4DA3-B4C5-B2761B885662}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1854F70-BEEC-4DA3-B4C5-B2761B885662}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1854F70-BEEC-4DA3-B4C5-B2761B885662}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D4E7063-5D4A-4E91-B299-4A1C27199E3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D4E7063-5D4A-4E91-B299-4A1C27199E3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D4E7063-5D4A-4E91-B299-4A1C27199E3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D4E7063-5D4A-4E91-B299-4A1C27199E3D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{16A418FA-F1A3-4023-9175-537C82007390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{16A418FA-F1A3-4023-9175-537C82007390}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16A418FA-F1A3-4023-9175-537C82007390}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16A418FA-F1A3-4023-9175-537C82007390}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A935F03A-49F6-433F-AD9D-0AF2C9B57F13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A935F03A-49F6-433F-AD9D-0AF2C9B57F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A935F03A-49F6-433F-AD9D-0AF2C9B57F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A935F03A-49F6-433F-AD9D-0AF2C9B57F13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA7D4B34-0FF9-4AF0-93BD-1D18FC613093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA7D4B34-0FF9-4AF0-93BD-1D18FC613093}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA7D4B34-0FF9-4AF0-93BD-1D18FC613093}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA7D4B34-0FF9-4AF0-93BD-1D18FC613093}.Release|Any CPU.Build.0 = Release|Any CPU
+		{422475E6-C55E-4896-B68B-5061E64500E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{422475E6-C55E-4896-B68B-5061E64500E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{422475E6-C55E-4896-B68B-5061E64500E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{422475E6-C55E-4896-B68B-5061E64500E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

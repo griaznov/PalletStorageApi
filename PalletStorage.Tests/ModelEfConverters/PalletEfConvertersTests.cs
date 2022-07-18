@@ -1,9 +1,9 @@
 ﻿using Xunit;
 using FluentAssertions;
 using AutoMapper;
-using DataContext.Models.Entities;
-using DataContext.Models.MappingProfiles;
-using PalletStorage.Business.Models;
+using DataContext.Entities.MappingProfiles;
+using DataContext.Entities;
+using PalletStorage.BusinessModels;
 
 namespace PalletStorage.Tests.ModelEfConverters;
 

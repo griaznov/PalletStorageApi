@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.HttpLogging;
 using FluentValidation;
 using DataContext;
-using DataContext.Models.MappingProfiles;
+using DataContext.Entities.MappingProfiles;
 using PalletStorage.WebApi.Models.MappingProfiles;
 using static System.Console;
 using PalletStorage.WebApi.Validators.Box;

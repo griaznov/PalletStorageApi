@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using DataContext.Models.Entities;
-using PalletStorage.Business.Models;
+using PalletStorage.BusinessModels;
 
-namespace DataContext.Models.MappingProfiles;
+namespace DataContext.Entities.MappingProfiles;
 
 public class MappingProfileEntity : Profile
 {

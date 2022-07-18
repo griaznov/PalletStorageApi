@@ -1,4 +1,4 @@
-﻿using DataContext.Models.Entities;
+﻿using DataContext.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataContext;

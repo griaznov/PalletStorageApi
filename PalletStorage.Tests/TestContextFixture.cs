@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using AutoMapper;
 using DataContext;
-using DataContext.Models.MappingProfiles;
+using DataContext.Entities.MappingProfiles;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.WebApi.Controllers;
 using PalletStorage.WebApi.Models.MappingProfiles;

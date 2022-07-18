@@ -1,8 +1,8 @@
 ﻿using Xunit;
 using FluentAssertions;
 using DataContext;
-using PalletStorage.Business.Models;
 using PalletStorage.Repositories.Pallets;
+using PalletStorage.BusinessModels;
 
 namespace PalletStorage.Tests.DataRepositories;
 

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DataContext;
-using DataContext.Models.Entities;
+using DataContext.Entities;
 using Microsoft.EntityFrameworkCore;
-using PalletStorage.Business.Models;
+using PalletStorage.BusinessModels;
 
 namespace PalletStorage.Repositories.Pallets;
 
@@ -39,31 +39,34 @@ public class PalletRepository : IPalletRepository
 
     public async Task<PalletModel?> CreateAsync(PalletModel pallet)
     {
+        var palletEntity = mapper.Map<Pallet>(pallet);
+
         // add to database using EF Core
-        await db.Pallets.AddAsync(mapper.Map<Pallet>(pallet));
+        await db.Pallets.AddAsync(palletEntity);
 
         var affected = await db.SaveChangesAsync();
 
-        return affected == 1 ? pallet : null;
+        return affected == 1 ? mapper.Map<PalletModel>(palletEntity) : null;
     }
 
     public async Task<PalletModel?> UpdateAsync(PalletModel pallet)
     {
-        var palletFounded = await db.Pallets.FindAsync(pallet.Id);
+        var palletEntity = await db.Pallets.FindAsync(pallet.Id);
 
-        if (palletFounded is null)
+        if (palletEntity is null)
         {
-            await db.Pallets.AddAsync(mapper.Map<Pallet>(pallet));
+            palletEntity = mapper.Map<Pallet>(pallet);
+            await db.Pallets.AddAsync(palletEntity);
         }
         else
         {
             // update in database new values for entry
-            mapper.Map(pallet, palletFounded);
+            mapper.Map(pallet, palletEntity);
         }
 
         var affected = await db.SaveChangesAsync();
 
-        return affected == 1 ? pallet : null;
+        return affected == 1 ? mapper.Map<PalletModel>(palletEntity) : null;
     }
 
     public async Task<bool> DeleteAsync(int id)

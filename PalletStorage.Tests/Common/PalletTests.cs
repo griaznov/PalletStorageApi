@@ -1,4 +1,4 @@
-﻿using PalletStorage.Business.Models;
+﻿using PalletStorage.BusinessModels;
 using Xunit;
 
 namespace PalletStorage.Tests.Common;

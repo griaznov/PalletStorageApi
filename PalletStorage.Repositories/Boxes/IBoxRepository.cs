@@ -1,4 +1,4 @@
-﻿using PalletStorage.Business.Models;
+﻿using PalletStorage.BusinessModels;
 
 namespace PalletStorage.Repositories;
 

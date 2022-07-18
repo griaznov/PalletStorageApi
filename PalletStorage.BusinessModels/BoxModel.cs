@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using static System.Console;
 
-namespace PalletStorage.Business.Models;
+namespace PalletStorage.BusinessModels;
 
 public class BoxModel : UniversalBoxModel
 {

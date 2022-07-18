@@ -1,6 +1,6 @@
 ﻿using Xunit;
 using AutoMapper;
-using DataContext.Models.MappingProfiles;
+using DataContext.Entities.MappingProfiles;
 
 namespace PalletStorage.Tests.ModelEfConverters;
 

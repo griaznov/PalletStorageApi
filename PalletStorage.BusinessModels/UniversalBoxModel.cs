@@ -1,4 +1,4 @@
-﻿namespace PalletStorage.Business.Models;
+﻿namespace PalletStorage.BusinessModels;
 
 public class UniversalBoxModel
 {
