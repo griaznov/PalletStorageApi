@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using PalletStorage.WebApi.Models.Models.Pallet;
+using PalletStorage.WebApi.Models.Pallet;
 
 namespace PalletStorage.WebApi.Validators.Pallet
 {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using FluentValidation;
-using PalletStorage.WebApi.Models.Models.Box;
 using PalletStorage.Repositories;
 using PalletStorage.BusinessModels;
+using PalletStorage.WebApi.Models.Box;
 
 namespace PalletStorage.WebApi.Controllers;
 

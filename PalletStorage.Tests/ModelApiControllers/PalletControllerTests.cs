@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using PalletStorage.WebApi.Controllers;
-using PalletStorage.WebApi.Models.Models.Pallet;
+using PalletStorage.WebApi.Models.Pallet;
 
 namespace PalletStorage.Tests.ModelApiControllers;
 

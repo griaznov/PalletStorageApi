@@ -2,9 +2,9 @@
 using FluentAssertions;
 using AutoMapper;
 using PalletStorage.WebApi.Models.MappingProfiles;
-using PalletStorage.WebApi.Models.Models.Box;
-using PalletStorage.WebApi.Models.Models.Pallet;
 using PalletStorage.BusinessModels;
+using PalletStorage.WebApi.Models.Box;
+using PalletStorage.WebApi.Models.Pallet;
 
 namespace PalletStorage.Tests.ModelApiConverters;
 

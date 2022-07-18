@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using PalletStorage.BusinessModels;
-using PalletStorage.WebApi.Models.Models.Box;
-using PalletStorage.WebApi.Models.Models.Pallet;
+using PalletStorage.WebApi.Models.Box;
+using PalletStorage.WebApi.Models.Pallet;
 
 namespace PalletStorage.WebApi.Models.MappingProfiles;
 

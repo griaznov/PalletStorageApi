@@ -32,7 +32,8 @@ public class PalletRepository : IPalletRepository
 
     public async Task<PalletModel?> GetAsync(int id)
     {
-        var palletEf = await db.Pallets.FindAsync(id);
+        //var palletEf = await db.Pallets.FindAsync(id);
+        var palletEf = await db.Pallets.FirstOrDefaultAsync(p => p.Id == id);
 
         return mapper.Map<PalletModel>(palletEf);
     }
