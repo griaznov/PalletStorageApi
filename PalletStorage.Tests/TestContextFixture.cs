@@ -10,6 +10,7 @@ using PalletStorage.WebApi.Validators.Pallet;
 using PalletStorage.Repositories;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
+using PalletStorage.WebApi.Validators.Box.RequestValidator;
 
 namespace PalletStorage.Tests;
 
@@ -41,7 +42,11 @@ public class StorageContextFixture : IDisposable, IAsyncLifetime
         BoxRepo = new BoxRepository(Db, mapper);
 
         PalletController = new PalletController(PalletRepo, mapper, new PalletCreateRequestValidator(), new PalletUpdateRequestValidator());
-        BoxController = new BoxController(BoxRepo, mapper, new BoxCreateRequestValidator(), new BoxUpdateRequestValidator());
+
+        //BoxController = new BoxController(BoxRepo, mapper, new BoxCreateRequestValidator(), new BoxUpdateRequestValidator());
+        var boxCv = new BoxCreateRequestValidator();
+        var boxUv = new BoxUpdateRequestValidator();
+        BoxController = new BoxController(BoxRepo, mapper, boxCv, boxUv, new BoxRequestValidator(boxCv, boxUv));
     }
 
     /// <summary>

@@ -4,6 +4,7 @@ using FluentValidation;
 using PalletStorage.Repositories;
 using PalletStorage.BusinessModels;
 using PalletStorage.WebApi.Models.Box;
+using PalletStorage.WebApi.Validators.Box.RequestValidator;
 
 namespace PalletStorage.WebApi.Controllers;
 
@@ -15,18 +16,22 @@ public class BoxController : ControllerBase
     private readonly IMapper mapper;
     private readonly IValidator<BoxCreateRequest> createValidator;
     private readonly IValidator<BoxUpdateRequest> updateValidator;
+    private readonly IBoxRequestValidator validator;
     private readonly IBoxRepository repo;
 
     // constructor injects repository registered in Startup
     public BoxController(IBoxRepository repo,
         IMapper mapper,
         IValidator<BoxCreateRequest> createValidator,
-        IValidator<BoxUpdateRequest> updateValidator)
+        IValidator<BoxUpdateRequest> updateValidator,
+        IBoxRequestValidator validator)
+        // TODO - Fix it?
     {
         this.repo = repo;
         this.mapper = mapper;
         this.createValidator = createValidator;
         this.updateValidator = updateValidator;
+        this.validator = validator;
     }
 
     // GET: api/boxes
@@ -62,7 +67,8 @@ public class BoxController : ControllerBase
     [ProducesResponseType(400)]
     public async Task<ActionResult<BoxResponse>> Create([FromBody] BoxCreateRequest box)
     {
-        var result = await createValidator.ValidateAsync(box);
+        //var result = await createValidator.ValidateAsync(box);
+        var result = await validator.ValidateCreateAsync(box);
         if (!result.IsValid)
         {
             return BadRequest(result.Errors.ToList()); // 400 Bad request
@@ -74,8 +80,9 @@ public class BoxController : ControllerBase
         {
             return BadRequest("Repository failed to create box.");
         }
-
-        return Created($"{Request.Path}/{addedBox.Id}", mapper.Map<BoxResponse>(addedBox));
+        // TODO - Fix it!
+        //return Created($"{Request.Path}/{addedBox.Id}", mapper.Map<BoxResponse>(addedBox));
+        return mapper.Map<BoxResponse>(addedBox);
     }
 
     // PUT: api/boxes

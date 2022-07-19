@@ -11,6 +11,7 @@ using PalletStorage.Repositories;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
 using static System.Console;
+using PalletStorage.WebApi.Validators.Box.RequestValidator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddValidatorsFromAssemblyContaining<BoxResponseValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<BoxCreateRequestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<BoxUpdateRequestValidator>();
+
+builder.Services.AddScoped<IBoxRequestValidator, BoxRequestValidator>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<PalletResponseValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<PalletCreateRequestValidator>();

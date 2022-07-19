@@ -61,6 +61,7 @@ public class PalletController : ControllerBase
     [HttpPost]
     [ProducesResponseType(201, Type = typeof(PalletResponse))]
     [ProducesResponseType(400)]
+    //public async Task<ActionResult> Create([FromBody] PalletCreateRequest pallet)
     public async Task<ActionResult<PalletResponse>> Create([FromBody] PalletCreateRequest pallet)
     {
         var result = await createValidator.ValidateAsync(pallet);
@@ -76,8 +77,9 @@ public class PalletController : ControllerBase
         {
             return BadRequest("Repository failed to create new pallet.");
         }
-
-        return Created($"{Request.Path}/{addedPallet.Id}", mapper.Map<PalletResponse>(addedPallet));
+        // TODO - Fix it!
+        //return Created($"{Request.Path}/{addedPallet.Id}", mapper.Map<PalletResponse>(addedPallet));
+        return mapper.Map<PalletResponse>(addedPallet);
     }
 
     // PUT: api/pallets
