@@ -1,9 +1,9 @@
-﻿using DataContext.Models.Converters;
-using DataContext.Models.Models;
+﻿using Xunit;
 using FluentAssertions;
-using PalletStorage.Common.CommonClasses;
-using Xunit;
 using AutoMapper;
+using DataContext.Entities.MappingProfiles;
+using DataContext.Entities;
+using PalletStorage.BusinessModels;
 
 namespace PalletStorage.Tests.ModelEfConverters;
 
@@ -15,7 +15,7 @@ public class PalletEfConvertersTests
     {
         var config = new MapperConfiguration(cfg =>
         {
-            cfg.AddProfile(typeof(MappingProfileEf));
+            cfg.AddProfile(typeof(MappingProfileEntity));
         });
 
         mapper = config.CreateMapper();
@@ -25,13 +25,13 @@ public class PalletEfConvertersTests
     public void PalletConvertToBoxEfModel()
     {
         // Arrange
-        var pallet = Pallet.Create(2, 3, 4);
-        var box = Box.Create(2, 2, 2, 2, DateTime.Today);
+        var pallet = PalletModel.Create(2, 3, 4);
+        var box = BoxModel.Create(2, 2, 2, 2, DateTime.Today);
 
         pallet.AddBox(box);
 
         // Act
-        var palletModel = mapper.Map<PalletEfModel>(pallet);
+        var palletModel = mapper.Map<Pallet>(pallet);
 
         // Assert
         palletModel.Boxes.Should().HaveCount(1);
@@ -41,7 +41,7 @@ public class PalletEfConvertersTests
     public void BoxEfModelConvertToBox()
     {
         // Arrange
-        var boxModel = new BoxEfModel()
+        var boxModel = new Box()
         {
             Id = 33,
             Width = 1,
@@ -52,18 +52,18 @@ public class PalletEfConvertersTests
             ExpirationDate = DateTime.Today,
         };
 
-        var palletModel = new PalletEfModel()
+        var palletModel = new Pallet()
         {
             Id = 36,
             Width = 1,
             Length = 1,
             Height = 1,
             PalletWeight = 10,
-            Boxes = new List<BoxEfModel> { boxModel }
+            Boxes = new List<Box> { boxModel }
         };
 
         // Act
-        var pallet = mapper.Map<Pallet>(palletModel);
+        var pallet = mapper.Map<PalletModel>(palletModel);
 
         // Assert
         pallet.Boxes.Should().HaveCount(1);

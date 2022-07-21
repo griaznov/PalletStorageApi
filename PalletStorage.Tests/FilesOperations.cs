@@ -9,13 +9,5 @@ namespace PalletStorage.Tests
             return string.Concat(GetRandomFileName().Replace(".", ""),
                 (!string.IsNullOrEmpty(extension)) ? (extension.StartsWith(".") ? extension : string.Concat(".", extension)) : "");
         }
-
-        public static void DeleteFile(string fileName)
-        {
-            if (File.Exists(fileName))
-            {
-                File.Delete(fileName);
-            }
-        }
     }
 }

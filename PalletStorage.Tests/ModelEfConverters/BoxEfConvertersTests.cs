@@ -1,10 +1,9 @@
-﻿using AutoMapper;
-using DataContext.Models.Converters;
-using DataContext.Models.Models;
+﻿using Xunit;
+using AutoMapper;
+using DataContext.Entities.MappingProfiles;
 using FluentAssertions;
-using PalletStorage.Common.CommonClasses;
-using PalletStorage.WebApi.Models.Converters;
-using Xunit;
+using DataContext.Entities;
+using PalletStorage.BusinessModels;
 
 namespace PalletStorage.Tests.ModelEfConverters;
 
@@ -16,7 +15,7 @@ public class BoxEfConvertersTests
     {
         var config = new MapperConfiguration(cfg =>
         {
-            cfg.AddProfile(typeof(MappingProfileEf));
+            cfg.AddProfile(typeof(MappingProfileEntity));
         });
 
         mapper = config.CreateMapper();
@@ -26,10 +25,10 @@ public class BoxEfConvertersTests
     public void BoxConvertToBoxEfModel()
     {
         // Arrange
-        var box = Box.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
+        var box = BoxModel.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
 
         // Act
-        Action action = () => { var boxModel = mapper.Map<BoxEfModel>(box); };
+        Action action = () => { var boxModel = mapper.Map<Box>(box); };
 
         // Assert
         action.Should().NotThrow<Exception>();
@@ -39,7 +38,7 @@ public class BoxEfConvertersTests
     public void BoxEfModelConvertToBox()
     {
         // Arrange
-        var boxModel = new BoxEfModel()
+        var boxModel = new Box()
         {
             Id = 33,
             Width = 1,
@@ -51,7 +50,7 @@ public class BoxEfConvertersTests
         };
 
         // Act
-        Action action = () => { var box = mapper.Map<Box>(boxModel); };
+        Action action = () => { var box = mapper.Map<BoxModel>(boxModel); };
 
         // Assert
         action.Should().NotThrow<Exception>();

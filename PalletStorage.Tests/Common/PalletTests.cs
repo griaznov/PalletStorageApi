@@ -1,4 +1,4 @@
-﻿using PalletStorage.Common.CommonClasses;
+﻿using PalletStorage.BusinessModels;
 using Xunit;
 
 namespace PalletStorage.Tests.Common;
@@ -9,7 +9,7 @@ public class PalletTests
     public void CreationPallet()
     {
         // Act
-        var pallet = Pallet.Create(2, 3, 4);
+        var pallet = PalletModel.Create(2, 3, 4);
 
         // Assert
         Assert.Equal(24, pallet.Volume);
@@ -19,8 +19,8 @@ public class PalletTests
     public void AddBoxToPallet()
     {
         // Arrange
-        var pallet = Pallet.Create(2, 3, 4);
-        var box = Box.Create(2, 2, 2, 2, DateTime.Today);
+        var pallet = PalletModel.Create(2, 3, 4);
+        var box = BoxModel.Create(2, 2, 2, 2, DateTime.Today);
 
         // Act
         pallet.AddBox(box);
@@ -33,9 +33,9 @@ public class PalletTests
     public void CheckingVolume()
     {
         // Arrange
-        var pallet = Pallet.Create(2, 3, 4);
-        var box1 = Box.Create(2, 2, 2, 2, DateTime.Today);
-        var box2 = Box.Create(2, 3, 2, 3, DateTime.Today);
+        var pallet = PalletModel.Create(2, 3, 4);
+        var box1 = BoxModel.Create(2, 2, 2, 2, DateTime.Today);
+        var box2 = BoxModel.Create(2, 3, 2, 3, DateTime.Today);
 
         // Act
         pallet.AddBox(box1);
@@ -49,7 +49,7 @@ public class PalletTests
     [Fact(DisplayName = "4. Checking empty expiration date for pallet")]
     public void CheckingDefaultExpirationDate()
     {
-        var pallet = Pallet.Create(2, 3, 4);
+        var pallet = PalletModel.Create(2, 3, 4);
 
         // For an empty pallet, the date must be empty
         Assert.Equal(default, pallet.ExpirationDate);
@@ -63,10 +63,10 @@ public class PalletTests
         var biggerDate = lessDate.AddDays(1);
         var biggerDate2 = lessDate.AddDays(2);
 
-        var pallet = Pallet.Create(2, 3, 4);
-        var box1 = Box.Create(2, 2, 2, 2, DateTime.Today, lessDate);
-        var box2 = Box.Create(2, 3, 2, 3, DateTime.Today, biggerDate);
-        var box3 = Box.Create(2, 3, 2, 3, DateTime.Today, biggerDate2);
+        var pallet = PalletModel.Create(2, 3, 4);
+        var box1 = BoxModel.Create(2, 2, 2, 2, DateTime.Today, lessDate);
+        var box2 = BoxModel.Create(2, 3, 2, 3, DateTime.Today, biggerDate);
+        var box3 = BoxModel.Create(2, 3, 2, 3, DateTime.Today, biggerDate2);
 
         // Act
         pallet.AddBox(box1);

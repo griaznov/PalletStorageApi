@@ -1,76 +1,88 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PalletStorage.Common.CommonClasses;
-using PalletStorage.Repositories.Repositories;
-using PalletStorage.WebApi.Models.Models;
 using AutoMapper;
 using FluentValidation;
+using PalletStorage.Repositories;
+using PalletStorage.BusinessModels;
+using PalletStorage.WebApi.Models.Box;
+using PalletStorage.WebApi.Validators.Box.RequestValidator;
 
 namespace PalletStorage.WebApi.Controllers;
 
 // base address: api/boxes
 [Route("api/[controller]")]
 [ApiController]
-public class BoxesController : ControllerBase
+public class BoxController : ControllerBase
 {
     private readonly IMapper mapper;
-    private readonly IValidator<BoxApiModel> validator;
+    private readonly IValidator<BoxCreateRequest> createValidator;
+    private readonly IValidator<BoxUpdateRequest> updateValidator;
+    private readonly IBoxRequestValidator validator;
     private readonly IBoxRepository repo;
 
     // constructor injects repository registered in Startup
-    public BoxesController(IBoxRepository repo, IMapper mapper, IValidator<BoxApiModel> validator)
+    public BoxController(IBoxRepository repo,
+        IMapper mapper,
+        IValidator<BoxCreateRequest> createValidator,
+        IValidator<BoxUpdateRequest> updateValidator,
+        IBoxRequestValidator validator)
+        // TODO - Fix it?
     {
         this.repo = repo;
         this.mapper = mapper;
+        this.createValidator = createValidator;
+        this.updateValidator = updateValidator;
         this.validator = validator;
     }
 
     // GET: api/boxes
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<BoxApiModel>))]
-    public async Task<IEnumerable<BoxApiModel>> GetBoxes(int take = 100, int skip = 0)
+    [ProducesResponseType(200, Type = typeof(IEnumerable<BoxResponse>))]
+    public async Task<IEnumerable<BoxResponse>> GetBoxes(int take = 100, int skip = 0)
     {
         var boxes = await repo.GetAllAsync(take, skip);
 
-        return boxes.Select(box => mapper.Map<BoxApiModel>(box)).AsEnumerable();
+        return boxes.Select(box => mapper.Map<BoxResponse>(box)).AsEnumerable();
     }
 
     // GET: api/boxes/[id]
     [HttpGet("{id:int}", Name = nameof(GetBox))] // named route
-    [ProducesResponseType(200, Type = typeof(BoxApiModel))]
+    [ProducesResponseType(200, Type = typeof(BoxResponse))]
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetBox(int id)
     {
-        Box? box = await repo.GetAsync(id);
+        BoxModel? box = await repo.GetAsync(id);
 
         if (box == null)
         {
             return NotFound(); // 404 Resource not found
         }
 
-        return Ok(mapper.Map<BoxApiModel>(box)); // 200 OK with customer in body
+        return Ok(mapper.Map<BoxResponse>(box)); // 200 OK with customer in body
     }
 
     // POST: api/boxes
     // BODY: Box (JSON, XML)
     [HttpPost]
-    [ProducesResponseType(201, Type = typeof(BoxApiModel))]
+    [ProducesResponseType(201, Type = typeof(BoxResponse))]
     [ProducesResponseType(400)]
-    public async Task<ActionResult<BoxApiModel>> Create([FromBody] BoxApiModel box)
+    public async Task<ActionResult<BoxResponse>> Create([FromBody] BoxCreateRequest box)
     {
-        var result = await validator.ValidateAsync(box);
+        //var result = await createValidator.ValidateAsync(box);
+        var result = await validator.ValidateCreateAsync(box);
         if (!result.IsValid)
         {
             return BadRequest(result.Errors.ToList()); // 400 Bad request
         }
 
-        var addedBox = await repo.CreateAsync(mapper.Map<Box>(box));
+        var addedBox = await repo.CreateAsync(mapper.Map<BoxModel>(box));
 
         if (addedBox == null)
         {
             return BadRequest("Repository failed to create box.");
         }
-
-        return mapper.Map<BoxApiModel>(addedBox);
+        // TODO - Fix it!
+        //return Created($"{Request.Path}/{addedBox.Id}", mapper.Map<BoxResponse>(addedBox));
+        return mapper.Map<BoxResponse>(addedBox);
     }
 
     // PUT: api/boxes
@@ -79,20 +91,16 @@ public class BoxesController : ControllerBase
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> Update([FromBody] BoxApiModel box)
+    public async Task<IActionResult> Update([FromBody] BoxUpdateRequest box)
     {
-        if (box.Id == null)
-        {
-            return BadRequest("Wrong model or ID for the box."); // 400 Bad request
-        }
+        var result = await updateValidator.ValidateAsync(box);
 
-        var result = await validator.ValidateAsync(box);
         if (!result.IsValid)
         {
             return BadRequest(result.Errors.ToList()); // 400 Bad request
         }
 
-        var existing = await repo.UpdateAsync(mapper.Map<Box>(box));
+        var existing = await repo.UpdateAsync(mapper.Map<BoxModel>(box));
 
         if (existing == null)
         {

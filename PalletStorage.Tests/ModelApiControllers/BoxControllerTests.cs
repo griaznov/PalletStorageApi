@@ -1,45 +1,26 @@
-﻿using AutoMapper;
-using DataContext;
-using DataContext.Models.Converters;
+﻿using Xunit;
 using FluentAssertions;
-using PalletStorage.Repositories.Repositories;
 using PalletStorage.WebApi.Controllers;
-using PalletStorage.WebApi.Models.Converters;
-using PalletStorage.WebApi.Models.Models;
-using PalletStorage.WebApi.Validators;
-using Xunit;
+using PalletStorage.WebApi.Models.Box;
 
 namespace PalletStorage.Tests.ModelApiControllers;
 
-public class BoxControllerTests : IDisposable
+[Collection("StorageContextCollectionFixture")]
+public class BoxControllerTests
 {
-    private readonly StorageDataContext db;
-    private readonly BoxesController controller;
+    private readonly BoxController controller;
 
-    public BoxControllerTests()
+    public BoxControllerTests(StorageContextFixture contextFixture)
     {
-        var fileName = FilesOperations.GenerateFileName("db");
-        db = DataContextCreator.CreateDataContextAsync(fileName).Result;
-
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(typeof(MappingProfileApi));
-            cfg.AddProfile(typeof(MappingProfileEf));
-        });
-
-        var mapper = config.CreateMapper();
-
-        var boxRepo = new BoxRepository(db, mapper);
-        controller = new BoxesController(boxRepo, mapper, new BoxValidator());
+        controller = contextFixture.BoxController;
     }
 
     [Fact(DisplayName = "1. Create Box")]
     public async Task CreateBox()
     {
         // Arrange
-        var modelApi = new BoxApiModel()
+        var box = new BoxCreateRequest()
         {
-            Id = 30,
             Width = 1,
             Length = 1,
             Height = 1,
@@ -49,14 +30,9 @@ public class BoxControllerTests : IDisposable
         };
 
         // Act
-        var response = await controller.Create(modelApi);
+        var response = await controller.Create(box);
 
         // Assert
-        response?.Value.Should().NotBeNull().And.BeAssignableTo<BoxApiModel>();
-    }
-
-    public void Dispose()
-    {
-        db.Database.EnsureDeleted();
+        response.Value.Should().NotBeNull().And.BeAssignableTo<BoxResponse>();
     }
 }

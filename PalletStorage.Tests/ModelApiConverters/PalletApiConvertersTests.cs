@@ -1,9 +1,10 @@
-﻿using FluentAssertions;
-using PalletStorage.Common.CommonClasses;
-using PalletStorage.WebApi.Models.Converters;
-using PalletStorage.WebApi.Models.Models;
-using Xunit;
+﻿using Xunit;
+using FluentAssertions;
 using AutoMapper;
+using PalletStorage.WebApi.Models.MappingProfiles;
+using PalletStorage.BusinessModels;
+using PalletStorage.WebApi.Models.Box;
+using PalletStorage.WebApi.Models.Pallet;
 
 namespace PalletStorage.Tests.ModelApiConverters;
 
@@ -25,13 +26,13 @@ public class PalletApiConvertersTests
     public void PalletConvertToPalletApiModel()
     {
         // Arrange
-        var pallet = Pallet.Create(2, 3, 4);
-        var box = Box.Create(2, 2, 2, 2, DateTime.Today);
+        var pallet = PalletModel.Create(2, 3, 4);
+        var box = BoxModel.Create(2, 2, 2, 2, DateTime.Today);
 
         pallet.AddBox(box);
 
         // Act
-        var palletModel = mapper.Map<PalletApiModel>(pallet);
+        var palletModel = mapper.Map<PalletResponse>(pallet);
 
         // Assert
         palletModel.Boxes.Should().HaveCount(1);
@@ -41,7 +42,7 @@ public class PalletApiConvertersTests
     public void PalletApiModelConvertToBox()
     {
         // Arrange
-        var boxModel = new BoxApiModel()
+        var boxModel = new BoxResponse()
         {
             Id = 33,
             Width = 1,
@@ -52,18 +53,18 @@ public class PalletApiConvertersTests
             ExpirationDate = DateTime.Today,
         };
 
-        var palletModel = new PalletApiModel()
+        var palletModel = new PalletResponse()
         {
             Id = 36,
             Width = 1,
             Length = 1,
             Height = 1,
             PalletWeight = 10,
-            Boxes = new List<BoxApiModel> { boxModel }
+            Boxes = new List<BoxResponse> { boxModel }
         };
 
         // Act
-        var pallet = mapper.Map<Pallet>(palletModel);
+        var pallet = mapper.Map<PalletModel>(palletModel);
 
         // Assert
         pallet.Boxes.Should().HaveCount(1);

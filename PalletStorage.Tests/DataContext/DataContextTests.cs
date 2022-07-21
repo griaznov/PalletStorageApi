@@ -1,34 +1,35 @@
-﻿using DataContext;
-using DataContext.Models.Models;
+﻿using Xunit;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+using DataContext;
+using DataContext.Entities;
 
 namespace PalletStorage.Tests.DataContext;
 
-public class DataContextTests : IDisposable
+[Collection("StorageContextCollectionFixture")]
+public class DataContextTests
 {
-    private readonly StorageDataContext db;
+    private readonly IStorageContext db;
     private readonly string fileName;
 
-    public DataContextTests()
+    public DataContextTests(StorageContextFixture contextFixture)
     {
-        fileName = FilesOperations.GenerateFileName("db");
-        db = DataContextCreator.CreateDataContextAsync(fileName).Result;
+        fileName = contextFixture.FilePath;
+        db = contextFixture.Db;
     }
 
     [Fact(DisplayName = "1. The database can be created by models")]
-    public void CreateDatabase()
+    protected void CreateDatabase()
     {
         // Assert
         File.Exists(fileName).Should().BeTrue("Because database must be created by models");
     }
 
     [Fact(DisplayName = "2. Add a box model to the database")]
-    public async void AddBox()
+    protected async void AddBox()
     {
         // Arrange
-        var box = new BoxEfModel()
+        var box = new Box()
         {
             Width = 1,
             Length = 1,
@@ -43,15 +44,14 @@ public class DataContextTests : IDisposable
         await db.SaveChangesAsync();
 
         // Assert
-        db.Boxes.Should().HaveCount(1);
         db.Boxes.Should().Contain(box);
     }
 
     [Fact(DisplayName = "3. Add a pallet model to the database")]
-    public async void AddPallet()
+    protected async void AddPallet()
     {
         // Arrange
-        var pallet = new PalletEfModel()
+        var pallet = new Pallet()
         {
             Width = 1,
             Length = 1,
@@ -63,16 +63,15 @@ public class DataContextTests : IDisposable
         await db.SaveChangesAsync();
 
         // Assert
-        db.Pallets.Should().HaveCount(1);
         db.Pallets.Should().Contain(pallet);
     }
 
     [Fact(DisplayName = "4. Add a pallet model containing box models to the database")]
-    public async void AddPalletWithBoxes()
+    protected async void AddPalletWithBoxes()
     {
         // Arrange
         // Pallet - owner
-        var pallet = new PalletEfModel()
+        var pallet = new Pallet()
         {
             Width = 1,
             Length = 1,
@@ -81,7 +80,7 @@ public class DataContextTests : IDisposable
         };
 
         // Box with id ref to pallet-owner
-        var box = new BoxEfModel()
+        var box = new Box()
         {
             Width = 1,
             Length = 1,
@@ -105,10 +104,5 @@ public class DataContextTests : IDisposable
             .First(p => p.Id == pallet.Id)
             .Boxes.Contains(box)
             .Should().BeTrue();
-    }
-
-    public void Dispose()
-    {
-        db.Database.EnsureDeleted();
     }
 }
