@@ -25,15 +25,15 @@ public class PalletController : ControllerBase
 
     // GET: api/pallets
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<PalletResponse>))]
-    public async Task<IEnumerable<PalletResponse>> GetPallets(
+    [ProducesResponseType(200, Type = typeof(IReadOnlyList<PalletResponse>))]
+    public async Task<IReadOnlyList<PalletResponse>> GetPallets(
         [DefaultValue(100)] int take,
         [DefaultValue(0)] int skip,
         CancellationToken token)
     {
         var pallets = await repo.GetAllAsync(take, skip, token);
 
-        return pallets.Select(p => mapper.Map<PalletResponse>(p)).AsEnumerable();
+        return mapper.Map<IReadOnlyList<PalletResponse>>(pallets);
     }
 
     // GET: api/pallets/[id]

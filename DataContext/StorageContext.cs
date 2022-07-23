@@ -15,7 +15,10 @@ internal sealed class StorageContext : DbContext, IStorageContext
         this.dataFileName = dataFileName;
     }
 
-    internal StorageContext(DbContextOptions<StorageContext> options, string dataFileName = "../PalletStorage.db") : base(options)
+    /// <summary>
+    /// Must be public for dependency injection
+    /// </summary>
+    public StorageContext(DbContextOptions<StorageContext> options, string dataFileName = "../PalletStorage.db") : base(options)
     {
         this.dataFileName = dataFileName;
     }

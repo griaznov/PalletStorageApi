@@ -15,7 +15,7 @@ public class BoxController : ControllerBase
     private readonly IMapper mapper;
     private readonly IBoxRepository repo;
 
-    // constructor injects repository registered in Startup
+    // constructor injects repository registered in Startup/Program
     public BoxController(IBoxRepository repo, IMapper mapper)
     {
         this.repo = repo;
@@ -24,15 +24,15 @@ public class BoxController : ControllerBase
 
     // GET: api/boxes
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<BoxResponse>))]
-    public async Task<IEnumerable<BoxResponse>> GetBoxes(
+    [ProducesResponseType(200, Type = typeof(IReadOnlyList<BoxResponse>))]
+    public async Task<IReadOnlyList<BoxResponse>> GetBoxes(
         [DefaultValue(100)] int take,
         [DefaultValue(0)] int skip,
         CancellationToken token)
     {
         var boxes = await repo.GetAllAsync(take, skip, token);
 
-        return boxes.Select(box => mapper.Map<BoxResponse>(box)).AsEnumerable();
+        return mapper.Map<IReadOnlyList<BoxResponse>>(boxes);
     }
 
     // GET: api/boxes/[id]
