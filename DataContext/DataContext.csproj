@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataContext.Entities\DataContext.Entities.csproj" />
+    <InternalsVisibleTo Include="PalletStorage.Tests" />
   </ItemGroup>
 
 </Project>

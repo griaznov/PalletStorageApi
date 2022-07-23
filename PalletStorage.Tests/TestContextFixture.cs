@@ -3,7 +3,6 @@ using AutoMapper;
 using DataContext;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.WebApi.Controllers;
-using PalletStorage.Repositories;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
 using DataContext.Extensions;

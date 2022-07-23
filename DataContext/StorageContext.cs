@@ -1,22 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DataContext.Entities;
-using DataContext.EntityConfigurations;
 
 namespace DataContext;
 
-public class StorageContext : DbContext, IStorageContext
+internal sealed class StorageContext : DbContext, IStorageContext
 {
     private readonly string dataFileName;
 
     public DbSet<Box> Boxes => Set<Box>();
     public DbSet<Pallet> Pallets => Set<Pallet>();
 
-    public StorageContext(string dataFileName = "../PalletStorage.db")
+    internal StorageContext(string dataFileName = "../PalletStorage.db")
     {
         this.dataFileName = dataFileName;
     }
 
-    public StorageContext(DbContextOptions<StorageContext> options, string dataFileName = "../PalletStorage.db") : base(options)
+    internal StorageContext(DbContextOptions<StorageContext> options, string dataFileName = "../PalletStorage.db") : base(options)
     {
         this.dataFileName = dataFileName;
     }

@@ -1,8 +1,8 @@
 ﻿namespace DataContext.Extensions;
 
-public static class StorageContextExtensions
+internal static class StorageContextExtensions
 {
-    public static async Task<bool> CreateDatabaseAsync(this IStorageContext dbContext, string dataPath)
+    internal static async Task<bool> CreateDatabaseAsync(this IStorageContext dbContext, string dataPath)
     {
         if (!File.Exists(dataPath))
         {
