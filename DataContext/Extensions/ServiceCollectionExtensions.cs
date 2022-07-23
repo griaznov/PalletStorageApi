@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DataContext;
+namespace DataContext.Extensions;
 
-public static class StorageContextCreator
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Adds DataContext to the specified IServiceCollection. Uses the Sqlite database provider.
@@ -15,7 +15,7 @@ public static class StorageContextCreator
     {
         var databasePath = Path.Combine(relativePath, "PalletStorage.db");
 
-        await using var context = await CreateContextAsync(databasePath);
+        await using var dbContext = await CreateStorageContextAsync(databasePath);
 
         services.AddDbContext<IStorageContext, StorageContext>(options =>
             options.UseSqlite($"Data Source={databasePath}")
@@ -25,27 +25,17 @@ public static class StorageContextCreator
         return services;
     }
 
-    public static async Task<IStorageContext> CreateContextAsync(string dataPath)
+    private static async Task<IStorageContext> CreateStorageContextAsync(string dataPath)
     {
-        var db = new StorageContext(dataPath);
+        var dbContext = new StorageContext(dataPath);
 
-        var dbIsExists = await db.CreateDatabaseAsync(dataPath);
+        var dbIsExists = await dbContext.CreateDatabaseAsync(dataPath);
 
         if (!dbIsExists)
         {
             throw new DbUpdateException($"Error with creating database in {dataPath}");
         }
 
-        return db;
-    }
-
-    public static async Task<bool> CreateDatabaseAsync(this IStorageContext context, string dataPath)
-    {
-        if (!File.Exists(dataPath))
-        {
-            return await context.Database.EnsureCreatedAsync();
-        }
-
-        return true;
+        return dbContext;
     }
 }

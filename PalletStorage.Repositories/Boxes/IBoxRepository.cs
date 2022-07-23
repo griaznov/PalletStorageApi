@@ -1,13 +1,13 @@
 ﻿using PalletStorage.BusinessModels;
 
-namespace PalletStorage.Repositories;
+namespace PalletStorage.Repositories.Boxes;
 
 public interface IBoxRepository
 {
-    Task<BoxModel?> CreateAsync(BoxModel box);
-    Task<List<BoxModel>> GetAllAsync(int take, int skip = 0);
-    Task<BoxModel?> GetAsync(int id);
-    Task<BoxModel?> UpdateAsync(BoxModel box);
-    Task<bool> DeleteAsync(int id);
+    Task<BoxModel?> CreateAsync(BoxModel box, CancellationToken token = default);
+    Task<List<BoxModel>> GetAllAsync(int take, int skip, CancellationToken token = default);
+    Task<BoxModel?> GetAsync(int id, CancellationToken token = default);
+    Task<BoxModel?> UpdateAsync(BoxModel box, CancellationToken token = default);
+    Task<bool> DeleteAsync(int id, CancellationToken token = default);
     Task<int> CountAsync();
 }

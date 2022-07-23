@@ -9,53 +9,50 @@ namespace PalletStorage.Repositories.Boxes;
 
 public class BoxRepository : IBoxRepository
 {
-    // use an instance data context field because it should not be
-    // cached due to their internal caching
-    private readonly IStorageContext db;
+    private readonly IStorageContext dbContext;
     private readonly IMapper mapper;
 
-    public BoxRepository(IStorageContext storageContext, IMapper mapper)
+    public BoxRepository(IStorageContext dbContext, IMapper mapper)
     {
-        db = storageContext;
+        this.dbContext = dbContext;
         this.mapper = mapper;
     }
 
-    public async Task<List<BoxModel>> GetAllAsync(int take, int skip = 0)
+    public async Task<List<BoxModel>> GetAllAsync(int take, int skip, CancellationToken token)
     {
-        return await db.Boxes
+        return await dbContext.Boxes
             .Skip(skip)
             .Take(take)
             .ProjectTo<BoxModel>(mapper.ConfigurationProvider)
-            .ToListAsync();
+            .ToListAsync(token);
     }
 
-    public async Task<BoxModel?> GetAsync(int id)
+    public async Task<BoxModel?> GetAsync(int id, CancellationToken token)
     {
-        var boxEntity = await db.Boxes.FirstOrDefaultAsync(b => b.Id == id);
+        var boxEntity = await dbContext.Boxes.FirstOrDefaultAsync(b => b.Id == id, token);
 
         return mapper.Map<BoxModel>(boxEntity);
     }
 
-    public async Task<BoxModel?> CreateAsync(BoxModel box)
+    public async Task<BoxModel?> CreateAsync(BoxModel box, CancellationToken token)
     {
         var boxEntity = mapper.Map<Box>(box);
 
-        // add to database using EF Core
-        await db.Boxes.AddAsync(boxEntity);
+        await dbContext.Boxes.AddAsync(boxEntity, token);
 
-        var affected = await db.SaveChangesAsync();
+        var affected = await dbContext.SaveChangesAsync();
 
         return affected == 1 ? mapper.Map<BoxModel>(boxEntity) : null;
     }
 
-    public async Task<BoxModel?> UpdateAsync(BoxModel box)
+    public async Task<BoxModel?> UpdateAsync(BoxModel box, CancellationToken token)
     {
-        var boxEntity = await db.Boxes.FindAsync(box.Id);
+        var boxEntity = await dbContext.Boxes.FirstOrDefaultAsync(b => b.Id == box.Id, token);
 
         if (boxEntity is null)
         {
             boxEntity = mapper.Map<Box>(box);
-            await db.Boxes.AddAsync(boxEntity);
+            await dbContext.Boxes.AddAsync(boxEntity, token);
         }
         else
         {
@@ -63,29 +60,29 @@ public class BoxRepository : IBoxRepository
             mapper.Map(box, boxEntity);
         }
 
-        var affected = await db.SaveChangesAsync();
+        var affected = await dbContext.SaveChangesAsync();
 
         return affected == 1 ? mapper.Map<BoxModel>(boxEntity) : null;
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken token)
     {
-        // remove from database
-        var boxFounded = await db.Boxes.FindAsync(id);
+        var boxEntity = await dbContext.Boxes.FirstOrDefaultAsync(b => b.Id == id, token);
 
-        if (boxFounded is null)
+        if (boxEntity is null)
         {
             return false;
         }
 
-        db.Boxes.Remove(boxFounded);
-        var affected = await db.SaveChangesAsync();
+        dbContext.Boxes.Remove(boxEntity);
+ 
+        var affected = await dbContext.SaveChangesAsync();
 
         return affected == 1;
     }
 
     public async Task<int> CountAsync()
     {
-        return await db.Boxes.CountAsync();
+        return await dbContext.Boxes.CountAsync();
     }
 }

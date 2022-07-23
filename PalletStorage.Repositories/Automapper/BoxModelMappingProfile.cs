@@ -1,20 +1,16 @@
 ﻿using AutoMapper;
+using DataContext.Entities;
 using PalletStorage.BusinessModels;
 
-namespace DataContext.Entities.MappingProfiles;
+namespace PalletStorage.Repositories.Automapper;
 
-public class MappingProfileEntity : Profile
+public class BoxModelMappingProfile : Profile
 {
-    public MappingProfileEntity()
+    public BoxModelMappingProfile()
     {
-        // Box
         CreateMap<BoxModel, Box>()
             .ForMember(b => b.PalletId, opt => opt.Ignore())
             .ForMember(b => b.Pallet, opt => opt.Ignore());
         CreateMap<Box, BoxModel>();
-
-        // Pallet
-        CreateMap<PalletModel, Pallet>();
-        CreateMap<Pallet, PalletModel>();
     }
 }

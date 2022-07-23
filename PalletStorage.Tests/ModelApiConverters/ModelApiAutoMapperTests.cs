@@ -1,6 +1,6 @@
 ﻿using Xunit;
 using AutoMapper;
-using PalletStorage.WebApi.Models.MappingProfiles;
+using PalletStorage.WebApi.Automapper;
 
 namespace PalletStorage.Tests.ModelApiConverters;
 
@@ -12,7 +12,8 @@ public class ModelEfAutoMapperTests
     {
         var config = new MapperConfiguration(cfg =>
         {
-            cfg.AddProfile(typeof(MappingProfileApi));
+            cfg.AddProfile(typeof(PalletApiMappingProfile));
+            cfg.AddProfile(typeof(BoxApiMappingProfile));
         });
 
         mapper = config.CreateMapper();

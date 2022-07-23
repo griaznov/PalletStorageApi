@@ -9,54 +9,51 @@ namespace PalletStorage.Repositories.Pallets;
 
 public class PalletRepository : IPalletRepository
 {
-    // use an instance data context field because it should not be
-    // cached due to their internal caching
-    private readonly IStorageContext db;
+    private readonly IStorageContext dbContext;
     private readonly IMapper mapper;
 
-    public PalletRepository(IStorageContext storageContext, IMapper mapper)
+    public PalletRepository(IStorageContext dbContext, IMapper mapper)
     {
-        db = storageContext;
+        this.dbContext = dbContext;
         this.mapper = mapper;
     }
 
-    public async Task<List<PalletModel>> GetAllAsync(int take, int skip = 0)
+    public async Task<List<PalletModel>> GetAllAsync(int take, int skip, CancellationToken token)
     {
-        return await db.Pallets
+        return await dbContext.Pallets
             .Skip(skip)
             .Take(take)
             .Include(p => p.Boxes)
             .ProjectTo<PalletModel>(mapper.ConfigurationProvider)
-            .ToListAsync();
+            .ToListAsync(token);
     }
 
-    public async Task<PalletModel?> GetAsync(int id)
+    public async Task<PalletModel?> GetAsync(int id, CancellationToken token)
     {
-        var palletEntity = await db.Pallets.FirstOrDefaultAsync(p => p.Id == id);
+        var palletEntity = await dbContext.Pallets.FirstOrDefaultAsync(p => p.Id == id, token);
 
         return mapper.Map<PalletModel>(palletEntity);
     }
 
-    public async Task<PalletModel?> CreateAsync(PalletModel pallet)
+    public async Task<PalletModel?> CreateAsync(PalletModel pallet, CancellationToken token)
     {
         var palletEntity = mapper.Map<Pallet>(pallet);
 
-        // add to database using EF Core
-        await db.Pallets.AddAsync(palletEntity);
+        await dbContext.Pallets.AddAsync(palletEntity, token);
 
-        var affected = await db.SaveChangesAsync();
+        var affected = await dbContext.SaveChangesAsync();
 
         return affected == 1 ? mapper.Map<PalletModel>(palletEntity) : null;
     }
 
-    public async Task<PalletModel?> UpdateAsync(PalletModel pallet)
+    public async Task<PalletModel?> UpdateAsync(PalletModel pallet, CancellationToken token)
     {
-        var palletEntity = await db.Pallets.FindAsync(pallet.Id);
+        var palletEntity = await dbContext.Pallets.FirstOrDefaultAsync(p => p.Id == pallet.Id, token);
 
         if (palletEntity is null)
         {
             palletEntity = mapper.Map<Pallet>(pallet);
-            await db.Pallets.AddAsync(palletEntity);
+            await dbContext.Pallets.AddAsync(palletEntity, token);
         }
         else
         {
@@ -64,65 +61,64 @@ public class PalletRepository : IPalletRepository
             mapper.Map(pallet, palletEntity);
         }
 
-        var affected = await db.SaveChangesAsync();
+        var affected = await dbContext.SaveChangesAsync();
 
         return affected == 1 ? mapper.Map<PalletModel>(palletEntity) : null;
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken token)
     {
-        // remove from database
-        var palletFounded = await db.Pallets.FindAsync(id);
+        var palletEntity = await dbContext.Pallets.FirstOrDefaultAsync(p => p.Id == id, token);
 
-        if (palletFounded is null)
+        if (palletEntity is null)
         {
             return false;
         }
 
-        db.Pallets.Remove(palletFounded);
-        var affected = await db.SaveChangesAsync();
+        dbContext.Pallets.Remove(palletEntity);
+        var affected = await dbContext.SaveChangesAsync();
 
         return affected == 1;
     }
 
     public async Task<int> CountAsync()
     {
-        return await db.Pallets.CountAsync();
+        return await dbContext.Pallets.CountAsync();
     }
 
-    public async Task<bool?> AddBoxToPalletAsync(BoxModel box, int palletId)
+    public async Task<bool?> AddBoxToPalletAsync(BoxModel box, int palletId, CancellationToken token)
     {
-        var palletFounded = await db.Pallets.FindAsync(palletId);
+        var palletEntity = await dbContext.Pallets.FirstOrDefaultAsync(p => p.Id == palletId, token);
 
-        if (palletFounded is null)
+        if (palletEntity is null)
         {
             return null;
         }
 
-        var boxEf = await db.Boxes.FindAsync(box.Id);
+        var boxEf = await dbContext.Boxes.FindAsync(box.Id);
 
         if (boxEf is null)
         {
             boxEf = mapper.Map<Box>(box);
-            await db.Boxes.AddAsync(boxEf);
+            await dbContext.Boxes.AddAsync(boxEf, token);
         }
 
         boxEf.PalletId = palletId;
 
-        return await db.SaveChangesAsync() > 0;
+        return await dbContext.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool?> DeleteBoxFromPalletAsync(BoxModel box)
+    public async Task<bool?> DeleteBoxFromPalletAsync(BoxModel box, CancellationToken token)
     {
-        var boxEf = await db.Boxes.FindAsync(box.Id);
+        var boxEntity = await dbContext.Boxes.FirstOrDefaultAsync(b => b.Id == box.Id, token);
 
-        if (boxEf == null)
+        if (boxEntity == null)
         {
             return null;
         }
 
-        boxEf.PalletId = null;
+        boxEntity.PalletId = null;
 
-        return await db.SaveChangesAsync() > 0;
+        return await dbContext.SaveChangesAsync() > 0;
     }
 }

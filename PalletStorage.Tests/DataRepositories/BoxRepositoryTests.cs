@@ -1,20 +1,20 @@
 ﻿using Xunit;
 using FluentAssertions;
 using DataContext;
-using PalletStorage.Repositories;
 using PalletStorage.BusinessModels;
+using PalletStorage.Repositories.Boxes;
 
 namespace PalletStorage.Tests.DataRepositories;
 
 [Collection("StorageContextCollectionFixture")]
 public class BoxRepositoryTests
 {
-    private readonly IStorageContext db;
+    private readonly IStorageContext dbContext;
     private readonly IBoxRepository boxRepo;
 
     public BoxRepositoryTests(StorageContextFixture contextFixture)
     {
-        db = contextFixture.Db;
+        dbContext = contextFixture.DbContext;
         boxRepo = contextFixture.BoxRepo;
     }
 
@@ -33,11 +33,11 @@ public class BoxRepositoryTests
         await boxRepo.CreateAsync(box);
 
         // Assert
-        var boxEfModel = db.Boxes.FirstOrDefault(boxes => boxes.ExpirationDate == date
-                                                          && boxes.ProductionDate == date
-                                                          && (boxes.Width - width) == 0 
-                                                          && (boxes.Length - length) == 0
-                                                          && (boxes.Height - height) == 0);
+        var boxEfModel = dbContext.Boxes.FirstOrDefault(boxes => boxes.ExpirationDate == date
+                                                                 && boxes.ProductionDate == date
+                                                                 && (boxes.Width - width) == 0 
+                                                                 && (boxes.Length - length) == 0
+                                                                 && (boxes.Height - height) == 0);
         boxEfModel.Should().NotBeNull();
     }
 
@@ -103,7 +103,7 @@ public class BoxRepositoryTests
         await CreateTestCollectionAsync(countMustBe);
 
         // Act
-        var collection = await boxRepo.GetAllAsync(countMustBe);
+        var collection = await boxRepo.GetAllAsync(countMustBe, 0);
 
         // Assert
         collection.Should().HaveCount(countMustBe);
