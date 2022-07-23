@@ -18,7 +18,7 @@ public class BoxRepository : IBoxRepository
         this.mapper = mapper;
     }
 
-    public async Task<List<BoxModel>> GetAllAsync(int take, int skip, CancellationToken token)
+    public async Task<IReadOnlyCollection<BoxModel>> GetAllAsync(int take, int skip, CancellationToken token)
     {
         return await dbContext.Boxes
             .Skip(skip)

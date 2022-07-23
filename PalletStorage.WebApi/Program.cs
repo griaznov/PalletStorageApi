@@ -5,11 +5,8 @@ using Microsoft.AspNetCore.HttpLogging;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using DataContext.Extensions;
-using PalletStorage.Repositories;
-using PalletStorage.Repositories.Automapper;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
-using PalletStorage.WebApi.Automapper;
 using static System.Console;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -12,5 +12,5 @@ public class PalletResponse
     public double Length { get; set; }
 
     [XmlIgnore]
-    public virtual IReadOnlyList<BoxResponse> Boxes { get; set; } = new List<BoxResponse>();
+    public virtual IReadOnlyCollection<BoxResponse> Boxes { get; set; } = new List<BoxResponse>();
 }

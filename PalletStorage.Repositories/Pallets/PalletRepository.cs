@@ -18,7 +18,7 @@ public class PalletRepository : IPalletRepository
         this.mapper = mapper;
     }
 
-    public async Task<List<PalletModel>> GetAllAsync(int take, int skip, CancellationToken token)
+    public async Task<IReadOnlyCollection<PalletModel>> GetAllAsync(int take, int skip, CancellationToken token)
     {
         return await dbContext.Pallets
             .Skip(skip)

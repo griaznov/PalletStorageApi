@@ -24,15 +24,15 @@ public class BoxController : ControllerBase
 
     // GET: api/boxes
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IReadOnlyList<BoxResponse>))]
-    public async Task<IReadOnlyList<BoxResponse>> GetBoxes(
+    [ProducesResponseType(200, Type = typeof(IReadOnlyCollection<BoxResponse>))]
+    public async Task<IReadOnlyCollection<BoxResponse>> GetBoxes(
         [DefaultValue(100)] int take,
         [DefaultValue(0)] int skip,
         CancellationToken token)
     {
         var boxes = await repo.GetAllAsync(take, skip, token);
 
-        return mapper.Map<IReadOnlyList<BoxResponse>>(boxes);
+        return mapper.Map<IReadOnlyCollection<BoxResponse>>(boxes);
     }
 
     // GET: api/boxes/[id]
