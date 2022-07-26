@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataContext.Migrations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataContext.Extensions;
@@ -9,13 +10,19 @@ public static class ServiceCollectionExtensions
     /// Adds DataContext to the specified IServiceCollection. Uses the Sqlite database provider.
     /// </summary>
     /// <param name="services"></param>
-    /// <param name="relativePath">Set to override the default of ".."</param>
+    /// <param name="databasePath">Set to override the default of ".."</param>
     /// <returns>An IServiceCollection that can be used to add more services.</returns>
-    public static async Task<IServiceCollection> AddStorageDataContextAsync(this IServiceCollection services, string relativePath = "..")
+    public static async Task<IServiceCollection> AddStorageDataContextAsync(this IServiceCollection services, string databasePath = "")
     {
-        var databasePath = Path.Combine(relativePath, "PalletStorage.db");
+        // TODO ?
+        if (string.IsNullOrEmpty(databasePath))
+        {
+            databasePath = "../PalletStorage.db";
+        }
 
-        await using var dbContext = await CreateStorageContextAsync(databasePath);
+        var contextFactory = new StorageContextFactory();
+
+        await using var dbContext = await contextFactory.CreateStorageContextAsync(databasePath);
 
         services.AddDbContext<IStorageContext, StorageContext>(options =>
             options.UseSqlite($"Data Source={databasePath}")
@@ -23,19 +30,5 @@ public static class ServiceCollectionExtensions
         );
 
         return services;
-    }
-
-    private static async Task<IStorageContext> CreateStorageContextAsync(string dataPath)
-    {
-        var dbContext = new StorageContext(dataPath);
-
-        var dbIsExists = await dbContext.CreateDatabaseAsync(dataPath);
-
-        if (!dbIsExists)
-        {
-            throw new DbUpdateException($"Error with creating database in {dataPath}");
-        }
-
-        return dbContext;
     }
 }

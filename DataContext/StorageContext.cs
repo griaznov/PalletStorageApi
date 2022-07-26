@@ -5,12 +5,14 @@ namespace DataContext;
 
 internal sealed class StorageContext : DbContext, IStorageContext
 {
+    private const string DefaultDataFileName = "../PalletStorage.db";
+
     private readonly string dataFileName;
 
     public DbSet<Box> Boxes => Set<Box>();
     public DbSet<Pallet> Pallets => Set<Pallet>();
 
-    internal StorageContext(string dataFileName = "../PalletStorage.db")
+    internal StorageContext(string dataFileName = DefaultDataFileName)
     {
         this.dataFileName = dataFileName;
     }
@@ -18,7 +20,7 @@ internal sealed class StorageContext : DbContext, IStorageContext
     /// <summary>
     /// Must be public for dependency injection
     /// </summary>
-    public StorageContext(DbContextOptions<StorageContext> options, string dataFileName = "../PalletStorage.db") : base(options)
+    public StorageContext(DbContextOptions<StorageContext> options, string dataFileName = DefaultDataFileName) : base(options)
     {
         this.dataFileName = dataFileName;
     }
@@ -32,7 +34,9 @@ internal sealed class StorageContext : DbContext, IStorageContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlite($"Filename={dataFileName}");
+            optionsBuilder
+                .UseSqlite($"Data Source={dataFileName}")
+                .UseLoggerFactory(new ConsoleLoggerFactory());
         }
     }
 
