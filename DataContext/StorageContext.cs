@@ -1,26 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DataContext.Entities;
-using DataContext.EntityConfigurations;
 
 namespace DataContext;
 
-public class StorageContext : DbContext, IStorageContext
+internal sealed class StorageContext : DbContext, IStorageContext
 {
+    private const string DefaultDataFileName = "../PalletStorage.db";
+
     private readonly string dataFileName;
 
-    public virtual DbSet<Box> Boxes => Set<Box>();
-    public virtual DbSet<Pallet> Pallets => Set<Pallet>();
+    public DbSet<Box> Boxes => Set<Box>();
+    public DbSet<Pallet> Pallets => Set<Pallet>();
 
-    public StorageContext(string dataFileName = "../PalletStorage.db")
+    internal StorageContext(string dataFileName = DefaultDataFileName)
     {
         this.dataFileName = dataFileName;
-        CheckTablesCreated();
     }
 
-    public StorageContext(DbContextOptions<StorageContext> options, string dataFileName = "../PalletStorage.db") : base(options)
+    /// <summary>
+    /// Must be public for dependency injection
+    /// </summary>
+    public StorageContext(DbContextOptions<StorageContext> options, string dataFileName = DefaultDataFileName) : base(options)
     {
         this.dataFileName = dataFileName;
-        CheckTablesCreated();
     }
 
     public async Task<int> SaveChangesAsync()
@@ -32,21 +34,15 @@ public class StorageContext : DbContext, IStorageContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlite($"Filename={dataFileName}");
+            optionsBuilder
+                .UseSqlite($"Data Source={dataFileName}")
+                .UseLoggerFactory(new ConsoleLoggerFactory());
         }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new BoxConfiguration());
-        modelBuilder.ApplyConfiguration(new PalletConfiguration());
-    }
-
-    private void CheckTablesCreated()
-    {
-        if ((Boxes is null) || (Pallets is null))
-        {
-            throw new DbUpdateException("False with reading main tables from database!");
-        }
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
     }
 }

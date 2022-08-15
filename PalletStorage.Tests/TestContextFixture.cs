@@ -1,52 +1,38 @@
 ﻿using Xunit;
 using AutoMapper;
 using DataContext;
-using DataContext.Entities.MappingProfiles;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.WebApi.Controllers;
-using PalletStorage.WebApi.Models.MappingProfiles;
-using PalletStorage.WebApi.Validators.Box;
-using PalletStorage.WebApi.Validators.Pallet;
-using PalletStorage.Repositories;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
-using PalletStorage.WebApi.Validators.Box.RequestValidator;
+using DataContext.Extensions;
+using PalletStorage.Repositories.Automapper;
+using PalletStorage.WebApi.Automapper;
 
 namespace PalletStorage.Tests;
 
-public class StorageContextFixture : IDisposable, IAsyncLifetime
+public class StorageContextFixture : IAsyncLifetime
 {
-    public string FilePath { get; }
-    public IStorageContext Db { get; }
-    public IPalletRepository PalletRepo { get; }
-    public IBoxRepository BoxRepo { get; }
-    public PalletController PalletController { get; }
-    public BoxController BoxController { get; }
+    private const string ErrorMessage = "Property not initialized!";
+    private IStorageContext? dbContext;
+    private IPalletRepository? palletRepo;
+    private IBoxRepository? boxRepo;
+    private PalletController? palletController;
+    private BoxController? boxController;
 
+    public string FilePath { get; }
+    public IStorageContext DbContext => dbContext ?? throw new NullReferenceException(ErrorMessage);
+    public IPalletRepository PalletRepo => palletRepo ?? throw new NullReferenceException(ErrorMessage);
+    public IBoxRepository BoxRepo => boxRepo ?? throw new NullReferenceException(ErrorMessage);
+    public PalletController PalletController => palletController ?? throw new NullReferenceException(ErrorMessage);
+    public BoxController BoxController => boxController ?? throw new NullReferenceException(ErrorMessage);
+
+    /// <summary>
+    /// Main fixture context will be created at the stage InitializeAsync(), after constructor.
+    /// </summary>
     public StorageContextFixture()
     {
         FilePath = FilesOperations.GenerateFileName("db");
-
-        // the database will be created at the stage InitializeAsync(), after constructor.
-        Db = new StorageContext(FilePath);
-
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(typeof(MappingProfileApi));
-            cfg.AddProfile(typeof(MappingProfileEntity));
-        });
-
-        var mapper = config.CreateMapper();
-
-        PalletRepo = new PalletRepository(Db, mapper);
-        BoxRepo = new BoxRepository(Db, mapper);
-
-        PalletController = new PalletController(PalletRepo, mapper, new PalletCreateRequestValidator(), new PalletUpdateRequestValidator());
-
-        //BoxController = new BoxController(BoxRepo, mapper, new BoxCreateRequestValidator(), new BoxUpdateRequestValidator());
-        var boxCv = new BoxCreateRequestValidator();
-        var boxUv = new BoxUpdateRequestValidator();
-        BoxController = new BoxController(BoxRepo, mapper, boxCv, boxUv, new BoxRequestValidator(boxCv, boxUv));
     }
 
     /// <summary>
@@ -54,12 +40,30 @@ public class StorageContextFixture : IDisposable, IAsyncLifetime
     /// </summary>
     public async Task InitializeAsync()
     {
-        var dbIsCreated = await Db.CreateDatabaseAsync(FilePath);
+        dbContext = new StorageContext(FilePath);
+
+        var dbIsCreated = await dbContext.CreateDatabaseAsync(FilePath);
 
         if (!dbIsCreated)
         {
             throw new DbUpdateException($"Error with creating database in {FilePath}");
         }
+
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(typeof(BoxApiMappingProfile));
+            cfg.AddProfile(typeof(PalletApiMappingProfile));
+            cfg.AddProfile(typeof(BoxModelMappingProfile));
+            cfg.AddProfile(typeof(PalletModelMappingProfile));
+        });
+
+        var mapper = config.CreateMapper();
+
+        palletRepo = new PalletRepository(dbContext, mapper);
+        boxRepo = new BoxRepository(dbContext, mapper);
+
+        palletController = new PalletController(palletRepo, mapper);
+        boxController = new BoxController(BoxRepo, mapper);
     }
 
     /// <summary>
@@ -67,16 +71,10 @@ public class StorageContextFixture : IDisposable, IAsyncLifetime
     /// </summary>
     public Task DisposeAsync()
     {
-        return Task.CompletedTask;
-    }
+        DbContext.Database.EnsureDeleted();
+        DbContext.Dispose();
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-    public void Dispose()
-    {
-        Db.Database.EnsureDeleted();
-        Db.Dispose();
-        // TODO - Ask, Need or no?
-        //GC.SuppressFinalize(this);
+        return Task.CompletedTask;
     }
 
     [CollectionDefinition("StorageContextCollectionFixture")]

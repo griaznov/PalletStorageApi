@@ -1,5 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PalletStorage.WebApi.Controllers;
 using PalletStorage.WebApi.Models.Box;
 
@@ -29,10 +31,13 @@ public class BoxControllerTests
             ExpirationDate = DateTime.Today,
         };
 
+        controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
+
         // Act
-        var response = await controller.Create(box);
+        var response = (CreatedResult) await controller.Create(box, CancellationToken.None);
 
         // Assert
+        response.StatusCode.Should().NotBeNull().And.Be(201);
         response.Value.Should().NotBeNull().And.BeAssignableTo<BoxResponse>();
     }
 }

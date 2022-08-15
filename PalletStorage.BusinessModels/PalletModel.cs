@@ -6,7 +6,7 @@ public class PalletModel : UniversalBoxModel
 
     public double PalletWeight { get; }
     public int Id { get; }
-    public List<BoxModel> Boxes { get; }
+    public IList<BoxModel> Boxes { get; }
     public override double Weight => PalletWeight + Boxes.Sum(b => b.Weight);
 
     public override double Volume => base.Volume + Boxes.Sum(b => b.Volume);
@@ -16,7 +16,7 @@ public class PalletModel : UniversalBoxModel
         double length,
         double height,
         int id = default,
-        List<BoxModel>? boxes = null)
+        IList<BoxModel>? boxes = null)
         : base(width, length, height)
     {
         // default weight value for the pallet

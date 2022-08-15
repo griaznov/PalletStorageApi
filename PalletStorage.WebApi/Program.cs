@@ -1,17 +1,14 @@
+using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.HttpLogging;
 using FluentValidation;
-using DataContext;
-using DataContext.Entities.MappingProfiles;
-using PalletStorage.WebApi.Models.MappingProfiles;
-using PalletStorage.WebApi.Validators.Box;
-using PalletStorage.WebApi.Validators.Pallet;
-using PalletStorage.Repositories;
+using FluentValidation.AspNetCore;
+using DataContext.Extensions;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
+using PalletStorage.WebApi.Controllers;
 using static System.Console;
-using PalletStorage.WebApi.Validators.Box.RequestValidator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,18 +45,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Validators
-builder.Services.AddValidatorsFromAssemblyContaining<BoxResponseValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<BoxCreateRequestValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<BoxUpdateRequestValidator>();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(BoxController)));
 
-builder.Services.AddScoped<IBoxRequestValidator, BoxRequestValidator>();
-
-builder.Services.AddValidatorsFromAssemblyContaining<PalletResponseValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<PalletCreateRequestValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<PalletUpdateRequestValidator>();
-
-// AutoMapper
-builder.Services.AddAutoMapper(typeof(MappingProfileApi), typeof(MappingProfileEntity));
+// AutoMapper - add all profiles from repositories and controllers
+// TODO - ask about class for finding the location of profiles
+builder.Services.AddAutoMapper(typeof(BoxRepository), typeof(BoxController));
 
 // Repositories
 builder.Services.AddScoped<IBoxRepository, BoxRepository>();

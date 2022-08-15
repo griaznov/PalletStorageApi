@@ -9,13 +9,13 @@ namespace PalletStorage.Tests.DataContext;
 [Collection("StorageContextCollectionFixture")]
 public class DataContextTests
 {
-    private readonly IStorageContext db;
+    private readonly IStorageContext dbContext;
     private readonly string fileName;
 
     public DataContextTests(StorageContextFixture contextFixture)
     {
         fileName = contextFixture.FilePath;
-        db = contextFixture.Db;
+        dbContext = contextFixture.DbContext;
     }
 
     [Fact(DisplayName = "1. The database can be created by models")]
@@ -40,11 +40,11 @@ public class DataContextTests
         };
 
         // Act
-        await db.Boxes.AddAsync(box);
-        await db.SaveChangesAsync();
+        await dbContext.Boxes.AddAsync(box);
+        await dbContext.SaveChangesAsync();
 
         // Assert
-        db.Boxes.Should().Contain(box);
+        dbContext.Boxes.Should().Contain(box);
     }
 
     [Fact(DisplayName = "3. Add a pallet model to the database")]
@@ -59,11 +59,11 @@ public class DataContextTests
         };
 
         // Act
-        await db.Pallets.AddAsync(pallet);
-        await db.SaveChangesAsync();
+        await dbContext.Pallets.AddAsync(pallet);
+        await dbContext.SaveChangesAsync();
 
         // Assert
-        db.Pallets.Should().Contain(pallet);
+        dbContext.Pallets.Should().Contain(pallet);
     }
 
     [Fact(DisplayName = "4. Add a pallet model containing box models to the database")]
@@ -92,14 +92,14 @@ public class DataContextTests
         };
 
         // Act
-        await db.Pallets.AddAsync(pallet);
-        await db.Boxes.AddAsync(box);
-        await db.SaveChangesAsync();
+        await dbContext.Pallets.AddAsync(pallet);
+        await dbContext.Boxes.AddAsync(box);
+        await dbContext.SaveChangesAsync();
 
         // Assert
-        db.Pallets.Should().Contain(pallet);
+        dbContext.Pallets.Should().Contain(pallet);
 
-        db.Pallets
+        dbContext.Pallets
             .Include(p => p.Boxes)
             .First(p => p.Id == pallet.Id)
             .Boxes.Contains(box)

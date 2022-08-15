@@ -9,12 +9,12 @@ namespace PalletStorage.Tests.DataRepositories;
 [Collection("StorageContextCollectionFixture")]
 public class PalletRepositoryTests
 {
-    private readonly IStorageContext db;
+    private readonly IStorageContext dbContext;
     private readonly IPalletRepository palletRepo;
 
     public PalletRepositoryTests(StorageContextFixture contextFixture)
     {
-        db = contextFixture.Db;
+        dbContext = contextFixture.DbContext;
         palletRepo = contextFixture.PalletRepo;
     }
 
@@ -32,9 +32,9 @@ public class PalletRepositoryTests
         await palletRepo.CreateAsync(pallet);
 
         // Assert
-        var palletSaved = db.Pallets.FirstOrDefault(p => (p.Width - width) == 0
-                                                         && (p.Length - length) == 0
-                                                         && (p.Height - height) == 0);
+        var palletSaved = dbContext.Pallets.FirstOrDefault(p => (p.Width - width) == 0
+                                                                && (p.Length - length) == 0
+                                                                && (p.Height - height) == 0);
         palletSaved.Should().NotBeNull();
     }
 
@@ -57,9 +57,9 @@ public class PalletRepositoryTests
         await palletRepo.CreateAsync(pallet);
 
         // Assert
-        var palletSaved = db.Pallets.FirstOrDefault(p => (p.Width - width) == 0
-                                                         && (p.Length - length) == 0
-                                                         && (p.Height - height) == 0);
+        var palletSaved = dbContext.Pallets.FirstOrDefault(p => (p.Width - width) == 0
+                                                                && (p.Length - length) == 0
+                                                                && (p.Height - height) == 0);
         palletSaved.Should().NotBeNull();
         palletSaved?.Boxes.Should().HaveCount(2);
     }
@@ -164,7 +164,7 @@ public class PalletRepositoryTests
         await CreateTestCollectionAsync(countMustBe);
 
         // Act
-        var collection = await palletRepo.GetAllAsync(countMustBe);
+        var collection = await palletRepo.GetAllAsync(countMustBe, 0);
 
         // Assert
         collection.Should().HaveCount(countMustBe);

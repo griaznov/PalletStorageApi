@@ -1,9 +1,9 @@
 ﻿using Xunit;
 using AutoMapper;
-using DataContext.Entities.MappingProfiles;
 using FluentAssertions;
 using DataContext.Entities;
 using PalletStorage.BusinessModels;
+using PalletStorage.Repositories.Automapper;
 
 namespace PalletStorage.Tests.ModelEfConverters;
 
@@ -15,7 +15,8 @@ public class BoxEfConvertersTests
     {
         var config = new MapperConfiguration(cfg =>
         {
-            cfg.AddProfile(typeof(MappingProfileEntity));
+            cfg.AddProfile(typeof(BoxModelMappingProfile));
+            cfg.AddProfile(typeof(PalletModelMappingProfile));
         });
 
         mapper = config.CreateMapper();
