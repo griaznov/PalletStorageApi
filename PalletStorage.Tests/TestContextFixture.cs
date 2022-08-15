@@ -19,6 +19,7 @@ public class StorageContextFixture : IAsyncLifetime
     private IBoxRepository? boxRepo;
     private PalletController? palletController;
     private BoxController? boxController;
+    private IMapper? mapper;
 
     public string FilePath { get; }
     public IStorageContext DbContext => dbContext ?? throw new NullReferenceException(ErrorMessage);
@@ -26,6 +27,7 @@ public class StorageContextFixture : IAsyncLifetime
     public IBoxRepository BoxRepo => boxRepo ?? throw new NullReferenceException(ErrorMessage);
     public PalletController PalletController => palletController ?? throw new NullReferenceException(ErrorMessage);
     public BoxController BoxController => boxController ?? throw new NullReferenceException(ErrorMessage);
+    public IMapper Mapper => mapper ?? throw new NullReferenceException(ErrorMessage);
 
     /// <summary>
     /// Main fixture context will be created at the stage InitializeAsync(), after constructor.
@@ -57,7 +59,7 @@ public class StorageContextFixture : IAsyncLifetime
             cfg.AddProfile(typeof(PalletModelMappingProfile));
         });
 
-        var mapper = config.CreateMapper();
+        mapper = config.CreateMapper();
 
         palletRepo = new PalletRepository(dbContext, mapper);
         boxRepo = new BoxRepository(dbContext, mapper);

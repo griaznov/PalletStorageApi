@@ -8,19 +8,7 @@ public class PalletConfiguration : IEntityTypeConfiguration<Pallet>
 {
     public void Configure(EntityTypeBuilder<Pallet> builder)
     {
-        builder.HasKey(p => p.Id);
-
-        builder.Property(p => p.Length)
-            .HasColumnType("DOUBLE")
-            .IsRequired();
-
-        builder.Property(p => p.Width)
-            .HasColumnType("DOUBLE")
-            .IsRequired();
-
-        builder.Property(p => p.Height)
-            .HasColumnType("DOUBLE")
-            .IsRequired();
+        builder.ConfigureUniversalBoxEntity();
 
         builder.Property(p => p.PalletWeight)
             .HasColumnType("DOUBLE")

@@ -8,19 +8,7 @@ public class BoxConfiguration : IEntityTypeConfiguration<Box>
 {
     public void Configure(EntityTypeBuilder<Box> builder)
     {
-        builder.HasKey(box => box.Id);
-
-        builder.Property(box => box.Length)
-            .HasColumnType("DOUBLE")
-            .IsRequired();
-
-        builder.Property(box => box.Width)
-            .HasColumnType("DOUBLE")
-            .IsRequired();
-
-        builder.Property(box => box.Height)
-            .HasColumnType("DOUBLE")
-            .IsRequired();
+        builder.ConfigureUniversalBoxEntity();
 
         builder.Property(box => box.Weight)
             .HasColumnType("DOUBLE")

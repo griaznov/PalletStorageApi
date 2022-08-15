@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DataContext.Entities\DataContext.Entities.csproj" />
     <ProjectReference Include="..\DataContext\DataContext.csproj" />
+    <ProjectReference Include="..\PalletStorage.BusinessModels\PalletStorage.BusinessModels.csproj" />
   </ItemGroup>
 
 </Project>

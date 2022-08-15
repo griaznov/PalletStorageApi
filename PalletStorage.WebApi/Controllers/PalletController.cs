@@ -24,7 +24,7 @@ public class PalletController : ControllerBase
     }
 
     // GET: api/pallets
-    [HttpGet]
+    [HttpGet(Name = "GetPallets")]
     [ProducesResponseType(200, Type = typeof(IReadOnlyList<PalletResponse>))]
     public async Task<IReadOnlyList<PalletResponse>> GetPallets(
         [DefaultValue(100)] int take,
@@ -43,7 +43,7 @@ public class PalletController : ControllerBase
     public async Task<IActionResult> GetPallet(int id, CancellationToken token)
     {
         PalletModel? pallet = await repo.GetAsync(id, token);
-
+        
         if (pallet == null)
         {
             return NotFound(); // 404 Resource not found
