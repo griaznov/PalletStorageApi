@@ -49,7 +49,6 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(BoxController)));
 
 // AutoMapper - add all profiles from repositories and controllers
-// TODO - ask about class for finding the location of profiles
 builder.Services.AddAutoMapper(typeof(BoxRepository), typeof(BoxController));
 
 // Repositories
