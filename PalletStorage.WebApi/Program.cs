@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.HttpLogging;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using DataContext.Extensions;
+using DataContext.Migrations;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
 using PalletStorage.WebApi.Controllers;
@@ -12,8 +13,11 @@ using static System.Console;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Schema and Data migrations
+await MigrationManager.MigrateAsync();
+
 // Add services to the container.
-await builder.Services.AddStorageDataContextAsync();
+builder.Services.AddStorageDataContext();
 
 builder.Services.AddControllers(options =>
     {

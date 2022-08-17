@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using PalletStorage.WebApi.Controllers;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
-using DataContext.Extensions;
+using DataContext.Migrations;
 using PalletStorage.Repositories.Automapper;
 using PalletStorage.WebApi.Automapper;
 
@@ -42,14 +42,10 @@ public class StorageContextFixture : IAsyncLifetime
     /// </summary>
     public async Task InitializeAsync()
     {
-        dbContext = new StorageContext(FilePath);
+        var contextFactory = new StorageContextFactory();
+        dbContext = contextFactory.CreateStorageContext(FilePath);
 
-        var dbIsCreated = await dbContext.CreateDatabaseAsync(FilePath);
-
-        if (!dbIsCreated)
-        {
-            throw new DbUpdateException($"Error with creating database in {FilePath}");
-        }
+        await dbContext.Database.MigrateAsync().ConfigureAwait(false);
 
         var config = new MapperConfiguration(cfg =>
         {

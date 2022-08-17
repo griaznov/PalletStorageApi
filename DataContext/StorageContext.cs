@@ -12,11 +12,6 @@ internal sealed class StorageContext : DbContext, IStorageContext
     public DbSet<Box> Boxes => Set<Box>();
     public DbSet<Pallet> Pallets => Set<Pallet>();
 
-    internal StorageContext(string dataFileName = DefaultDataFileName)
-    {
-        this.dataFileName = dataFileName;
-    }
-
     /// <summary>
     /// Must be public for dependency injection
     /// </summary>
