@@ -52,14 +52,11 @@ public class PalletRepository : IPalletRepository
 
         if (palletEntity is null)
         {
-            palletEntity = mapper.Map<Pallet>(pallet);
-            await dbContext.Pallets.AddAsync(palletEntity, token);
+            throw new ArgumentException($"The pallet with id {pallet.Id} was not found for updating!");
         }
-        else
-        {
-            // update in database new values for entry
-            mapper.Map(pallet, palletEntity);
-        }
+
+        // update in database new values for entry
+        mapper.Map(pallet, palletEntity);
 
         var affected = await dbContext.SaveChangesAsync();
 
