@@ -9,7 +9,7 @@ using DataContext.Migrations;
 using PalletStorage.Repositories.Automapper;
 using PalletStorage.WebApi.Automapper;
 
-namespace PalletStorage.Tests;
+namespace PalletStorage.Tests.Infrastructure;
 
 public class StorageContextFixture : IAsyncLifetime
 {

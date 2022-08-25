@@ -4,6 +4,7 @@ using DataContext;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.Repositories.Pallets;
 using PalletStorage.BusinessModels;
+using PalletStorage.Tests.Infrastructure;
 
 namespace PalletStorage.Tests.DataRepositories;
 

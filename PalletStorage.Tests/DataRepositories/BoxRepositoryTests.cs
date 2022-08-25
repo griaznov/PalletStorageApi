@@ -4,6 +4,7 @@ using DataContext;
 using Microsoft.EntityFrameworkCore;
 using PalletStorage.BusinessModels;
 using PalletStorage.Repositories.Boxes;
+using PalletStorage.Tests.Infrastructure;
 
 namespace PalletStorage.Tests.DataRepositories;
 
@@ -118,7 +119,7 @@ public class BoxRepositoryTests
     {
         for (var i = 0; i < count; i++)
         {
-            await boxRepo.CreateAsync(BoxModel.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today));
+            await boxRepo.CreateAsync(BoxModel.Create(1, 2, 3, 4, dateTimeToday, dateTimeToday));
         }
     }
 }

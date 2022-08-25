@@ -1,16 +1,19 @@
 using FluentAssertions;
 using PalletStorage.BusinessModels;
+using PalletStorage.Tests.Infrastructure;
 using Xunit;
 
 namespace PalletStorage.Tests.Common;
 
 public class BoxTests
 {
+    private readonly DateTime dateTimeToday = new DateTimeProvider().GetToday();
+
     [Fact(DisplayName = "1. Creating a normal box and checking the volume count")]
     public void CreationBox()
     {
         // Act
-        BoxModel testBox = new(2, 3, 4, 1, DateTime.Today, DateTime.Today);
+        BoxModel testBox = new(2, 3, 4, 1, dateTimeToday, dateTimeToday);
 
         // Assert
         Assert.Equal(24, testBox.Volume);
@@ -20,7 +23,7 @@ public class BoxTests
     public void CreationBoxByCreate()
     {
         // Act
-        var testBox = BoxModel.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
+        var testBox = BoxModel.Create(2, 3, 4, 1, dateTimeToday, dateTimeToday);
 
         // Assert
         Assert.Equal(24, testBox.Volume);
@@ -40,7 +43,7 @@ public class BoxTests
     public void CreationWithoutExpirationDate()
     {
         // Arrange
-        var todayDate = DateTime.Today;
+        var todayDate = dateTimeToday;
 
         // Act
         BoxModel testBox = new(2, 3, 4, 1, todayDate);

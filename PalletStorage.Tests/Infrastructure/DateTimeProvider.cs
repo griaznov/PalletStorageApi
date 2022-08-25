@@ -1,4 +1,4 @@
-﻿namespace PalletStorage.Tests;
+﻿namespace PalletStorage.Tests.Infrastructure;
 
 internal class DateTimeProvider : IDateTimeProvider
 {

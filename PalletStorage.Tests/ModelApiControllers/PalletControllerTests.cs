@@ -8,6 +8,7 @@ using PalletStorage.BusinessModels;
 using PalletStorage.Repositories.Pallets;
 using PalletStorage.WebApi.Controllers;
 using PalletStorage.WebApi.Models.Pallet;
+using PalletStorage.Tests.Infrastructure;
 
 namespace PalletStorage.Tests.ModelApiControllers;
 

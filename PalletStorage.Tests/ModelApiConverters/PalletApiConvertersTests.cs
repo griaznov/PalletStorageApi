@@ -2,6 +2,7 @@
 using FluentAssertions;
 using AutoMapper;
 using PalletStorage.BusinessModels;
+using PalletStorage.Tests.Infrastructure;
 using PalletStorage.WebApi.Automapper;
 using PalletStorage.WebApi.Models.Box;
 using PalletStorage.WebApi.Models.Pallet;
@@ -11,6 +12,7 @@ namespace PalletStorage.Tests.ModelApiConverters;
 public class PalletApiConvertersTests
 {
     private readonly IMapper mapper;
+    private readonly DateTime dateTimeToday = new DateTimeProvider().GetToday();
 
     public PalletApiConvertersTests()
     {
@@ -28,7 +30,7 @@ public class PalletApiConvertersTests
     {
         // Arrange
         var pallet = PalletModel.Create(2, 3, 4);
-        var box = BoxModel.Create(2, 2, 2, 2, DateTime.Today);
+        var box = BoxModel.Create(2, 2, 2, 2, dateTimeToday);
 
         pallet.AddBox(box);
 
@@ -50,8 +52,8 @@ public class PalletApiConvertersTests
             Length = 1,
             Height = 1,
             Weight = 1,
-            ProductionDate = DateTime.Today,
-            ExpirationDate = DateTime.Today,
+            ProductionDate = dateTimeToday,
+            ExpirationDate = dateTimeToday,
         };
 
         var palletModel = new PalletResponse()
