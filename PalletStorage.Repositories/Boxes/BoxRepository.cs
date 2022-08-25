@@ -42,7 +42,7 @@ public class BoxRepository : IBoxRepository
 
         var affected = await dbContext.SaveChangesAsync();
 
-        return affected == 1 ? mapper.Map<BoxModel>(boxEntity) : null;
+        return affected > 0 ? mapper.Map<BoxModel>(boxEntity) : null;
     }
 
     public async Task<BoxModel?> UpdateAsync(BoxModel box, CancellationToken token)
@@ -59,7 +59,7 @@ public class BoxRepository : IBoxRepository
 
         var affected = await dbContext.SaveChangesAsync();
 
-        return affected == 1 ? mapper.Map<BoxModel>(boxEntity) : null;
+        return affected > 0 ? mapper.Map<BoxModel>(boxEntity) : null;
     }
 
     public async Task<bool> DeleteAsync(int id, CancellationToken token)

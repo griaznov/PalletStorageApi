@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using DataContext;
+using Microsoft.EntityFrameworkCore;
 using PalletStorage.Repositories.Pallets;
 using PalletStorage.BusinessModels;
 
@@ -11,14 +12,18 @@ public class PalletRepositoryTests
 {
     private readonly IStorageContext dbContext;
     private readonly IPalletRepository palletRepo;
+    private readonly DateTime dateTimeToday;
 
     public PalletRepositoryTests(StorageContextFixture contextFixture)
     {
         dbContext = contextFixture.DbContext;
         palletRepo = contextFixture.PalletRepo;
+
+        var dateTimeProvider = new DateTimeProvider();
+        dateTimeToday = dateTimeProvider.GetToday();
     }
 
-    [Fact(DisplayName = "1. Save common model of Pallet")]
+    [Fact(DisplayName = "1 Save common model of Pallet")]
     public async Task AddPalletAsync()
     {
         // Arrange
@@ -29,37 +34,40 @@ public class PalletRepositoryTests
         var pallet = PalletModel.Create(width, length, height);
 
         // Act
-        await palletRepo.CreateAsync(pallet);
+        var palletInRepo = await palletRepo.CreateAsync(pallet);
 
         // Assert
-        var palletSaved = dbContext.Pallets.FirstOrDefault(p => (p.Width - width) == 0
-                                                                && (p.Length - length) == 0
-                                                                && (p.Height - height) == 0);
-        palletSaved.Should().NotBeNull();
+        if (palletInRepo == null)
+        {
+            throw new ArgumentException($"The pallet was not created!");
+        }
+
+        var palletSaved = await dbContext.Pallets.FirstOrDefaultAsync(p => p.Id == palletInRepo.Id);
+
+        palletSaved.Should().BeEquivalentTo(new { Length = length, Height = height, Width = width, palletInRepo.Id });
     }
 
     [Fact(DisplayName = "2. Save common model of Pallet with Boxes")]
     public async Task AddPalletWithBoxesAsync()
     {
         // Arrange
-        const int width = 21;
-        const int length = 32;
-        const int height = 53;
-
-        var pallet = PalletModel.Create(width, length, height);
-        var box1 = BoxModel.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
-        var box2 = BoxModel.Create(2, 3, 3, 2, DateTime.Today, DateTime.Today);
+        var pallet = PalletModel.Create(21, 32, 53);
+        var box1 = BoxModel.Create(2, 3, 4, 1, dateTimeToday, dateTimeToday);
+        var box2 = BoxModel.Create(2, 3, 3, 2, dateTimeToday, dateTimeToday);
 
         pallet.AddBox(box1);
         pallet.AddBox(box2);
 
         // Act
-        await palletRepo.CreateAsync(pallet);
+        var palletInRepo = await palletRepo.CreateAsync(pallet);
 
         // Assert
-        var palletSaved = dbContext.Pallets.FirstOrDefault(p => (p.Width - width) == 0
-                                                                && (p.Length - length) == 0
-                                                                && (p.Height - height) == 0);
+        if (palletInRepo == null)
+        {
+            throw new ArgumentException($"The pallet was not created!");
+        }
+
+        var palletSaved = dbContext.Pallets.FirstOrDefault(p => p.Id == palletInRepo.Id);
         palletSaved.Should().NotBeNull();
         palletSaved?.Boxes.Should().HaveCount(2);
     }
@@ -69,7 +77,7 @@ public class PalletRepositoryTests
     {
         // Arrange
         var pallet = new PalletModel(1, 2, 3, 981);
-        var box = BoxModel.Create(2, 3, 4, 1, DateTime.Today, DateTime.Today);
+        var box = BoxModel.Create(25, 53, 13, 11, dateTimeToday, dateTimeToday);
 
         await palletRepo.CreateAsync(pallet);
 
@@ -88,7 +96,7 @@ public class PalletRepositoryTests
     {
         // Arrange
         var pallet = new PalletModel(1, 2, 3, 980);
-        var box = new BoxModel(1, 2, 3, 4, DateTime.Today, DateTime.Today, 101);
+        var box = new BoxModel(1, 2, 3, 4, dateTimeToday, dateTimeToday, 101);
 
         pallet.AddBox(box);
         await palletRepo.CreateAsync(pallet);
@@ -127,17 +135,15 @@ public class PalletRepositoryTests
         await palletRepo.CreateAsync(pallet);
 
         // Act
-        pallet = new PalletModel(2, 3, 4, 970);
+        pallet = new PalletModel(25, 81, 16, pallet.Id);
         await palletRepo.UpdateAsync(pallet);
 
         // Assert
         var palletSaved = await palletRepo.GetAsync(pallet.Id);
 
-        palletSaved.Should().NotBeNull();
-
-        palletSaved?.Width.Should().Be(2);
-        palletSaved?.Length.Should().Be(3);
-        palletSaved?.Height.Should().Be(4);
+        palletSaved?.Should().BeEquivalentTo(
+            new { pallet.Length, pallet.Height, pallet.Width, pallet.Id },
+            options => options.ExcludingMissingMembers());
     }
 
     [Fact(DisplayName = "7. Retrieve Pallets with pagination - Skip")]

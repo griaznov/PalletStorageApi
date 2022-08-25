@@ -43,7 +43,7 @@ public class PalletRepository : IPalletRepository
 
         var affected = await dbContext.SaveChangesAsync();
 
-        return affected == 1 ? mapper.Map<PalletModel>(palletEntity) : null;
+        return affected > 0 ? mapper.Map<PalletModel>(palletEntity) : null;
     }
 
     public async Task<PalletModel?> UpdateAsync(PalletModel pallet, CancellationToken token)
@@ -60,7 +60,7 @@ public class PalletRepository : IPalletRepository
 
         var affected = await dbContext.SaveChangesAsync();
 
-        return affected == 1 ? mapper.Map<PalletModel>(palletEntity) : null;
+        return affected > 0 ? mapper.Map<PalletModel>(palletEntity) : null;
     }
 
     public async Task<bool> DeleteAsync(int id, CancellationToken token)
