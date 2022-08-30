@@ -6,8 +6,9 @@ using PalletStorage.WebApi.Controllers;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
 using DataContext.Migrations;
+using Microsoft.Data.Sqlite;
 using PalletStorage.Repositories.Automapper;
-using PalletStorage.WebApi.Automapper;
+using PalletStorage.WebApi.Infrastructure.Automapper;
 
 namespace PalletStorage.Tests.Infrastructure;
 
@@ -44,6 +45,14 @@ public class StorageContextFixture : IAsyncLifetime
     {
         var contextFactory = new StorageContextFactory();
         dbContext = contextFactory.CreateStorageContext(FilePath);
+
+        // in-memory SQLite
+        // https://stackoverflow.com/questions/56319638/entityframeworkcore-sqlite-in-memory-db-tables-are-not-created
+        //
+        //var keepAliveConnection = new SqliteConnection("DataSource=:memory:");
+        //keepAliveConnection.Open();
+        //var options = new DbContextOptionsBuilder<StorageContext>().UseSqlite(keepAliveConnection).Options;
+        //dbContext = new StorageContext(options, FilePath);
 
         await dbContext.Database.MigrateAsync().ConfigureAwait(false);
 

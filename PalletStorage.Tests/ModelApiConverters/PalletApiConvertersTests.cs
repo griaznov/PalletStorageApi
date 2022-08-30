@@ -3,7 +3,7 @@ using FluentAssertions;
 using AutoMapper;
 using PalletStorage.BusinessModels;
 using PalletStorage.Tests.Infrastructure;
-using PalletStorage.WebApi.Automapper;
+using PalletStorage.WebApi.Infrastructure.Automapper;
 using PalletStorage.WebApi.Models.Box;
 using PalletStorage.WebApi.Models.Pallet;
 

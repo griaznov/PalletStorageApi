@@ -9,6 +9,7 @@ using DataContext.Migrations;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
 using PalletStorage.WebApi.Controllers;
+using PalletStorage.WebApi.Infrastructure.Filters;
 using static System.Console;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,6 +52,13 @@ builder.Services.AddSwaggerGen(c =>
 // Validators
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(BoxController)));
+
+// Filters
+builder.Services.AddMvc(options =>
+{
+    //options.Filters.Add<ValidateModelExceptionFilter>();
+    options.Filters.Add<OperationCancelledExceptionFilter>();
+});
 
 // AutoMapper - add all profiles from repositories and controllers
 builder.Services.AddAutoMapper(typeof(BoxRepository), typeof(BoxController));

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using PalletStorage.WebApi.Models.Pallet;
 
-namespace PalletStorage.WebApi.Validators.Pallet
+namespace PalletStorage.WebApi.Infrastructure.Validators.Pallet
 {
     public class PalletCreateRequestValidator : AbstractValidator<PalletCreateRequest>
     {

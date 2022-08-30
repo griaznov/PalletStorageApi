@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using PalletStorage.WebApi.Models.Additional;
 
-namespace PalletStorage.WebApi.Validators.Additional;
+namespace PalletStorage.WebApi.Infrastructure.Validators.Additional;
 
 public class PaginationFilterValidator : AbstractValidator<PaginationFilter>
 {
