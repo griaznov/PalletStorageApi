@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using PalletStorage.BusinessModels;
 using PalletStorage.Repositories.Boxes;
+using PalletStorage.WebApi.Models.Additional;
 using PalletStorage.WebApi.Models.Box;
 
 namespace PalletStorage.WebApi.Controllers;
@@ -26,11 +27,10 @@ public class BoxController : ControllerBase
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(IReadOnlyCollection<BoxResponse>))]
     public async Task<IReadOnlyCollection<BoxResponse>> GetBoxes(
-        [DefaultValue(100)] int take,
-        [DefaultValue(0)] int skip,
+        [FromQuery] PaginationFilter filter,
         CancellationToken token)
     {
-        var boxes = await repo.GetAllAsync(take, skip, token);
+        var boxes = await repo.GetAllAsync(filter.Take, filter.Skip, token);
 
         return mapper.Map<IReadOnlyCollection<BoxResponse>>(boxes);
     }

@@ -15,8 +15,4 @@
     <PackageReference Include="Automapper" Version="11.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\PalletStorage.BusinessModels\PalletStorage.BusinessModels.csproj" />
-  </ItemGroup>
-
 </Project>

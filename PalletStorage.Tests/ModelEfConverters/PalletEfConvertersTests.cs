@@ -4,12 +4,14 @@ using AutoMapper;
 using DataContext.Entities;
 using PalletStorage.BusinessModels;
 using PalletStorage.Repositories.Automapper;
+using PalletStorage.Tests.Infrastructure;
 
 namespace PalletStorage.Tests.ModelEfConverters;
 
 public class PalletEfConvertersTests
 {
     private readonly IMapper mapper;
+    private readonly DateTime dateTimeToday = new DateTimeProvider().GetToday();
 
     public PalletEfConvertersTests()
     {
@@ -27,7 +29,7 @@ public class PalletEfConvertersTests
     {
         // Arrange
         var pallet = PalletModel.Create(2, 3, 4);
-        var box = BoxModel.Create(2, 2, 2, 2, DateTime.Today);
+        var box = BoxModel.Create(2, 2, 2, 2, dateTimeToday);
 
         pallet.AddBox(box);
 
@@ -49,8 +51,8 @@ public class PalletEfConvertersTests
             Length = 1,
             Height = 1,
             Weight = 1,
-            ProductionDate = DateTime.Today,
-            ExpirationDate = DateTime.Today,
+            ProductionDate = dateTimeToday,
+            ExpirationDate = dateTimeToday,
         };
 
         var palletModel = new Pallet()

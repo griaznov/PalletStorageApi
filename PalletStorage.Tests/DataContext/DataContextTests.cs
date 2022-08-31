@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using DataContext;
 using DataContext.Entities;
+using PalletStorage.Tests.Infrastructure;
 
 namespace PalletStorage.Tests.DataContext;
 
@@ -11,6 +12,7 @@ public class DataContextTests
 {
     private readonly IStorageContext dbContext;
     private readonly string fileName;
+    private readonly DateTime dateTimeToday = new DateTimeProvider().GetToday();
 
     public DataContextTests(StorageContextFixture contextFixture)
     {
@@ -35,8 +37,8 @@ public class DataContextTests
             Length = 1,
             Height = 1,
             Weight = 1,
-            ProductionDate = DateTime.Today,
-            ExpirationDate = DateTime.Today,
+            ProductionDate = dateTimeToday,
+            ExpirationDate = dateTimeToday,
         };
 
         // Act
@@ -86,8 +88,8 @@ public class DataContextTests
             Length = 1,
             Height = 1,
             Weight = 1,
-            ProductionDate = DateTime.Today,
-            ExpirationDate = DateTime.Today,
+            ProductionDate = dateTimeToday,
+            ExpirationDate = dateTimeToday,
             PalletId = pallet.Id,
         };
 

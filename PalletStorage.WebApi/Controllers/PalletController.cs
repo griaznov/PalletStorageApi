@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PalletStorage.BusinessModels;
 using PalletStorage.Repositories.Pallets;
+using PalletStorage.WebApi.Models.Additional;
 using PalletStorage.WebApi.Models.Box;
 using PalletStorage.WebApi.Models.Pallet;
 
@@ -24,14 +25,13 @@ public class PalletController : ControllerBase
     }
 
     // GET: api/pallets
-    [HttpGet]
+    [HttpGet(Name = "GetPallets")]
     [ProducesResponseType(200, Type = typeof(IReadOnlyList<PalletResponse>))]
     public async Task<IReadOnlyList<PalletResponse>> GetPallets(
-        [DefaultValue(100)] int take,
-        [DefaultValue(0)] int skip,
+        [FromQuery] PaginationFilter filter,
         CancellationToken token)
     {
-        var pallets = await repo.GetAllAsync(take, skip, token);
+        var pallets = await repo.GetAllAsync(filter.Take, filter.Skip, token);
 
         return mapper.Map<IReadOnlyList<PalletResponse>>(pallets);
     }
@@ -43,7 +43,7 @@ public class PalletController : ControllerBase
     public async Task<IActionResult> GetPallet(int id, CancellationToken token)
     {
         PalletModel? pallet = await repo.GetAsync(id, token);
-
+        
         if (pallet == null)
         {
             return NotFound(); // 404 Resource not found

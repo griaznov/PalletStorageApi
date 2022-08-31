@@ -2,7 +2,7 @@
 using PalletStorage.BusinessModels;
 using PalletStorage.WebApi.Models.Box;
 
-namespace PalletStorage.WebApi.Automapper;
+namespace PalletStorage.WebApi.Infrastructure.Automapper;
 
 public class BoxApiMappingProfile : Profile
 {

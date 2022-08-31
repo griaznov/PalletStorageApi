@@ -2,7 +2,7 @@
 using PalletStorage.BusinessModels;
 using PalletStorage.WebApi.Models.Pallet;
 
-namespace PalletStorage.WebApi.Automapper;
+namespace PalletStorage.WebApi.Infrastructure.Automapper;
 
 public class PalletApiMappingProfile : Profile
 {
@@ -13,9 +13,12 @@ public class PalletApiMappingProfile : Profile
         CreateMap<PalletResponse, PalletModel>();
 
         CreateMap<PalletModel, PalletCreateRequest>();
-        CreateMap<PalletCreateRequest, PalletModel>();
+        CreateMap<PalletCreateRequest, PalletModel>()
+            .ForMember(p => p.Boxes, opt => opt.Ignore());
 
         CreateMap<PalletModel, PalletUpdateRequest>();
-        CreateMap<PalletUpdateRequest, PalletModel>();
+        CreateMap<PalletUpdateRequest, PalletModel>()
+            .ForMember(p => p.Boxes, opt => opt.Ignore());
+        ;
     }
 }

@@ -1,10 +1,13 @@
 ﻿using PalletStorage.BusinessModels;
+using PalletStorage.Tests.Infrastructure;
 using Xunit;
 
 namespace PalletStorage.Tests.Common;
 
 public class PalletTests
 {
+    private readonly DateTime dateTimeToday = new DateTimeProvider().GetToday();
+
     [Fact(DisplayName = "1. Creating a normal pallet and checking the volume count")]
     public void CreationPallet()
     {
@@ -20,7 +23,7 @@ public class PalletTests
     {
         // Arrange
         var pallet = PalletModel.Create(2, 3, 4);
-        var box = BoxModel.Create(2, 2, 2, 2, DateTime.Today);
+        var box = BoxModel.Create(2, 2, 2, 2, dateTimeToday);
 
         // Act
         pallet.AddBox(box);
@@ -34,8 +37,8 @@ public class PalletTests
     {
         // Arrange
         var pallet = PalletModel.Create(2, 3, 4);
-        var box1 = BoxModel.Create(2, 2, 2, 2, DateTime.Today);
-        var box2 = BoxModel.Create(2, 3, 2, 3, DateTime.Today);
+        var box1 = BoxModel.Create(2, 2, 2, 2, dateTimeToday);
+        var box2 = BoxModel.Create(2, 3, 2, 3, dateTimeToday);
 
         // Act
         pallet.AddBox(box1);
@@ -59,14 +62,14 @@ public class PalletTests
     public void CheckingExpirationDate()
     {
         // Arrange
-        var lessDate = DateTime.Today;
+        var lessDate = dateTimeToday;
         var biggerDate = lessDate.AddDays(1);
         var biggerDate2 = lessDate.AddDays(2);
 
         var pallet = PalletModel.Create(2, 3, 4);
-        var box1 = BoxModel.Create(2, 2, 2, 2, DateTime.Today, lessDate);
-        var box2 = BoxModel.Create(2, 3, 2, 3, DateTime.Today, biggerDate);
-        var box3 = BoxModel.Create(2, 3, 2, 3, DateTime.Today, biggerDate2);
+        var box1 = BoxModel.Create(2, 2, 2, 2, dateTimeToday, lessDate);
+        var box2 = BoxModel.Create(2, 3, 2, 3, dateTimeToday, biggerDate);
+        var box3 = BoxModel.Create(2, 3, 2, 3, dateTimeToday, biggerDate2);
 
         // Act
         pallet.AddBox(box1);

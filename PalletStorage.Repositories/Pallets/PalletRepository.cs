@@ -43,7 +43,7 @@ public class PalletRepository : IPalletRepository
 
         var affected = await dbContext.SaveChangesAsync();
 
-        return affected == 1 ? mapper.Map<PalletModel>(palletEntity) : null;
+        return affected > 0 ? mapper.Map<PalletModel>(palletEntity) : null;
     }
 
     public async Task<PalletModel?> UpdateAsync(PalletModel pallet, CancellationToken token)
@@ -52,18 +52,15 @@ public class PalletRepository : IPalletRepository
 
         if (palletEntity is null)
         {
-            palletEntity = mapper.Map<Pallet>(pallet);
-            await dbContext.Pallets.AddAsync(palletEntity, token);
+            throw new ArgumentException($"The pallet with id {pallet.Id} was not found for updating!");
         }
-        else
-        {
-            // update in database new values for entry
-            mapper.Map(pallet, palletEntity);
-        }
+
+        // update in database new values for entry
+        mapper.Map(pallet, palletEntity);
 
         var affected = await dbContext.SaveChangesAsync();
 
-        return affected == 1 ? mapper.Map<PalletModel>(palletEntity) : null;
+        return affected > 0 ? mapper.Map<PalletModel>(palletEntity) : null;
     }
 
     public async Task<bool> DeleteAsync(int id, CancellationToken token)

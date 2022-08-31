@@ -42,7 +42,7 @@ public class BoxRepository : IBoxRepository
 
         var affected = await dbContext.SaveChangesAsync();
 
-        return affected == 1 ? mapper.Map<BoxModel>(boxEntity) : null;
+        return affected > 0 ? mapper.Map<BoxModel>(boxEntity) : null;
     }
 
     public async Task<BoxModel?> UpdateAsync(BoxModel box, CancellationToken token)
@@ -51,18 +51,15 @@ public class BoxRepository : IBoxRepository
 
         if (boxEntity is null)
         {
-            boxEntity = mapper.Map<Box>(box);
-            await dbContext.Boxes.AddAsync(boxEntity, token);
+            throw new ArgumentException($"The box with id {box.Id} was not found for updating!");
         }
-        else
-        {
-            // update in database new values for entry
-            mapper.Map(box, boxEntity);
-        }
+
+        // update in database new values for entry
+        mapper.Map(box, boxEntity);
 
         var affected = await dbContext.SaveChangesAsync();
 
-        return affected == 1 ? mapper.Map<BoxModel>(boxEntity) : null;
+        return affected > 0 ? mapper.Map<BoxModel>(boxEntity) : null;
     }
 
     public async Task<bool> DeleteAsync(int id, CancellationToken token)

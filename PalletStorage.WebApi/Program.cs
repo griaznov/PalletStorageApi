@@ -5,15 +5,20 @@ using Microsoft.AspNetCore.HttpLogging;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using DataContext.Extensions;
+using DataContext.Migrations;
 using PalletStorage.Repositories.Boxes;
 using PalletStorage.Repositories.Pallets;
 using PalletStorage.WebApi.Controllers;
+using PalletStorage.WebApi.Infrastructure.Filters;
 using static System.Console;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Schema and Data migrations
+await MigrationManager.MigrateAsync();
+
 // Add services to the container.
-await builder.Services.AddStorageDataContextAsync();
+builder.Services.AddStorageDataContext();
 
 builder.Services.AddControllers(options =>
     {
@@ -48,8 +53,14 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(BoxController)));
 
+// Filters
+builder.Services.AddMvc(options =>
+{
+    //options.Filters.Add<ValidateModelExceptionFilter>();
+    options.Filters.Add<OperationCancelledExceptionFilter>();
+});
+
 // AutoMapper - add all profiles from repositories and controllers
-// TODO - ask about class for finding the location of profiles
 builder.Services.AddAutoMapper(typeof(BoxRepository), typeof(BoxController));
 
 // Repositories

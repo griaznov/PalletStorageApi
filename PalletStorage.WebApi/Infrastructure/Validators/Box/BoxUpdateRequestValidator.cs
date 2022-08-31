@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using PalletStorage.WebApi.Models.Box;
 
-namespace PalletStorage.WebApi.Validators.Box;
+namespace PalletStorage.WebApi.Infrastructure.Validators.Box;
 
 public class BoxUpdateRequestValidator : AbstractValidator<BoxUpdateRequest>
 {

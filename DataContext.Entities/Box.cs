@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using DataContext.Entities.AbstractEntities;
 
 namespace DataContext.Entities
 {
     [Index(nameof(Id), Name = "Id")]
-    public class Box
+    public class Box : IUniversalBox
     {
         public int Id { get; set; }
         public DateTime ProductionDate { get; set; }

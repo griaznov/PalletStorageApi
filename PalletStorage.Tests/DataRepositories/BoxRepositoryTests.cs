@@ -1,8 +1,10 @@
 ﻿using Xunit;
 using FluentAssertions;
 using DataContext;
+using Microsoft.EntityFrameworkCore;
 using PalletStorage.BusinessModels;
 using PalletStorage.Repositories.Boxes;
+using PalletStorage.Tests.Infrastructure;
 
 namespace PalletStorage.Tests.DataRepositories;
 
@@ -11,41 +13,46 @@ public class BoxRepositoryTests
 {
     private readonly IStorageContext dbContext;
     private readonly IBoxRepository boxRepo;
+    private readonly DateTime dateTimeToday;
 
     public BoxRepositoryTests(StorageContextFixture contextFixture)
     {
         dbContext = contextFixture.DbContext;
         boxRepo = contextFixture.BoxRepo;
+
+        var dateTimeProvider = new DateTimeProvider();
+        dateTimeToday = dateTimeProvider.GetToday();
     }
 
     [Fact(DisplayName = "1. Save common model of Box")]
     public async Task AddBoxAsync()
     {
         // Arrange
-        var date = new DateTime(2022, 7, 21, 19, 20, 17);
         const int width = 22;
         const int length = 31;
         const int height = 43;
 
-        var box = BoxModel.Create(width, length, height, 11, date, date);
+        var box = BoxModel.Create(width, length, height, 11, dateTimeToday, dateTimeToday);
 
         // Act
-        await boxRepo.CreateAsync(box);
+        var boxInRepo =  await boxRepo.CreateAsync(box);
 
         // Assert
-        var boxEfModel = dbContext.Boxes.FirstOrDefault(boxes => boxes.ExpirationDate == date
-                                                                 && boxes.ProductionDate == date
-                                                                 && (boxes.Width - width) == 0 
-                                                                 && (boxes.Length - length) == 0
-                                                                 && (boxes.Height - height) == 0);
-        boxEfModel.Should().NotBeNull();
+        if (boxInRepo == null)
+        {
+            throw new ArgumentException($"The box was not created!");
+        }
+
+        var palletSaved = await dbContext.Boxes.FirstOrDefaultAsync(b => b.Id == boxInRepo.Id);
+
+        palletSaved.Should().BeEquivalentTo(new { Length = length, Height = height, Width = width, boxInRepo.Id });
     }
 
     [Fact(DisplayName = "2. Delete common model Box")]
     public async Task DeleteBox()
     {
         // Arrange
-        var box = new BoxModel(1, 2, 3, 4, DateTime.Today, DateTime.Today, 12);
+        var box = new BoxModel(1, 2, 3, 4, dateTimeToday, dateTimeToday, 12);
 
         await boxRepo.CreateAsync(box);
 
@@ -61,11 +68,11 @@ public class BoxRepositoryTests
     public async Task UpdateBox()
     {
         // Arrange
-        var box = new BoxModel(1, 2, 3, 4, DateTime.Today, DateTime.Today, 13);
+        var box = new BoxModel(1, 2, 3, 4, dateTimeToday, dateTimeToday, 13);
         await boxRepo.CreateAsync(box);
 
         // Act
-        box = new BoxModel(2, 3, 4, 5, DateTime.Today, DateTime.Today, 13);
+        box = new BoxModel(21, 35, 44, 15, dateTimeToday, dateTimeToday, 13);
         await boxRepo.UpdateAsync(box);
 
         // Assert
@@ -73,10 +80,9 @@ public class BoxRepositoryTests
 
         boxSaved.Should().NotBeNull();
 
-        boxSaved?.Width.Should().Be(2);
-        boxSaved?.Length.Should().Be(3);
-        boxSaved?.Height.Should().Be(4);
-        boxSaved?.Weight.Should().Be(5);
+        boxSaved?.Should().BeEquivalentTo(
+            new { box.Length, box.Height, box.Width, box.Weight, box.Id },
+            options => options.ExcludingMissingMembers());
     }
 
     [Fact(DisplayName = "4. Retrieve Boxes with pagination - Skip")]
@@ -113,7 +119,7 @@ public class BoxRepositoryTests
     {
         for (var i = 0; i < count; i++)
         {
-            await boxRepo.CreateAsync(BoxModel.Create(1, 2, 3, 4, DateTime.Today, DateTime.Today));
+            await boxRepo.CreateAsync(BoxModel.Create(1, 2, 3, 4, dateTimeToday, dateTimeToday));
         }
     }
 }

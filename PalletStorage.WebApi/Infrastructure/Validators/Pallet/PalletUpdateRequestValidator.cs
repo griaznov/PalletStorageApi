@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using PalletStorage.WebApi.Models.Pallet;
 
-namespace PalletStorage.WebApi.Validators.Pallet;
+namespace PalletStorage.WebApi.Infrastructure.Validators.Pallet;
 
-public class PalletResponseValidator : AbstractValidator<PalletResponse>
+public class PalletUpdateRequestValidator : AbstractValidator<PalletUpdateRequest>
 {
-    public PalletResponseValidator()
+    public PalletUpdateRequestValidator()
     {
         RuleFor(p => p.Id).NotNull().GreaterThan(0).WithMessage("Id must be > 0");
         RuleFor(p => p.Length).NotNull().GreaterThan(0).WithMessage("Length must be > 0");

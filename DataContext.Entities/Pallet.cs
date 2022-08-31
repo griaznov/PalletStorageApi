@@ -1,10 +1,11 @@
 ﻿using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore;
+using DataContext.Entities.AbstractEntities;
 
 namespace DataContext.Entities
 {
     [Index(nameof(Id), Name = "Id")]
-    public class Pallet
+    public class Pallet : IUniversalBox
     {
         public int Id { get; set; }
         public double PalletWeight { get; set; }

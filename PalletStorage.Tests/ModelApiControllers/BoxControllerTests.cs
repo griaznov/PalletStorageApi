@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PalletStorage.WebApi.Controllers;
 using PalletStorage.WebApi.Models.Box;
+using PalletStorage.Tests.Infrastructure;
 
 namespace PalletStorage.Tests.ModelApiControllers;
 
@@ -11,10 +12,14 @@ namespace PalletStorage.Tests.ModelApiControllers;
 public class BoxControllerTests
 {
     private readonly BoxController controller;
+    private readonly DateTime dateTimeToday;
 
     public BoxControllerTests(StorageContextFixture contextFixture)
     {
         controller = contextFixture.BoxController;
+
+        var dateTimeProvider = new DateTimeProvider();
+        dateTimeToday = dateTimeProvider.GetToday();
     }
 
     [Fact(DisplayName = "1. Create Box")]
@@ -27,8 +32,8 @@ public class BoxControllerTests
             Length = 1,
             Height = 1,
             Weight = 1,
-            ProductionDate = DateTime.Today,
-            ExpirationDate = DateTime.Today,
+            ProductionDate = dateTimeToday,
+            ExpirationDate = dateTimeToday,
         };
 
         controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
