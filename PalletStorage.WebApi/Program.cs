@@ -56,7 +56,6 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(BoxContro
 // Filters
 builder.Services.AddMvc(options =>
 {
-    //options.Filters.Add<ValidateModelExceptionFilter>();
     options.Filters.Add<OperationCancelledExceptionFilter>();
 });
 
